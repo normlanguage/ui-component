@@ -37,12 +37,15 @@ public record ComponentConfig(String fontFamily, double fontSize, Density densit
 
     String stylesheet() {
         double space = 8 * density.scale();
-        return ".norm-button { -fx-background-radius: " + radius + "px; -fx-border-radius: " + radius
-                + "px; -fx-padding: " + space + "px " + (2 * space) + "px; }"
-                + ".norm-input { -fx-background-radius: " + radius + "px; -fx-padding: "
-                + space + "px " + (1.25 * space) + "px; }"
-                + ".norm-card, .norm-popover, .norm-message { -fx-background-radius: " + radius
-                + "px; -fx-border-radius: " + radius + "px; -fx-padding: " + (2 * space) + "px; }"
+        double height = 32 * density.scale() * fontSize / 14;
+        return ".button, .toggle-button, .menu-button, .choice-box, .text-field, .combo-box-base, .spinner {"
+                + "-fx-background-radius: " + radius + "px; -fx-border-radius: " + radius + "px;"
+                + "-fx-min-height: " + height + "px; -fx-pref-height: " + height + "px; -fx-max-height: " + height + "px; }"
+                + ".button, .toggle-button, .menu-button { -fx-padding: " + (space / 2) + "px " + (space * 1.75) + "px; }"
+                + ".text-field { -fx-padding: " + (space / 2) + "px " + (space * 1.25) + "px; }"
+                + ".text-area, .text-area .content { -fx-background-radius: " + radius + "px; -fx-border-radius: " + radius + "px; }"
+                + ".norm-card, .norm-popover, .norm-message { -fx-background-radius: " + (radius + 2)
+                + "px; -fx-border-radius: " + (radius + 2) + "px; -fx-padding: " + (3 * space) + "px; }"
                 + ".norm-space { -fx-spacing: " + space + "px; }"
                 + ".norm-flex, .norm-grid { -fx-hgap: " + space + "px; -fx-vgap: " + space + "px; }";
     }

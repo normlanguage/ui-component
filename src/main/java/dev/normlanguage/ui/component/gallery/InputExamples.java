@@ -29,23 +29,20 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
 
 public final class InputExamples {
     private InputExamples() {}
-    public static Map<String, Supplier<Node>> examples(App app) {
-        var examples = new LinkedHashMap<String, Supplier<Node>>();
-        examples.put("AutoComplete", () -> {
+    public static java.util.List<Gallery.Component> components(App app) {
+        var examples = new java.util.ArrayList<Gallery.Component>();
+        examples.add(new Gallery.Component(Gallery.Category.INPUT, "AutoComplete", "自动完成", () -> {
             var control = new AutoComplete();
             control.setPromptText("Search city");
             control.setSuggestions(List.of("Singapore", "Seoul", "Sydney", "Tokyo"));
             return control;
-        });
-        examples.put("Cascader", () -> {
+        }));
+        examples.add(new Gallery.Component(Gallery.Category.INPUT, "Cascader", "级联选择", () -> {
             var control = new Cascader<String>(List.of(
             new Cascader.Item<>("Asia", "Asia", List.of(
                 new Cascader.Item<>("Singapore", "Singapore", List.of()),
@@ -55,11 +52,11 @@ public final class InputExamples {
                 new Cascader.Item<>("France", "France", List.of()),
                 new Cascader.Item<>("Germany", "Germany", List.of()))));
             return control;
-        });
-        examples.put("Checkbox", () -> new Checkbox("Send email updates"));
-        examples.put("ColorPicker", ColorPicker::new);
-        examples.put("DatePicker", () -> new VBox(8, new DatePicker(), new DatePicker.Range()));
-        examples.put("Form", () -> {
+        }));
+        examples.add(new Gallery.Component(Gallery.Category.INPUT, "Checkbox", "多选框", () -> new Checkbox("Send email updates")));
+        examples.add(new Gallery.Component(Gallery.Category.INPUT, "ColorPicker", "颜色选择器", ColorPicker::new));
+        examples.add(new Gallery.Component(Gallery.Category.INPUT, "DatePicker", "日期选择框", () -> new VBox(8, new DatePicker(), new DatePicker.Range())));
+        examples.add(new Gallery.Component(Gallery.Category.INPUT, "Form", "表单", () -> {
             var form = new Form();
             var name = new Input();
             name.setPromptText("Required name");
@@ -71,8 +68,8 @@ public final class InputExamples {
             var send = new javafx.scene.control.Button("Submit");
             send.setOnAction(event -> { if (!form.submit()) result.setText("Complete required fields"); });
             return new VBox(8, form, send, result);
-        });
-        examples.put("Input", () -> {
+        }));
+        examples.add(new Gallery.Component(Gallery.Category.INPUT, "Input", "输入框", () -> {
             var control = new Input();
             control.setPromptText("Type a name");
             var password = Input.password();
@@ -80,20 +77,20 @@ public final class InputExamples {
             var multiline = Input.multiline();
             multiline.setPromptText("Notes");
             return new VBox(8, control, password, multiline);
-        });
-        examples.put("InputNumber", () -> {
+        }));
+        examples.add(new Gallery.Component(Gallery.Category.INPUT, "InputNumber", "数字输入框", () -> {
             var number = new InputNumber(new java.math.BigDecimal("0"), new java.math.BigDecimal("100"),
                 new java.math.BigDecimal("50.00"), new java.math.BigDecimal("0.25"));
             number.setScale(2);
             return number;
-        });
-        examples.put("Mentions", () -> {
+        }));
+        examples.add(new Gallery.Component(Gallery.Category.INPUT, "Mentions", "提及", () -> {
             var control = new Mentions();
             control.setPromptText("Type @ to mention a person");
             control.setSuggestions(List.of("alice", "bob", "charlie"));
             return control;
-        });
-        examples.put("Radio", () -> {
+        }));
+        examples.add(new Gallery.Component(Gallery.Category.INPUT, "Radio", "单选框", () -> {
             var group = new ToggleGroup();
             var first = new Radio("First");
             var second = new Radio("Second");
@@ -101,24 +98,24 @@ public final class InputExamples {
             second.setToggleGroup(group);
             first.setSelected(true);
             return new VBox(8, first, second);
-        });
-        examples.put("Rate", () -> new Rate(5));
-        examples.put("Select", () -> {
+        }));
+        examples.add(new Gallery.Component(Gallery.Category.INPUT, "Rate", "评分", () -> new Rate(5)));
+        examples.add(new Gallery.Component(Gallery.Category.INPUT, "Select", "选择器", () -> {
             var select = new Select<String>();
             select.getItems().addAll("Small", "Medium", "Large");
             select.setPromptText("Choose a size");
             var options = javafx.collections.FXCollections.observableArrayList("Small", "Medium", "Large");
             return new VBox(8, select, Select.searchable(options), Select.multiple(options));
-        });
-        examples.put("Slider", () -> new VBox(8, new Slider(0, 100, 40), new Slider.Range(0, 100, 20, 80)));
-        examples.put("Switch", () -> new Switch("Enable notifications"));
-        examples.put("TimePicker", () -> {
+        }));
+        examples.add(new Gallery.Component(Gallery.Category.INPUT, "Slider", "滑动输入条", () -> new VBox(8, new Slider(0, 100, 40), new Slider.Range(0, 100, 20, 80))));
+        examples.add(new Gallery.Component(Gallery.Category.INPUT, "Switch", "开关", () -> new Switch("Enable notifications")));
+        examples.add(new Gallery.Component(Gallery.Category.INPUT, "TimePicker", "时间选择框", () -> {
             var picker = new TimePicker(30);
             picker.setAllowedRange(java.time.LocalTime.of(8, 0), java.time.LocalTime.of(18, 0));
             return picker;
-        });
-        examples.put("Transfer", () -> new Transfer<>(List.of("Alpha", "Beta", "Gamma", "Delta")));
-        examples.put("TreeSelect", () -> {
+        }));
+        examples.add(new Gallery.Component(Gallery.Category.INPUT, "Transfer", "穿梭框", () -> new Transfer<>(List.of("Alpha", "Beta", "Gamma", "Delta"))));
+        examples.add(new Gallery.Component(Gallery.Category.INPUT, "TreeSelect", "树选择", () -> {
             var root = new TreeItem<String>("root");
             var fruit = new TreeItem<String>("Fruit");
             fruit.getChildren().add(new TreeItem<>("Apple"));
@@ -128,8 +125,8 @@ public final class InputExamples {
             root.getChildren().add(fruit);
             root.getChildren().add(vegetable);
             return new TreeSelect<>(root);
-        });
-        examples.put("Upload", () -> {
+        }));
+        examples.add(new Gallery.Component(Gallery.Category.INPUT, "Upload", "上传", () -> {
             var upload = new Upload();
             Path destination = Path.of(System.getProperty("java.io.tmpdir"), "ui-component-demo-uploads");
             upload.setUploader((file, progress) -> CompletableFuture.runAsync(() -> {
@@ -141,7 +138,7 @@ public final class InputExamples {
             }));
             app.own(upload);
             return new VBox(8, new Label("Files are copied to " + destination), upload);
-        });
-        return java.util.Collections.unmodifiableMap(examples);
+        }));
+        return java.util.List.copyOf(examples);
     }
 }

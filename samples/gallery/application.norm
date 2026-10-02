@@ -5,11 +5,19 @@ import theme.ThemeDefinition
 import theme.ThemeMode
 import theme.generateTheme
 import ui.component.themeCss
+import ui.component.utilEmptyItems
 
 Void main() {
-  var definition = ThemeDefinition(primary: Color(hex: "#6750A4"))
-  galleryOpen(
-    arg0: themeCss(generateTheme(definition, mode: ThemeMode.Light)),
-    arg1: themeCss(generateTheme(definition, mode: ThemeMode.Dark))
-  )
+  var palettes = utilEmptyItems<GalleryPalette>()!!
+  for item : [palette(name: "蓝色", primary: "#1677FF"), palette(name: "紫色", primary: "#722ED1"), palette(name: "绿色", primary: "#13A874")] {
+    palettes.add(item)
+  }
+  galleryOpen(palettes)
+}
+
+private GalleryPalette palette(String name, String primary) {
+  var definition = ThemeDefinition(primary: Color(hex: primary), neutral: Color(hex: "#808080"))
+  galleryPaletteNew(arg0: name,
+    arg1: themeCss(generateTheme(definition, mode: ThemeMode.Light)),
+    arg2: themeCss(generateTheme(definition, mode: ThemeMode.Dark)))
 }

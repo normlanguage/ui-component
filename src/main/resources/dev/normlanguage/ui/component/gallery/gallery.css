@@ -1,0 +1,119 @@
+.gallery-root {
+    -fx-background-color: -norm-surface;
+}
+
+.gallery-sidebar {
+    -fx-background-color: -norm-surface-raised;
+    -fx-padding: 26 14 20 18;
+    -fx-border-color: transparent -norm-divider transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
+
+.gallery-brand {
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -norm-text;
+    -fx-padding: 0 8 0 8;
+}
+
+.gallery-navigation-scroll, .gallery-navigation-scroll > .viewport,
+.gallery-scroll, .gallery-scroll > .viewport {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.gallery-navigation-heading {
+    -fx-text-fill: -norm-muted;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-padding: 20 10 6 10;
+}
+
+.norm-root:themed .gallery-root .gallery-navigation-item {
+    -fx-alignment: center-left;
+    -fx-background-color: transparent;
+    -fx-text-fill: -norm-text;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-pref-width: 218px;
+    -fx-padding: 7 10;
+}
+
+.norm-root:themed .gallery-root .gallery-navigation-item:hover {
+    -fx-background-color: -norm-surface;
+}
+
+.norm-root:themed .gallery-root .gallery-navigation-item.selected {
+    -fx-background-color: -norm-primary-soft-selected-normal-background;
+    -fx-text-fill: -norm-primary-soft-selected-normal-foreground;
+}
+
+.gallery-toolbar {
+    -fx-background-color: -norm-surface-raised;
+    -fx-padding: 12 28;
+    -fx-border-color: transparent transparent -norm-divider transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.gallery-toolbar-title {
+    -fx-text-fill: -norm-text;
+    -fx-font-weight: 600;
+}
+
+.gallery-page {
+    -fx-padding: 36 44 56 44;
+}
+
+.gallery-page-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -norm-text;
+}
+
+.gallery-section-title {
+    -fx-font-size: 17px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -norm-text;
+}
+
+.gallery-secondary {
+    -fx-text-fill: -norm-muted;
+}
+
+.norm-root:themed .gallery-root .gallery-tile {
+    -fx-alignment: center-left;
+    -fx-text-alignment: left;
+    -fx-pref-width: 188px;
+    -fx-pref-height: 70px;
+    -fx-min-height: 70px;
+    -fx-max-height: 70px;
+    -fx-wrap-text: true;
+    -fx-background-color: -norm-surface-raised;
+    -fx-border-color: -norm-divider;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-text-fill: -norm-text;
+    -fx-padding: 10 14;
+}
+
+.norm-root:themed .gallery-root .gallery-tile:hover {
+    -fx-border-color: -norm-primary-filled-normal-background;
+}
+
+.norm-root:themed .gallery-root .gallery-back {
+    -fx-background-color: transparent;
+    -fx-text-fill: -norm-primary-filled-normal-background;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.gallery-preview {
+    -fx-background-color: -norm-surface-raised;
+    -fx-border-color: -norm-divider;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 24;
+    -fx-min-height: 150px;
+}
+
+

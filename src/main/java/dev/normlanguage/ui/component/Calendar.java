@@ -32,6 +32,9 @@ public class Calendar extends BorderPane implements AutoCloseable {
         getStyleClass().add("norm-calendar");
         var previous = new Button("‹");
         var next = new Button("›");
+        previous.getStyleClass().add("norm-calendar-nav");
+        next.getStyleClass().add("norm-calendar-nav");
+        heading.getStyleClass().add("norm-calendar-heading");
         previous.setOnAction(event -> previousMonth());
         next.setOnAction(event -> nextMonth());
         var header = new HBox(previous, heading, next);
@@ -65,7 +68,9 @@ public class Calendar extends BorderPane implements AutoCloseable {
         int firstWeekday = WeekFields.of(locale).getFirstDayOfWeek().getValue();
         for (int column = 0; column < 7; column++) {
             var weekday = DayOfWeek.of((firstWeekday - 1 + column) % 7 + 1);
-            days.add(new Label(weekday.getDisplayName(TextStyle.SHORT, locale)), column, 0);
+            var weekdayLabel = new Label(weekday.getDisplayName(TextStyle.SHORT, locale));
+            weekdayLabel.getStyleClass().add("norm-calendar-weekday");
+            days.add(weekdayLabel, column, 0);
         }
         var first = month.atDay(1);
         var start = first.minusDays(Math.floorMod(first.getDayOfWeek().getValue() - firstWeekday, 7));
@@ -74,6 +79,7 @@ public class Calendar extends BorderPane implements AutoCloseable {
             var day = new Button(Integer.toString(date.getDayOfMonth()));
             day.getStyleClass().add("norm-calendar-day");
             day.setOnAction(event -> setValue(date));
+            if (date.equals(LocalDate.now())) day.getStyleClass().add("today");
             if (!YearMonth.from(date).equals(month)) day.getStyleClass().add("outside-month");
             if (date.equals(value.get())) day.getStyleClass().add("selected");
             var content = dayContentFactory == null ? null : dayContentFactory.apply(date);

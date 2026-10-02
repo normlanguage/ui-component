@@ -31,7 +31,14 @@ Norm 应用通过 [主题连接](ui/component/connection.norm)把 `ThemeSource` 
 .\gradlew.bat test -PtestSource=LayoutNavigationTest --tests '*LayoutNavigationTest' --console=plain
 ```
 
-其他定向测试入口见 [验证工作流](.github/workflows/verify.yml)。展示应用经由 `theme` 生成明暗两套配色，可用 [gallery.ps1](scripts/gallery.ps1) 启动；加 `-Verify` 会验证已打包的 Norm API，并运行真实主题渲染测试。依赖 Norm 配色产物的渲染验证由 `themeRenderingTest` 任务单独执行。
+其他定向测试入口见 [验证工作流](.github/workflows/verify.yml)。[Gallery](src/main/java/dev/normlanguage/ui/component/gallery/Gallery.java) 提供分类总览、搜索和全部组件的可操作详情；顶部可切换主题色、明暗模式和密度。配色在 [Norm 示例](samples/gallery/application.norm)中交给 `theme` 生成。
+
+```powershell
+.\scripts\gallery.ps1
+.\scripts\gallery.ps1 -Verify
+```
+
+[gallery.ps1](scripts/gallery.ps1) 的 `-Verify` 验证已打包的 Norm API，并导出真实主题供渲染测试使用；渲染结果保存在 `build/previews`。依赖这些主题产物的定向验证由 `themeRenderingTest` 任务执行，不在普通 `test` 中运行。
 
 Norm 适配需要支持 `jdkModule` 的 Norm 构建、本地已构建的 `theme` 仓库和相邻的 `jdk-base` 仓库。[prepare.ps1](scripts/prepare.ps1) 构建本地 Java 工件并解析模块；`ThemeRoot`、`JdkRoot` 参数可指定依赖目录，`NORM_EXECUTABLE` 环境变量可指定 Norm 命令路径。Gradle 的 `publish` 目标仅写入本仓库的 `build/repository`，不代表远程包已发布。
 

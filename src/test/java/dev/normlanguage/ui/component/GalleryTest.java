@@ -26,7 +26,7 @@ class GalleryTest extends FxTest {
                     app.applyCss(); app.layout();
                     assertTrue(view.getBoundsInParent().getWidth() > 0, entry.getKey());
                     viewport.getChildren().clear();
-                    Gallery.closeTree(view);
+                    Util.closeTree(view);
                 }
             } finally { app.close(); stage.close(); }
         });

@@ -51,7 +51,7 @@ Void liveThemePreservesInputAndLocalScope() {
 
 @Test
 Void exportThemeFixtures() {
-  var definition = ThemeDefinition(primary: Color(hex: "#6750A4"))
+  var definition = ThemeDefinition(primary: Color(hex: "#1677FF"), neutral: Color(hex: "#808080"))
   gallerySaveThemes(
     arg0: themeCss(generateTheme(definition, mode: ThemeMode.Light)),
     arg1: themeCss(generateTheme(definition, mode: ThemeMode.Dark))

@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.geometry.Pos;
 public class Badge extends StackPane {
     private final IntegerProperty count = new SimpleIntegerProperty(this, "count");
     private final Label indicator = new Label();
@@ -11,6 +12,7 @@ public class Badge extends StackPane {
         getStyleClass().add("norm-badge");
         getChildren().addAll(content, indicator);
         indicator.getStyleClass().add("norm-badge-indicator");
+        StackPane.setAlignment(indicator, Pos.TOP_RIGHT);
         count.addListener((o,a,b) -> update());
         update();
     }

@@ -1,0 +1,168 @@
+.text-input, .spinner, .combo-box-base, .choice-box, .color-picker {
+    -fx-background-insets: 0;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-effect: none;
+}
+.text-input { -fx-padding: 6 10; }
+.text-area { -fx-padding: 0; }
+.text-area .content { -fx-background-insets: 0; -fx-background-radius: 6; -fx-padding: 8 10; }
+.norm-color-picker { -fx-spacing: 12; -fx-alignment: center-left; }
+.norm-color-picker .slider { -fx-pref-width: 120; -fx-max-width: 120; }
+.spinner .text-field, .date-picker .text-field, .combo-box-base:editable .text-field {
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
+    -fx-background-radius: 6 0 0 6;
+    -fx-padding: 6 10;
+}
+.spinner .increment-arrow-button, .spinner .decrement-arrow-button,
+.combo-box-base .arrow-button, .choice-box .open-button {
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
+    -fx-effect: none;
+}
+.check-box .box, .radio-button .radio {
+    -fx-background-insets: 0;
+    -fx-border-width: 1;
+    -fx-effect: none;
+}
+.check-box .box { -fx-background-radius: 4; -fx-border-radius: 4; }
+.radio-button .radio { -fx-background-radius: 999; -fx-border-radius: 999; }
+.slider .track, .slider .thumb, .scroll-bar .track, .scroll-bar .thumb,
+.progress-bar .track, .progress-bar .bar, .progress-indicator .indicator {
+    -fx-background-insets: 0;
+    -fx-effect: none;
+}
+.slider .track, .progress-bar .track { -fx-background-radius: 4; }
+.scroll-bar .track { -fx-background-radius: 4; -fx-background-color: transparent; }
+.slider .thumb, .scroll-bar .thumb, .progress-bar .bar { -fx-background-radius: 999; }
+.scroll-bar { -fx-background-color: transparent; -fx-background-insets: 0; }
+.scroll-bar:horizontal { -fx-min-height: 8; -fx-pref-height: 8; -fx-max-height: 8; }
+.scroll-bar:vertical { -fx-min-width: 8; -fx-pref-width: 8; -fx-max-width: 8; }
+.scroll-bar .increment-button, .scroll-bar .decrement-button { -fx-background-color: transparent; -fx-padding: 0; }
+.scroll-bar .increment-arrow, .scroll-bar .decrement-arrow { -fx-background-color: transparent; -fx-padding: 0; }
+.combo-box-popup .list-view, .context-menu, .date-picker-popup {
+    -fx-background-insets: 0;
+    -fx-background-radius: 6;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 12, 0, 0, 4);
+}
+.combo-box-popup .list-cell, .context-menu .menu-item, .date-picker-popup .day-cell {
+    -fx-background-insets: 0;
+    -fx-background-radius: 4;
+}
+.date-picker-popup .month-year-pane {
+    -fx-background-color: -fx-control-inner-background;
+    -fx-background-insets: 0;
+    -fx-background-radius: 6 6 0 0;
+}
+.norm-root .norm-switch {
+    -fx-min-height: 22;
+    -fx-pref-height: 22;
+    -fx-max-height: 22;
+    -fx-padding: 0;
+    -fx-background-insets: 0;
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-effect: none;
+}
+.norm-switch .norm-switch-track {
+    -fx-min-width: 36;
+    -fx-pref-width: 36;
+    -fx-max-width: 36;
+    -fx-min-height: 22;
+    -fx-pref-height: 22;
+    -fx-max-height: 22;
+    -fx-background-radius: 999;
+    -fx-background-color: -fx-text-box-border;
+}
+.norm-switch .norm-switch-thumb {
+    -fx-min-width: 16;
+    -fx-pref-width: 16;
+    -fx-max-width: 16;
+    -fx-min-height: 16;
+    -fx-pref-height: 16;
+    -fx-max-height: 16;
+    -fx-background-radius: 999;
+    -fx-background-color: -fx-control-inner-background;
+    -fx-translate-x: -7;
+}
+.norm-switch:selected .norm-switch-thumb { -fx-translate-x: 7; }
+.norm-root:themed .text-input, .norm-root:themed .spinner,
+.norm-root:themed .combo-box-base, .norm-root:themed .choice-box, .norm-root:themed .color-picker {
+    -fx-background-color: -norm-surface-raised;
+    -fx-border-color: -norm-divider;
+    -fx-text-fill: -norm-text;
+    -fx-prompt-text-fill: -norm-muted;
+}
+.norm-root:themed .text-input:focused, .norm-root:themed .spinner:focused,
+.norm-root:themed .combo-box-base:focused, .norm-root:themed .choice-box:focused,
+.norm-root:themed .color-picker:focused {
+    -fx-border-color: -norm-focus;
+}
+.norm-root:themed .text-input:disabled, .norm-root:themed .spinner:disabled,
+.norm-root:themed .combo-box-base:disabled, .norm-root:themed .choice-box:disabled { -fx-opacity: 0.55; }
+.norm-root:themed .text-area .content, .norm-root:themed .spinner .text-field,
+.norm-root:themed .date-picker .text-field, .norm-root:themed .combo-box-base:editable .text-field,
+.norm-root:themed .spinner .increment-arrow-button,
+.norm-root:themed .spinner .decrement-arrow-button,
+.norm-root:themed .combo-box-base .arrow-button, .norm-root:themed .choice-box .open-button {
+    -fx-background-color: -norm-surface-raised;
+}
+.norm-root:themed .check-box, .norm-root:themed .radio-button { -fx-text-fill: -norm-text; }
+.norm-root:themed .check-box .box, .norm-root:themed .radio-button .radio {
+    -fx-background-color: -norm-surface-raised;
+    -fx-border-color: -norm-divider;
+}
+.norm-root:themed .check-box:selected .box, .norm-root:themed .radio-button:selected .radio {
+    -fx-background-color: -norm-primary-filled-normal-background;
+    -fx-border-color: -norm-primary-filled-normal-background;
+}
+.norm-root:themed .check-box:selected .mark, .norm-root:themed .radio-button:selected .dot {
+    -fx-background-color: -norm-primary-filled-normal-foreground;
+}
+.norm-root:themed .slider .track { -fx-background-color: -norm-divider; }
+.norm-root:themed .slider .thumb { -fx-background-color: -norm-primary-filled-normal-background; }
+.norm-root:themed .scroll-bar .thumb { -fx-background-color: -norm-muted; }
+.norm-root:themed .norm-switch { -fx-text-fill: -norm-text; }
+.norm-root:themed .toggle-button.norm-switch, .norm-root:themed .toggle-button.norm-switch:selected {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: -norm-text;
+}
+.norm-root:themed .norm-switch .norm-switch-track { -fx-background-color: -norm-divider; }
+.norm-root:themed .norm-switch:selected .norm-switch-track { -fx-background-color: -norm-primary-filled-normal-background; }
+.norm-root:themed .norm-switch .norm-switch-thumb { -fx-background-color: -norm-primary-filled-normal-foreground; }
+.norm-rate { -fx-spacing: 2; }
+.norm-root .norm-rate .toggle-button, .norm-root .norm-rate .toggle-button:selected {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 1;
+    -fx-padding: 0 2;
+    -fx-effect: none;
+    -fx-font-size: 18px;
+}
+.norm-root:themed .norm-rate .toggle-button { -fx-text-fill: -norm-muted; }
+.norm-root:themed .norm-rate .toggle-button:selected {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: -norm-warning-filled-normal-background;
+}
+.norm-root:themed .norm-rate .toggle-button:focused,
+.norm-root:themed .norm-rate .toggle-button:selected:focused { -fx-border-color: -norm-focus; }
+.combo-box-popup .list-view, .context-menu, .date-picker-popup {
+    -fx-background-color: -fx-control-inner-background;
+    -fx-border-color: -fx-text-box-border;
+}
+.combo-box-popup .list-cell, .context-menu .menu-item, .date-picker-popup .day-cell {
+    -fx-background-color: -fx-control-inner-background;
+    -fx-text-fill: -fx-text-base-color;
+}
+.combo-box-popup .list-cell:hover, .combo-box-popup .list-cell:selected,
+.context-menu .menu-item:focused, .date-picker-popup .day-cell:hover {
+    -fx-background-color: -fx-accent;
+    -fx-text-fill: -fx-selection-bar-text;
+}

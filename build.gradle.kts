@@ -11,7 +11,7 @@ repositories { mavenCentral() }
 
 java { toolchain { languageVersion = JavaLanguageVersion.of(25) } }
 providers.gradleProperty("testSource").orNull?.let { selected ->
-    sourceSets.test { java { include("**/FxTest.java", "**/$selected.java") } }
+    sourceSets.test { java { include("**/FxTest.java"); selected.split(",").forEach { include("**/$it.java") } } }
 }
 
 javafx {
@@ -38,7 +38,7 @@ tasks.withType<Test>().configureEach {
 
 tasks.named<Test>("test") {
     useJUnitPlatform {
-        if (providers.gradleProperty("testSource").orNull != "ThemeRenderingTest") {
+        if (!providers.gradleProperty("testSource").isPresent) {
             excludeTags("theme-rendering")
         }
     }

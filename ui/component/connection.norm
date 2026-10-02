@@ -81,6 +81,8 @@ String themeCss(Theme theme) {
   var css = "-norm-canvas: " + theme.canvas.background.hex() + ";"
   css = css + "-norm-text: " + theme.canvas.foreground.hex() + ";"
   css = css + "-norm-surface: " + theme.surface.background.hex() + ";"
+  css = css + "-norm-surface-raised: " + theme.surfaceRaised.background.hex() + ";"
+  css = css + "-norm-divider: " + theme.divider.hex() + ";"
   css = css + "-norm-muted: " + theme.textMuted.hex() + ";"
   css = css + "-norm-outline: " + theme.outline.hex() + ";"
   css = css + "-norm-focus: " + theme.control(tone: Tone.Primary).focusRing.hex() + ";"
