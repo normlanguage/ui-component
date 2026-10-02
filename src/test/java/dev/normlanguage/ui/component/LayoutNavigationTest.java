@@ -114,9 +114,13 @@ class LayoutNavigationTest extends FxTest {
         fx(() -> {
             var app = new App();
             try {
-                var examples = NavigationExamples.examples(app);
+                var examples = NavigationExamples.components(app);
                 assertEquals(17, examples.size());
-                examples.values().forEach(factory -> assertNotNull(factory.get()));
+                examples.forEach(example -> {
+                    var view = example.factory().get();
+                    assertNotNull(view);
+                    Util.closeTree(view);
+                });
             } finally { app.close(); }
         });
     }

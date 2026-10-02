@@ -145,9 +145,13 @@ class DisplayControlsTest extends FxTest {
     @Test void galleryConstructsEachDisplayComponent() throws Exception {
         fx(() -> {
             var app = new App();
-            var examples = dev.normlanguage.ui.component.gallery.DisplayExamples.examples(app);
+            var examples = dev.normlanguage.ui.component.gallery.DisplayExamples.components(app);
             assertEquals(18, examples.size());
-            examples.values().forEach(example -> assertNotNull(example.get()));
+            examples.forEach(example -> {
+                var view = example.factory().get();
+                assertNotNull(view);
+                Util.closeTree(view);
+            });
             app.close();
         });
     }
