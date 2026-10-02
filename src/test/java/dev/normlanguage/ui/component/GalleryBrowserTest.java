@@ -48,7 +48,7 @@ class GalleryBrowserTest extends FxTest {
                 app.layout(); app.applyCss(); app.layout(); view.layout();
                 assertFalse(view.getRight().isManaged());
                 assertEquals(1, sections.getColumnConstraints().size());
-                capture(app, stage, "gallery-button-compact.png");
+                capture(app, "gallery-button-compact.png");
                 assertTrue(view.lookup("#gallery-dark-toggle").localToScene(view.lookup("#gallery-dark-toggle").getBoundsInLocal()).getMaxX() <= 900, () -> "Toolbar: " + view.getTop().getBoundsInParent() + " toggle: " + view.lookup("#gallery-dark-toggle").localToScene(view.lookup("#gallery-dark-toggle").getBoundsInLocal()));
             } finally { app.close(); stage.close(); }
         });
@@ -132,13 +132,13 @@ class GalleryBrowserTest extends FxTest {
             stage[0].show();
         });
         try {
-            fx(() -> capture(app[0], stage[0], "gallery-overview-light.png"));
+            fx(() -> capture(app[0], "gallery-overview-light.png"));
             fx(() -> view[0].selectComponent("Button"));
-            fx(() -> capture(app[0], stage[0], "gallery-button-light.png"));
+            fx(() -> capture(app[0], "gallery-button-light.png"));
             fx(() -> { view[0].setDark(true); view[0].selectHome(); });
-            fx(() -> capture(app[0], stage[0], "gallery-overview-dark.png"));
+            fx(() -> capture(app[0], "gallery-overview-dark.png"));
             fx(() -> view[0].selectComponent("Button"));
-            fx(() -> capture(app[0], stage[0], "gallery-button-dark.png"));
+            fx(() -> capture(app[0], "gallery-button-dark.png"));
             fx(() -> view[0].setDark(false));
             for (var component : view[0].catalog()) {
                 fx(() -> view[0].selectComponent(component.name()));
@@ -150,8 +150,8 @@ class GalleryBrowserTest extends FxTest {
                     assertNotNull(example, component.name());
                     assertTrue(example.getBoundsInParent().getWidth() > 0, component.name());
                     assertTrue(example.getBoundsInParent().getHeight() > 0, component.name());
-                    if (component.name().equals("Input")) capture(app[0], stage[0], "gallery-input-light.png");
-                    if (component.name().equals("Table")) capture(app[0], stage[0], "gallery-table-light.png");
+                    if (component.name().equals("Input")) capture(app[0], "gallery-input-light.png");
+                    if (component.name().equals("Table")) capture(app[0], "gallery-table-light.png");
                 });
             }
             for (var name : List.of("gallery-overview-light.png", "gallery-button-light.png",
@@ -162,7 +162,7 @@ class GalleryBrowserTest extends FxTest {
         }
     }
 
-    private static void capture(App app, Stage stage, String name) {
+    private static void capture(App app, String name) {
         app.applyCss(); app.layout();
         var file = Path.of("build", "previews", name);
         try {
