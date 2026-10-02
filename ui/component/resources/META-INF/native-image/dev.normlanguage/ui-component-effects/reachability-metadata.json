@@ -1,0 +1,7 @@
+{
+  "reflection": [
+    {"type": "com.sun.scenario.effect.impl.prism.ps.PPSLinearConvolveShadowPeer", "allDeclaredConstructors": true},
+    {"type": "com.sun.scenario.effect.impl.sw.java.JSWLinearConvolveShadowPeer", "allDeclaredConstructors": true},
+    {"type": "com.sun.scenario.effect.impl.sw.sse.SSELinearConvolveShadowPeer", "allDeclaredConstructors": true}
+  ]
+}

@@ -20,13 +20,13 @@ class SaveExample implements Widget {
 }
 ```
 
-使用 Norm 0.26.1 或更新工具链，在应用模块中声明正式 GitHub 依赖：
+使用 Norm 0.26.2 或更新工具链，在应用模块中声明正式 GitHub 依赖：
 
 ```norm
 Module module() {
   module(dependencies: [
-    dependency(repository: "github", name: "ui", version: 4),
-    dependency(repository: "github", name: "ui.component", version: 2),
+    dependency(repository: "github", name: "ui", version: 5),
+    dependency(repository: "github", name: "ui.component", version: 3),
     dependency(repository: "github", name: "theme", version: 1)
   ])
 }
