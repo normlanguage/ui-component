@@ -1,0 +1,68 @@
+.gallery-example-row {
+    -fx-alignment: center-left;
+}
+
+.norm-root:themed .norm-button.gallery-example-dashed {
+    -fx-border-style: dashed;
+}
+
+.norm-root:themed .norm-button.gallery-example-link {
+    -fx-underline: true;
+}
+
+.norm-root:themed .gallery-example-row .norm-button.gallery-danger-outlined {
+    -fx-background-color: transparent;
+    -fx-text-fill: -norm-danger-outlined-normal-foreground;
+    -fx-border-color: -norm-danger-outlined-normal-border;
+}
+
+.norm-root:themed .gallery-example-row .norm-button.gallery-danger-outlined:hover {
+    -fx-background-color: -norm-danger-outlined-hovered-background;
+    -fx-text-fill: -norm-danger-outlined-hovered-foreground;
+    -fx-border-color: -norm-danger-outlined-hovered-border;
+}
+
+.norm-root:themed .gallery-example-row .norm-button.gallery-danger-outlined:pressed {
+    -fx-background-color: -norm-danger-outlined-pressed-background;
+    -fx-text-fill: -norm-danger-outlined-pressed-foreground;
+    -fx-border-color: -norm-danger-outlined-pressed-border;
+}
+
+.norm-root:themed .gallery-example-row .norm-button.gallery-danger-text {
+    -fx-background-color: transparent;
+    -fx-text-fill: -norm-danger-plain-normal-foreground;
+    -fx-border-color: transparent;
+}
+
+.norm-root:themed .gallery-example-row .norm-button.gallery-danger-text:hover {
+    -fx-background-color: -norm-danger-plain-hovered-background;
+    -fx-text-fill: -norm-danger-plain-hovered-foreground;
+}
+
+.norm-root:themed .gallery-example-row .norm-button.gallery-danger-text:pressed {
+    -fx-background-color: -norm-danger-plain-pressed-background;
+    -fx-text-fill: -norm-danger-plain-pressed-foreground;
+}
+
+.gallery-code-panel {
+    -fx-background-color: -norm-surface-raised;
+    -fx-border-color: -norm-divider;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.gallery-code-header {
+    -fx-alignment: center-left;
+    -fx-padding: 8 12;
+    -fx-background-color: -norm-surface;
+}
+
+.gallery-code-panel .text-area {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 15px;
+    -fx-pref-height: 150px;
+}
+
+.gallery-example-row > .norm-root { -fx-background-color: transparent; }

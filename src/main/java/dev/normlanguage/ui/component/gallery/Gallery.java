@@ -161,9 +161,16 @@ public final class Gallery {
         var finished = new CountDownLatch(1);
         Platform.startup(() -> {
             var app = new App();
-            app.setContent(createView(app, palettes));
+            var defaults = ComponentConfig.defaults();
+            app.setConfig(new ComponentConfig(defaults.fontFamily(), 18, defaults.density(),
+                    defaults.radius(), defaults.motionEnabled(), defaults.locale()));
+            var view = createView(app, palettes);
+            view.selectComponent("Button");
+            app.setContent(view);
             var stage = new Stage(); stage.setTitle("Norm UI Component");
-            stage.setScene(new Scene(app, 1120, 780));
+            stage.setScene(new Scene(app, 1440, 1024));
+            stage.setMinWidth(900);
+            stage.setMinHeight(640);
             stage.setOnHidden(event -> {
                 app.close(); finished.countDown(); Platform.exit();
             });

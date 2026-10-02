@@ -23,3 +23,5 @@
 弹层使用触发控件所属的根节点和最近的局部主题。[ThemeConnection](../src/main/java/dev/normlanguage/ui/component/ThemeConnection.java)是 Popover、Modal、Drawer 的主题继承入口；各弹层分别管理自己的显示、焦点与关闭。`Message` 与 `Notification` 归所属 `App` 管理，不创建全局窗口服务。异步和动画控件的关闭入口可由组件索引定位到各自实现。
 
 [组件索引](components.md)列出公开范围；[Gallery](../src/main/java/dev/normlanguage/ui/component/gallery/Gallery.java)提供每项可操作示例；[测试目录](../src/test/java/dev/normlanguage/ui/component)验证实际 JavaFX 窗口、主题与交互。
+
+Gallery 页面结构见 [GalleryView](../src/main/java/dev/normlanguage/ui/component/gallery/GalleryView.java)，示例分组见 [GalleryExamples](../src/main/java/dev/normlanguage/ui/component/gallery/GalleryExamples.java)；导航和页内目录由同一组件目录与示例列表派生。

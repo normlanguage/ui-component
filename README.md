@@ -31,7 +31,7 @@ Norm 应用通过 [主题连接](ui/component/connection.norm)把 `ThemeSource` 
 .\gradlew.bat test -PtestSource=LayoutNavigationTest --tests '*LayoutNavigationTest' --console=plain
 ```
 
-其他定向测试入口见 [验证工作流](.github/workflows/verify.yml)。[Gallery](src/main/java/dev/normlanguage/ui/component/gallery/Gallery.java) 提供分类总览、搜索和全部组件的可操作详情；顶部可切换主题色、明暗模式和密度。配色在 [Norm 示例](samples/gallery/application.norm)中交给 `theme` 生成。
+其他定向测试入口见 [验证工作流](.github/workflows/verify.yml)。[Gallery](src/main/java/dev/normlanguage/ui/component/gallery/Gallery.java) 提供可折叠分类、搜索和全部组件的可操作详情；详情页按示例分组，支持页内导航与窄窗口单列布局。顶部可切换主题色、明暗模式和密度。配色在 [Norm 示例](samples/gallery/application.norm)中交给 `theme` 生成。
 
 ```powershell
 .\scripts\gallery.ps1

@@ -23,6 +23,37 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("theme-rendering")
 class GalleryBrowserTest extends FxTest {
+    @Test void documentationLayoutGroupsNavigationAndExamplesWithoutOverflow() throws Exception {
+        var light = Files.readString(Path.of("build/themes/light.css"));
+        fx(() -> {
+            var app = new App();
+            var view = Gallery.createView(app, List.of(new Gallery.Palette("Blue", light, light)));
+            app.setContent(view);
+            var stage = new Stage();
+            stage.setScene(new Scene(app, 1487, 1058));
+            stage.show();
+            try {
+                app.applyCss(); app.layout();
+                assertNotNull(view.getTop().lookup("#gallery-search"));
+                assertNull(view.lookup("#gallery-nav-Input"));
+                ((javafx.scene.control.Button) view.lookup("#gallery-category-INPUT")).fire();
+                assertNotNull(view.lookup("#gallery-nav-Input"));
+                view.selectComponent("Button");
+                app.applyCss(); app.layout(); app.layout();
+                assertEquals(6, ((Anchor) view.lookup("#gallery-section-index")).getItems().size());
+                var sections = (javafx.scene.layout.GridPane) view.lookup("#gallery-sections");
+                assertEquals(2, sections.getColumnConstraints().size());
+                assertTrue(sections.getBoundsInParent().getHeight() < 850);
+                app.resize(900, 720);
+                app.layout(); app.applyCss(); app.layout(); view.layout();
+                assertFalse(view.getRight().isManaged());
+                assertEquals(1, sections.getColumnConstraints().size());
+                capture(app, stage, "gallery-button-compact.png");
+                assertTrue(view.lookup("#gallery-dark-toggle").localToScene(view.lookup("#gallery-dark-toggle").getBoundsInLocal()).getMaxX() <= 900, () -> "Toolbar: " + view.getTop().getBoundsInParent() + " toggle: " + view.lookup("#gallery-dark-toggle").localToScene(view.lookup("#gallery-dark-toggle").getBoundsInLocal()));
+            } finally { app.close(); stage.close(); }
+        });
+    }
+
     @Test void catalogDrivesOverviewSearchAndDetails() throws Exception {
         var light = Files.readString(Path.of("build", "themes", "light.css"));
         var dark = Files.readString(Path.of("build", "themes", "dark.css"));
@@ -91,10 +122,13 @@ class GalleryBrowserTest extends FxTest {
         var stage = new Stage[1];
         fx(() -> {
             app[0] = new App();
+            var defaults = ComponentConfig.defaults();
+            app[0].setConfig(new ComponentConfig(defaults.fontFamily(), 18, defaults.density(),
+                    defaults.radius(), defaults.motionEnabled(), defaults.locale()));
             view[0] = Gallery.createView(app[0], List.of(new Gallery.Palette("Default", light, dark)));
             app[0].setContent(view[0]);
             stage[0] = new Stage();
-            stage[0].setScene(new Scene(app[0], 1200, 800));
+            stage[0].setScene(new Scene(app[0], 1487, 1058));
             stage[0].show();
         });
         try {
@@ -133,7 +167,7 @@ class GalleryBrowserTest extends FxTest {
         var file = Path.of("build", "previews", name);
         try {
             Files.createDirectories(file.getParent());
-            WritableImage image = stage.getScene().snapshot(null);
+            WritableImage image = app.snapshot(null, null);
             var pixels = image.getPixelReader();
             var output = new BufferedImage((int) image.getWidth(), (int) image.getHeight(), BufferedImage.TYPE_INT_ARGB);
             for (int y = 0; y < output.getHeight(); y++)
