@@ -1,27 +1,27 @@
 package gallery
 
 import ui.Widget
-import ui.Column
-import ui.Row
-import ui.Text
+import ui.kit.Column
+import ui.kit.Row
+import ui.kit.Text
 import ui.Binding
 import theme.Color
 import theme.ThemeDefinition
 import theme.ThemeManager
-import ui.component.Button
-import ui.component.Alert
-import ui.component.Message
-import ui.component.Notification
-import ui.component.Progress
-import ui.component.Result
-import ui.component.Skeleton
-import ui.component.Spin
-import ui.component.Watermark
-import ui.component.Affix
-import ui.component.BorderBeam
-import ui.component.App
-import ui.component.ConfigProvider
-import ui.component.Surface
+import ui.kit.Button
+import ui.kit.Alert
+import ui.kit.Message
+import ui.kit.Notification
+import ui.kit.Progress
+import ui.kit.Result
+import ui.kit.Skeleton
+import ui.kit.Spin
+import ui.kit.Watermark
+import ui.kit.Affix
+import ui.kit.BorderBeam
+import ui.kit.App
+import ui.kit.ConfigProvider
+import ui.kit.Surface
 
 class AlertExample implements Widget {
   private Boolean closable = true

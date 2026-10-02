@@ -2,15 +2,15 @@ package gallery
 
 import ui.Widget
 import ui.Binding
-import ui.Text
-import ui.Column
-import ui.Row
+import ui.kit.Text
+import ui.kit.Column
+import ui.kit.Row
 import theme.Tone
 import theme.Appearance
-import ui.component.Button
-import ui.component.FloatButton
-import ui.component.Icon
-import ui.component.Typography
+import ui.kit.Button
+import ui.kit.FloatButton
+import ui.kit.Icon
+import ui.kit.Typography
 
 class ButtonExample implements Widget {
   private Integer presses = 0

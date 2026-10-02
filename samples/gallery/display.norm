@@ -1,35 +1,35 @@
 package gallery
 
 import ui.Widget
-import ui.Text
-import ui.Column as Vertical
-import ui.Row as Horizontal
+import ui.kit.Text
+import ui.kit.Column as Vertical
+import ui.kit.Row as Horizontal
 import ui.Binding
 import jdk.base.LocalDate
 import jdk.base.localDateOf
-import ui.component.Button as ActionButton
-import ui.component.Avatar
-import ui.component.Badge
-import ui.component.Calendar
-import ui.component.Card
-import ui.component.Carousel
-import ui.component.Collapse
-import ui.component.Description
-import ui.component.Descriptions
-import ui.component.Empty
-import ui.component.Image
-import ui.component.ListView
-import ui.component.Listy
-import ui.component.QRCode
-import ui.component.Segmented
-import ui.component.Statistic
-import ui.component.Table
-import ui.component.Column as DataColumn
-import ui.component.TableSort
-import ui.component.Tag
-import ui.component.Timeline
-import ui.component.TimelineEntry
-import ui.component.Tree
+import ui.kit.Button as ActionButton
+import ui.kit.Avatar
+import ui.kit.Badge
+import ui.kit.Calendar
+import ui.kit.Card
+import ui.kit.Carousel
+import ui.kit.Collapse
+import ui.kit.Description
+import ui.kit.Descriptions
+import ui.kit.Empty
+import ui.kit.Image
+import ui.kit.ListView
+import ui.kit.Listy
+import ui.kit.QRCode
+import ui.kit.Segmented
+import ui.kit.Statistic
+import ui.kit.Table
+import ui.kit.TableColumn as DataColumn
+import ui.kit.TableSort
+import ui.kit.Tag
+import ui.kit.Timeline
+import ui.kit.TimelineEntry
+import ui.kit.Tree
 
 class AvatarExample implements Widget {
   Boolean photo = false

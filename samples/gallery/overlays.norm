@@ -1,18 +1,18 @@
 package gallery
 
 import ui.Widget
-import ui.Text
-import ui.Column as Vertical
+import ui.kit.Text
+import ui.kit.Column as Vertical
 import ui.Binding
-import ui.component.Button as ActionButton
-import ui.component.Modal
-import ui.component.Drawer
-import ui.component.DrawerSide
-import ui.component.Popover
-import ui.component.Tooltip
-import ui.component.Popconfirm
-import ui.component.Tour
-import ui.component.TourStep
+import ui.kit.Button as ActionButton
+import ui.kit.Modal
+import ui.kit.Drawer
+import ui.kit.DrawerSide
+import ui.kit.Popover
+import ui.kit.Tooltip
+import ui.kit.Popconfirm
+import ui.kit.Tour
+import ui.kit.TourStep
 
 class ModalExample implements Widget {
   Boolean open = false

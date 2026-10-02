@@ -2,22 +2,22 @@ package gallery
 
 import ui.Widget
 import ui.Binding
-import ui.Text
-import ui.Column
-import ui.Row
-import ui.component.Button
-import ui.component.Anchor
-import ui.component.AnchorSection
-import ui.component.Breadcrumb
-import ui.component.BreadcrumbItem
-import ui.component.Dropdown
-import ui.component.Menu
-import ui.component.MenuGroup
-import ui.component.MenuItem
-import ui.component.Pagination
-import ui.component.Steps
-import ui.component.Tabs
-import ui.component.TabItem
+import ui.kit.Text
+import ui.kit.Column
+import ui.kit.Row
+import ui.kit.Button
+import ui.kit.Anchor
+import ui.kit.AnchorSection
+import ui.kit.Breadcrumb
+import ui.kit.BreadcrumbItem
+import ui.kit.Dropdown
+import ui.kit.Menu
+import ui.kit.MenuGroup
+import ui.kit.MenuItem
+import ui.kit.Pagination
+import ui.kit.Steps
+import ui.kit.Tabs
+import ui.kit.Tab
 
 class AnchorExample implements Widget {
   Widget build() {
@@ -128,16 +128,16 @@ class TabsExample implements Widget {
     var activeTitle = if selected == 0 { "概览" } else if selected == 1 { "成员" } else { "设置" }
     var current = Binding<Integer>(read: () { selected }, write: (Integer next) { selected = next })
     Column {
-      Tabs(items: [
-        TabItem(title: "概览", content: Column {
+      Tabs(tabs: [
+        Tab(title: "概览", content: Column {
           Text("项目概览与近期动态")
           Button(text: "刷新概览", action: () { actions = actions + 1 })
         }),
-        TabItem(title: "成员", content: Column {
+        Tab(title: "成员", content: Column {
           Text("团队成员与角色")
           Button(text: "邀请成员", action: () { actions = actions + 1 })
         }),
-        TabItem(title: "设置", content: Text("管理项目基础设置"))
+        Tab(title: "设置", content: Text("管理项目基础设置"))
       ], selected: current)
       Text("当前标签：${activeTitle}")
       Text("操作次数：${actions}")

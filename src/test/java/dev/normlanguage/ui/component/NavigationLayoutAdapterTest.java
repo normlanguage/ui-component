@@ -12,6 +12,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.*;
 
 class NavigationLayoutAdapterTest extends FxTest {
+    @Test void tabsKeepPagesNonClosableAcrossProjectionUpdates() throws Exception {
+        fx(() -> {
+            var tabs = new Tabs();
+            assertEquals(javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE, tabs.getTabClosingPolicy());
+            NavigationLayoutAdapter.tabs(tabs, List.of("First"), List.of(new Label("first")));
+            assertEquals(javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE, tabs.getTabClosingPolicy());
+        });
+    }
+
     @Test void gridReplacesBreakpointsAndPreservesContentNodes() throws Exception {
         fx(() -> {
             var grid = new Grid();

@@ -1,20 +1,20 @@
 package gallery
 
 import ui.Widget
-import ui.Text
-import ui.Column
-import ui.Row
-import ui.component.Button
-import ui.component.Divider
-import ui.component.Flex
-import ui.component.FlexItem
-import ui.component.Grid
-import ui.component.GridItem
-import ui.component.GridBreakpoint
-import ui.component.Layout
-import ui.component.Masonry
-import ui.component.Space
-import ui.component.Splitter
+import ui.kit.Text
+import ui.kit.Column
+import ui.kit.Row
+import ui.kit.Button
+import ui.kit.Divider
+import ui.kit.Flex
+import ui.kit.FlexItem
+import ui.kit.Grid
+import ui.kit.GridItem
+import ui.kit.GridBreakpoint
+import ui.kit.Layout
+import ui.kit.Masonry
+import ui.kit.Space
+import ui.kit.Splitter
 
 class DividerExample implements Widget {
   private Boolean vertical = false

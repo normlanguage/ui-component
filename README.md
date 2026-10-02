@@ -1,12 +1,12 @@
 # ui-component
 
-`ui.component` 是面向 Norm 应用的 JavaFX 组件库。公开组件实现 `ui.Widget`，用普通字段保存局部状态，用 `Binding<T>`连接可编辑值；`ui` 渲染器负责重绘、子树复用与释放。颜色由独立的 [`theme`](https://github.com/normlanguage/theme) 生成。
+`ui.kit` 是面向 Norm 应用的 JavaFX 组件库。公开组件实现 `ui.Widget`，用普通字段保存局部状态，用 `Binding<T>`连接可编辑值；`ui` 渲染器负责重绘、子树复用与释放。颜色由独立的 [`theme`](https://github.com/normlanguage/theme) 生成。
 
 ```norm
 import ui.Widget
-import ui.Column
-import ui.Text
-import ui.component.Button
+import ui.kit.Column
+import ui.kit.Text
+import ui.kit.Button
 
 class SaveExample implements Widget {
   private Integer saves = 0
@@ -20,23 +20,13 @@ class SaveExample implements Widget {
 }
 ```
 
-使用 Norm 0.26.2 或更新工具链，在应用模块中声明正式 GitHub 依赖：
+模块依赖以 [ui.kit/module.norm](ui/kit/module.norm) 为准。
 
-```norm
-Module module() {
-  module(dependencies: [
-    dependency(repository: "github", name: "ui", version: 5),
-    dependency(repository: "github", name: "ui.component", version: 4),
-    dependency(repository: "github", name: "theme", version: 1)
-  ])
-}
-```
+发布制品使用 `norm package ui/kit/fx --output build/repository` 和 `norm package ui/kit --output build/repository` 生成；GitHub Release 提供 `.nar` 与对应 `.sha256`。底层运行依赖由包携带，应用无需复制库源码。
 
-发布制品使用 `norm package ui/component/fx --output build/repository` 和 `norm package ui/component --output build/repository` 生成；GitHub Release 提供 `.nar` 与对应 `.sha256`。底层运行依赖由包携带，应用无需复制库源码。
+公开入口见 [ui.kit 模块](ui/kit/module.norm)及 [组件索引](docs/components.md)。[Norm 示例](samples/gallery)展示实际交互；可直接使用的 JavaFX 控件和绑定位于 [Java 源码](src/main/java/dev/normlanguage/ui/component)及底层模块 [`ui.kit.fx`](ui/kit/fx/module.norm)。应用代码以 Widget 层为入口，JavaFX 原生扩展通过 [`ui` 原生视图协议](https://github.com/normlanguage/ui)接入同一渲染树。
 
-公开入口见 [ui.component 模块](ui/component/module.norm)及 [组件索引](docs/components.md)。[Norm 示例](samples/gallery)展示实际交互；可直接使用的 JavaFX 控件和绑定位于 [Java 源码](src/main/java/dev/normlanguage/ui/component)及底层模块 [`ui.component.fx`](ui/component/fx/module.norm)。应用代码以 Widget 层为入口，JavaFX 原生扩展通过 [`ui` 原生视图协议](https://github.com/normlanguage/ui)接入同一渲染树。
-
-在 Windows 上运行示例：`.\scripts\gallery.ps1`。验证示例：`.\scripts\gallery.ps1 -Verify`。依赖仓库不在同级目录时可传 `-UiRoot`、`-UiFxRoot`、`-ThemeRoot` 和 `-JdkRoot`；Norm 编译器默认使用同级 `Norm` 仓库的构建产物，也可用 `NORM_EXECUTABLE` 指定。
+在 Windows 上运行示例：`.\scripts\gallery.ps1`。验证示例：`.\scripts\gallery.ps1 -Verify`。依赖仓库不在同级目录时可传 `-UiRoot`、`-UiFxRoot`、`-FxGraphicsRoot`、`-FxControlsRoot`、`-ThemeRoot` 和 `-JdkRoot`；Norm 编译器默认使用同级 `Norm` 仓库的构建产物，也可用 `NORM_EXECUTABLE` 指定。
 
 本地构建需要 JDK 25。Gradle 解析对应平台的 JavaFX 依赖；定向 Java 验证可运行：
 
