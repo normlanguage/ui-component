@@ -25,6 +25,7 @@ jobs:
           - PropertyInvariantTest
           - WatermarkTest
           - MotionTest
+          - CardLayoutTest
           - NavigationLayoutAdapterTest
           - InputAdapterTest
           - DisplayAdapterTest

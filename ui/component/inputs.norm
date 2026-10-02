@@ -65,6 +65,7 @@ import ui.component.fx.updateSearchableOptions
 import ui.component.fx.updateTreeOptions
 import ui.component.fx.updateTransferOptions
 import ui.component.fx.hostItems
+import ui.component.fx.inputAdapterInputSubmit
 import ui.component.fx.inputAdapterInputValue
 import ui.component.fx.inputAdapterMentionsValue
 import ui.component.fx.inputAdapterAutoCompleteValue
@@ -110,6 +111,7 @@ private class SelectionHost<C, T> {
 value Input implements Widget {
   String placeholder
   Binding<String> value
+  Function<Void()>? submit = null
   NodeKey? key = null
   Boolean enabled = true
 
@@ -121,8 +123,10 @@ value Input implements Widget {
       }, node: (host) { host.control },
       update: (host, scope) {
         host.control.setPromptText(placeholder)
+        var action = submit
+        inputAdapterInputSubmit(arg0: host.control, arg1: if action != null { scope.bind(action) } else { null })
         host.value.update(arg0: value.value, arg1: scope.bind((String? next) { if next != null { value.value = next } }))
-      }, close: (host) { host.value.close() }, key: key, enabled: enabled)
+      }, close: (host) { inputAdapterInputSubmit(arg0: host.control, arg1: null) host.value.close() }, key: key, enabled: enabled)
   }
 }
 

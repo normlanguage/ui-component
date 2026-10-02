@@ -5,6 +5,7 @@ import javafx.scene.Node;
 
 public final class Util {
     private Util() {}
+    public static void style(Node node, String css) { node.setStyle(css); }
     public static <T> java.util.List<T> emptyItems() { return new java.util.ArrayList<>(); }
     public static void requireFxThread() {
         if (!Platform.isFxApplicationThread()) throw new IllegalStateException("JavaFX application thread required");

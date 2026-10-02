@@ -20,6 +20,20 @@ class SaveExample implements Widget {
 }
 ```
 
+使用 Norm 0.26.1 或更新工具链，在应用模块中声明正式 GitHub 依赖：
+
+```norm
+Module module() {
+  module(dependencies: [
+    dependency(repository: "github", name: "ui", version: 4),
+    dependency(repository: "github", name: "ui.component", version: 2),
+    dependency(repository: "github", name: "theme", version: 1)
+  ])
+}
+```
+
+发布制品使用 `norm package ui/component/fx --output build/repository` 和 `norm package ui/component --output build/repository` 生成；GitHub Release 提供 `.nar` 与对应 `.sha256`。底层运行依赖由包携带，应用无需复制库源码。
+
 公开入口见 [ui.component 模块](ui/component/module.norm)及 [组件索引](docs/components.md)。[Norm 示例](samples/gallery)展示实际交互；可直接使用的 JavaFX 控件和绑定位于 [Java 源码](src/main/java/dev/normlanguage/ui/component)及底层模块 [`ui.component.fx`](ui/component/fx/module.norm)。应用代码以 Widget 层为入口，JavaFX 原生扩展通过 [`ui` 原生视图协议](https://github.com/normlanguage/ui)接入同一渲染树。
 
 在 Windows 上运行示例：`.\scripts\gallery.ps1`。验证示例：`.\scripts\gallery.ps1 -Verify`。依赖仓库不在同级目录时可传 `-UiRoot`、`-UiFxRoot`、`-ThemeRoot` 和 `-JdkRoot`；Norm 编译器默认使用同级 `Norm` 仓库的构建产物，也可用 `NORM_EXECUTABLE` 指定。

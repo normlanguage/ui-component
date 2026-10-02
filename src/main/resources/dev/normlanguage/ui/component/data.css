@@ -150,7 +150,7 @@
 .norm-root:themed .norm-collapse > .content { -fx-background-color: -norm-surface-raised; -fx-border-color: transparent; }
 .norm-card, .norm-popover, .norm-message { -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-width: 1; -fx-padding: 16; }
 .norm-root:themed.norm-card, .norm-root:themed.norm-popover,
-.norm-root:themed .norm-card, .norm-root:themed .norm-popover, .norm-root:themed .norm-message {
+.norm-root:themed .norm-popover, .norm-root:themed .norm-message {
     -fx-background-color: -norm-surface-raised;
     -fx-border-color: -norm-divider;
 }
@@ -162,10 +162,15 @@
 .norm-badge-indicator { -fx-background-radius: 100; -fx-padding: 2 6; -fx-font-size: 10; -fx-font-weight: bold; }
 .norm-root:themed .norm-badge-indicator { -fx-background-color: -norm-danger-filled-normal-background; -fx-text-fill: -norm-danger-filled-normal-foreground; }
 .norm-tag { -fx-alignment: center; -fx-spacing: 4; -fx-background-radius: 5; -fx-padding: 4 8; }
-.norm-root:themed .norm-tag { -fx-background-color: -norm-neutral-soft-normal-background; }
-.norm-root:themed .norm-tag .label { -fx-text-fill: -norm-neutral-soft-normal-foreground; }
-.norm-root:themed .norm-tag .button { -fx-background-color: transparent; -fx-border-color: transparent; -fx-border-width: 0; -fx-text-fill: -norm-neutral-soft-normal-foreground; -fx-padding: 0 3; }
-.norm-root:themed .norm-tag .button:hover { -fx-background-color: -norm-neutral-soft-hovered-background; }
+.norm-root:themed .norm-tag { -fx-background-color: -norm-surface-background; }
+.norm-root:themed .norm-tag .label { -fx-text-fill: -norm-surface-foreground; }
+.norm-root:themed .norm-tag .button { -fx-background-color: transparent; -fx-border-color: transparent; -fx-border-width: 0; -fx-text-fill: -norm-surface-foreground; -fx-padding: 0 3; }
+.norm-root:themed .norm-tag .button:hover { -fx-background-color: -norm-surface-hover; }
 .norm-root:themed .progress-bar .track, .norm-root:themed .progress-indicator .track { -fx-background-color: -norm-neutral-soft-normal-background; -fx-background-insets: 0; -fx-background-radius: 100; }
 .norm-root:themed .progress-bar .bar { -fx-background-color: -norm-primary-filled-normal-background; -fx-background-insets: 0; -fx-background-radius: 100; }
 .norm-root:themed .progress-indicator { -fx-progress-color: -norm-primary-filled-normal-background; }
+
+.norm-root:themed .norm-card { -fx-background-color: -norm-surface-background; -fx-border-color: -norm-surface-border; }
+
+.norm-card { -norm-surface-background: -norm-surface-raised; -norm-surface-border: -norm-divider; }
+.norm-tag { -norm-surface-background: -norm-neutral-soft-normal-background; -norm-surface-foreground: -norm-neutral-soft-normal-foreground; -norm-surface-hover: -norm-neutral-soft-hovered-background; }

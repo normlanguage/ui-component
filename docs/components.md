@@ -14,3 +14,5 @@
 | 根配置与组合 | [configuration.norm](../ui/component/configuration.norm)、[surface.norm](../ui/component/surface.norm) | [status.norm](../samples/gallery/status.norm) |
 
 [Norm 组件测试](../ui/component/tests)覆盖 Widget 入口，[JavaFX 定向测试](../src/test/java/dev/normlanguage/ui/component)覆盖原生控件与投影桥。原生控件需要直接嵌入 JavaFX 应用时，以对应 Java 类为入口；Norm 应用直接使用本表的 Widget。
+
+布局对齐与卡片标题区域的原生验证：[CardLayoutTest](../src/test/java/dev/normlanguage/ui/component/CardLayoutTest.java)。语义颜色参数复用 [`theme`](https://github.com/normlanguage/theme)，组件映射以 [connection.norm](../ui/component/fx/connection.norm) 为准。

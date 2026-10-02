@@ -23,6 +23,10 @@ public final class InputAdapter {
 
     private InputAdapter() {}
 
+    public static void inputSubmit(Input control, Runnable action) {
+        control.setOnAction(action == null ? null : event -> action.run());
+    }
+
     public static ValueLink<String> inputValue(Input control) { return ValueLink.text(control); }
     public static ValueLink<String> mentionsValue(Mentions control) { return ValueLink.text(control); }
     public static ValueLink<String> autoCompleteValue(AutoComplete control) { return ValueLink.text(control.getEditor()); }
