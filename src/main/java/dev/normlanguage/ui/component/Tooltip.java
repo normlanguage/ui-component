@@ -19,6 +19,7 @@ public final class Tooltip implements AutoCloseable {
     private final ChangeListener<javafx.scene.Scene> sceneChanged;
     private App owner;
     private boolean closed;
+    private Runnable onHidden;
 
     public Tooltip(Node anchor, String text) {
         this.anchor = Objects.requireNonNull(anchor);
@@ -32,7 +33,10 @@ public final class Tooltip implements AutoCloseable {
         popup.setOnShowing(event -> {
             theme.connect();
         });
-        popup.setOnHidden(event -> theme.close());
+        popup.setOnHidden(event -> {
+            theme.close();
+            if (onHidden != null) onHidden.run();
+        });
         focusDelay.setOnFinished(event -> {
             if (anchor.isFocused()) show();
         });
@@ -61,6 +65,7 @@ public final class Tooltip implements AutoCloseable {
     }
     public ConfigProvider getContentRoot() { return contentRoot; }
     public boolean isShowing() { return popup.isShowing(); }
+    public void setOnHidden(Runnable action) { onHidden = action; }
     public boolean isClosed() { return closed; }
     public void show() {
         Util.requireFxThread();

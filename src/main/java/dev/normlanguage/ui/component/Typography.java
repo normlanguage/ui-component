@@ -30,6 +30,8 @@ public class Typography extends Label {
     public Typography() { this(""); }
     public Typography(String text) {
         super(text);
+        setWrapText(true);
+        setMaxWidth(Double.MAX_VALUE);
         getStyleClass().add("norm-typography");
         copy.setOnAction(event -> {
             var content = new ClipboardContent();

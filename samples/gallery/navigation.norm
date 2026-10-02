@@ -1,0 +1,146 @@
+package gallery
+
+import ui.Widget
+import ui.Binding
+import ui.Text
+import ui.Column
+import ui.Row
+import ui.component.Button
+import ui.component.Anchor
+import ui.component.AnchorSection
+import ui.component.Breadcrumb
+import ui.component.BreadcrumbItem
+import ui.component.Dropdown
+import ui.component.Menu
+import ui.component.MenuGroup
+import ui.component.MenuItem
+import ui.component.Pagination
+import ui.component.Steps
+import ui.component.Tabs
+import ui.component.TabItem
+
+class AnchorExample implements Widget {
+  Widget build() {
+    Column {
+      Anchor(sections: [
+        AnchorSection(title: "概览", content: Column {
+          Text("项目概览") Text("当前有三个进行中的任务") Text("负责人：产品与设计团队")
+        }),
+        AnchorSection(title: "进度", content: Column {
+          Text("本周进度") Text("需求已确认") Text("交互稿正在评审") Text("组件示例持续补充")
+        }),
+        AnchorSection(title: "下一步", content: Column {
+          Text("后续安排") Text("完成验收清单") Text("准备发布说明")
+        })
+      ])
+    }
+  }
+}
+
+class BreadcrumbExample implements Widget {
+  private String current = "组件"
+
+  Widget build() {
+    Column {
+      Breadcrumb(items: [
+        BreadcrumbItem(text: "首页", action: () { current = "首页" }),
+        BreadcrumbItem(text: "组件", action: () { current = "组件" }),
+        BreadcrumbItem(text: "详情", action: () { current = "详情" })
+      ])
+      Text("当前层级：${current}")
+    }
+  }
+}
+
+class DropdownExample implements Widget {
+  private String choice = "尚未选择"
+
+  Widget build() {
+    Column {
+      Text("点击更多操作，选择一项")
+      Dropdown(text: "更多操作", content: Column {
+        Button(text: "复制链接", action: () { choice = "已复制链接" })
+        Button(text: "分享项目", action: () { choice = "已选择分享项目" })
+        Button(text: "保存草稿", action: () { choice = "已保存草稿" })
+      })
+      Text(choice)
+    }
+  }
+}
+
+class MenuExample implements Widget {
+  private String selected = "尚未操作"
+
+  Widget build() {
+    Column {
+      Menu(groups: [
+        MenuGroup(title: "文件", items: [
+          MenuItem(text: "新建", action: () { selected = "新建文件" }),
+          MenuItem(text: "打开", action: () { selected = "打开文件" })
+        ]),
+        MenuGroup(title: "编辑", items: [
+          MenuItem(text: "复制", action: () { selected = "复制内容" }),
+          MenuItem(text: "查找", action: () { selected = "查找内容" })
+        ])
+      ])
+      Text("最近操作：${selected}")
+    }
+  }
+}
+
+class PaginationExample implements Widget {
+  private Integer page = 1
+
+  Widget build() {
+    var current = Binding<Integer>(read: () { page }, write: (Integer next) { page = next })
+    Column {
+      Pagination(totalItems: 48, pageSize: 8, currentPage: current)
+      Text("当前显示第 ${page} 页，每页八条数据")
+      Row {
+        Button(text: "第一页", action: () { page = 1 })
+        Button(text: "最后一页", action: () { page = 6 })
+      }
+    }
+  }
+}
+
+class StepsExample implements Widget {
+  private Integer step = 0
+
+  Widget build() {
+    var current = Binding<Integer>(read: () { step }, write: (Integer next) { step = next })
+    Column {
+      Steps(titles: ["填写信息", "确认内容", "完成"], currentStep: current)
+      Text(if step == 2 { "流程已完成" } else { "按顺序推进流程" })
+      Row {
+        Button(text: "上一步", enabled: step > 0, action: () { step = step - 1 })
+        Button(text: "下一步", enabled: step < 2, action: () { step = step + 1 })
+      }
+    }
+  }
+}
+
+class TabsExample implements Widget {
+  private Integer selected = 0
+  private Integer actions = 0
+
+  Widget build() {
+    var activeTitle = if selected == 0 { "概览" } else if selected == 1 { "成员" } else { "设置" }
+    var current = Binding<Integer>(read: () { selected }, write: (Integer next) { selected = next })
+    Column {
+      Tabs(items: [
+        TabItem(title: "概览", content: Column {
+          Text("项目概览与近期动态")
+          Button(text: "刷新概览", action: () { actions = actions + 1 })
+        }),
+        TabItem(title: "成员", content: Column {
+          Text("团队成员与角色")
+          Button(text: "邀请成员", action: () { actions = actions + 1 })
+        }),
+        TabItem(title: "设置", content: Text("管理项目基础设置"))
+      ], selected: current)
+      Text("当前标签：${activeTitle}")
+      Text("操作次数：${actions}")
+    }
+  }
+}

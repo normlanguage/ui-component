@@ -27,6 +27,7 @@ public final class Drawer implements AutoCloseable {
     private OverlayHost host;
     private Node previousFocus;
     private boolean closed;
+    private Runnable onHidden;
 
     public Drawer(Node anchor, Node content, Side side) { this(anchor, content, side, ContentOwnership.OWNED); }
     public Drawer(Node anchor, Node content, Side side, ContentOwnership ownership) {
@@ -65,6 +66,7 @@ public final class Drawer implements AutoCloseable {
         overlay.setFocusTraversable(true);
     }
     public boolean isShowing() { return host != null; }
+    public void setOnHidden(Runnable action) { onHidden = action; }
     public ConfigProvider getContentRoot() { return panel; }
     public void show() {
         Util.requireFxThread();
@@ -101,6 +103,7 @@ public final class Drawer implements AutoCloseable {
         window = null;
         if (previousFocus != null && previousFocus.getScene() != null) previousFocus.requestFocus();
         previousFocus = null;
+        if (onHidden != null) onHidden.run();
     }
     @Override public void close() {
         Util.requireFxThread();

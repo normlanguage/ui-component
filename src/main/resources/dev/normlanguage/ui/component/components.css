@@ -2,6 +2,7 @@
 @import "data.css";
 
 .norm-root { -fx-font-smoothing-type: gray; }
+.norm-root .label.norm-destructive { -fx-text-fill: -norm-danger-plain-normal-foreground; }
 .norm-root:themed {
     -fx-base: -norm-surface;
     -fx-background: -norm-canvas;

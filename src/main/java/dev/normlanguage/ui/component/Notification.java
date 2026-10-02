@@ -17,7 +17,8 @@ public final class Notification {
     }
     public int getVisibleCount() { return queue.getChildren().size(); }
     Node getContainer() { return queue; }
-    public Handle show(String title, Node content) {
+    public Handle show(String title, Node content) { return show(title, content, () -> {}); }
+    public Handle show(String title, Node content, Runnable dismissed) {
         Util.requireFxThread();
         var dismiss = new Button("×");
         var box = new VBox(8, new Label(title), content, dismiss);
@@ -34,6 +35,7 @@ public final class Notification {
                 queue.getChildren().remove(box);
                 app.release(this);
                 if (queue.getChildren().isEmpty()) app.getChildren().remove(queue);
+                dismissed.run();
             }
         }
         var entry = new Entry();

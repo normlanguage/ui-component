@@ -142,20 +142,6 @@ class DisplayControlsTest extends FxTest {
         fx(() -> assertTrue(treeHolder.get().getRoot().getChildren().isEmpty()));
     }
 
-    @Test void galleryConstructsEachDisplayComponent() throws Exception {
-        fx(() -> {
-            var app = new App();
-            var examples = dev.normlanguage.ui.component.gallery.DisplayExamples.components(app);
-            assertEquals(18, examples.size());
-            examples.forEach(example -> {
-                var view = example.factory().get();
-                assertNotNull(view);
-                Util.closeTree(view);
-            });
-            app.close();
-        });
-    }
-
     @Test void imageCancelsOnDetachAndLoadsAgainOnRemount() throws Exception {
         var source = DisplayControlsTest.class.getResource("image.png").toExternalForm();
         fx(() -> {

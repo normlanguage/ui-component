@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "dev.normlanguage"
-version = "1"
+version = "2"
 
 repositories { mavenCentral() }
 
@@ -34,10 +34,8 @@ tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.add("-parameters")
 }
 tasks.processResources {
-    from("src/main/java") {
-        include("dev/normlanguage/ui/component/**/*.java")
-        into("gallery-source")
-    }
+    from("samples/gallery") { include("**/*.norm"); exclude("tests/**"); into("norm-source/samples/gallery") }
+    from("ui/component") { include("*.norm"); into("norm-source/ui/component") }
 }
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()

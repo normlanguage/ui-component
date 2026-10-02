@@ -17,5 +17,6 @@ public final class Popconfirm implements AutoCloseable {
     public void show() { popover.show(); }
     public void hide() { popover.hide(); }
     public boolean isShowing() { return popover.isShowing(); }
+    public void setOnHidden(Runnable action) { popover.setOnHidden(action); }
     @Override public void close() { popover.close(); }
 }

@@ -1,23 +1,128 @@
 package gallery
 
-import theme.Color
+import ui.Widget
+import ui.DesktopApp
+import ui.Text
+import ui.Column
+import ui.Row
+import ui.Scroll
+import ui.WidgetRole
+import ui.Binding
+import theme.ThemeManager
 import theme.ThemeDefinition
 import theme.ThemeMode
-import theme.generateTheme
-import ui.component.themeCss
-import ui.component.utilEmptyItems
+import theme.Color
+import theme.Tone
+import theme.Appearance
+import ui.component.configuration
+import ui.component.App
+import ui.component.Button
+import ui.component.Input
+import ui.component.Layout
+import ui.component.Surface
+import ui.component.Typography
+import ui.component.resourceText
 
 Void main() {
-  var palettes = utilEmptyItems<GalleryPalette>()!!
-  for item : [palette(name: "蓝色", primary: "#1677FF"), palette(name: "紫色", primary: "#722ED1"), palette(name: "绿色", primary: "#13A874")] {
-    palettes.add(item)
-  }
-  galleryOpen(palettes)
+  var theme = ThemeManager(ThemeDefinition(primary: Color(hex: "#1677FF"), neutral: Color(hex: "#808080")))
+  try { DesktopApp(title: "Norm · Components", home: Gallery(theme: theme), width: 1440.0, height: 1000.0).run() }
+  finally { theme.close() }
 }
 
-private GalleryPalette palette(String name, String primary) {
-  var definition = ThemeDefinition(primary: Color(hex: primary), neutral: Color(hex: "#808080"))
-  galleryPaletteNew(arg0: name,
-    arg1: themeCss(generateTheme(definition, mode: ThemeMode.Light)),
-    arg2: themeCss(generateTheme(definition, mode: ThemeMode.Dark)))
+private value GallerySelection {
+  GalleryPage page
+  Widget example
+}
+
+class Gallery implements Widget {
+  ThemeManager theme
+  private List<GalleryPage> pages
+  private String query = ""
+  private Boolean dark = false
+  private Boolean motion = true
+  private GallerySelection selection
+  private Boolean showCode = false
+  private Boolean showApi = false
+
+  Gallery(ThemeManager theme) {
+    this.theme = theme
+    pages = galleryPages()
+    selection = GallerySelection(page: pages[0], example: pages[0].create())
+  }
+
+  Void select(GalleryPage page) {
+    selection = GallerySelection(page: page, example: page.create())
+    showCode = false
+    showApi = false
+  }
+
+  Widget build() {
+    var selected = selection.page
+    var example = selection.example
+    App(theme: theme, config: configuration(fontFamily: "Microsoft YaHei UI", motionEnabled: motion), stylesheet: "/dev/normlanguage/ui/component/gallery/norm-gallery.css", content:
+      Layout(top: Surface(styleClass: "gallery-header", content: Row {
+        Text(text: "NORM", role: WidgetRole.Title)
+        Text(text: "Components", role: WidgetRole.Muted)
+        Button(text: if motion { "动画：开" } else { "动画：关" }, tone: Tone.Neutral, appearance: Appearance.Plain,
+          action: () { motion = !motion })
+        Button(text: if dark { "浅色" } else { "深色" }, tone: Tone.Neutral, appearance: Appearance.Plain,
+          action: () { dark = !dark theme.setMode(if dark { ThemeMode.Dark } else { ThemeMode.Light }) })
+      }), left: Surface(styleClass: "gallery-sidebar", content: Column {
+        Input(value: Binding<String>(read: () { query }, write: (String next) { query = next }), placeholder: "搜索组件")
+        Scroll(child: Column {
+          for category : ["通用", "布局", "导航", "数据录入", "数据展示", "反馈", "其他"] {
+            Text(text: category, role: WidgetRole.Muted)
+            for page : pages {
+              if page.category == category && (query.isBlank || (page.name + page.chinese).toLowercase().contains(value: query.toLowercase())) {
+                Button(text: page.name + "  " + page.chinese,
+                  tone: if selected.name == page.name { Tone.Primary } else { Tone.Neutral },
+                  appearance: if selected.name == page.name { Appearance.Soft } else { Appearance.Plain },
+                  action: () { this.select(page) })
+              }
+            }
+          }
+        })
+      }), center: Scroll(child: Surface(styleClass: "gallery-document", content: Column {
+        Text(text: selected.category + " / " + selected.name, role: WidgetRole.Muted)
+        Text(text: selected.name + "  " + selected.chinese, role: WidgetRole.Title)
+        Typography(text: selected.summary)
+        Text(text: "何时使用", role: WidgetRole.Title)
+        Typography(text: selected.whenToUse)
+        Text(text: "交互示例", role: WidgetRole.Title)
+        Surface(styleClass: "gallery-preview", minimumHeight: 180.0, content: example)
+        Row {
+          Button(text: if showCode { "收起源码" } else { "查看 Norm 源码" }, tone: Tone.Neutral,
+            appearance: Appearance.Outlined, action: () { showCode = !showCode })
+          Button(text: if showApi { "收起 API" } else { "组件 API" }, tone: Tone.Neutral,
+            appearance: Appearance.Plain, action: () { showApi = !showApi })
+        }
+        if showCode {
+          Text(text: selected.source, role: WidgetRole.Muted)
+          Surface(styleClass: "gallery-code", content: Typography(text: sourceDeclaration(file: selected.source, symbol: selected.symbol), copyable: true))
+        }
+        if showApi {
+          Text(text: selected.api, role: WidgetRole.Muted)
+          Surface(styleClass: "gallery-code", content: Typography(text: sourceDeclaration(file: selected.api, symbol: selected.apiSymbol), copyable: true))
+        }
+        Text(text: "组合与状态", role: WidgetRole.Title)
+        Typography(text: "布局由 Widget 组合完成。可交互值通过 Binding 连接普通字段；移除组件时自动清理监听、动画和弹层。主题从外层 App 或 ConfigProvider 继承。")
+      }))))
+  }
+}
+
+String sourceDeclaration(String file, String symbol) {
+  var source = resourceText("/norm-source/" + file)
+  var active = false
+  var result = ""
+  for line : source.split(separator: "\n") {
+    if line.startsWith(prefix: "class " + symbol) || line.startsWith(prefix: "value " + symbol) {
+      active = true
+    }
+    if active {
+      result = result + line + "\n"
+      if line.trim() == "}" && !line.startsWith(prefix: " ") { return result }
+    }
+  }
+  if active { return result }
+  source
 }

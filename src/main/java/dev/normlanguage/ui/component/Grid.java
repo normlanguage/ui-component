@@ -6,6 +6,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Priority;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
@@ -32,6 +33,13 @@ public class Grid extends GridPane {
         if (minimumWidth < 0 || !Double.isFinite(minimumWidth)) throw new IllegalArgumentException("Minimum width must be finite and nonnegative");
         if (columns < 1) throw new IllegalArgumentException("Columns must be positive");
         responsiveColumns.put(minimumWidth, columns);
+        reflow();
+    }
+    void replaceResponsiveColumns(Map<Double, Integer> breakpoints) {
+        responsiveColumns.clear();
+        responsiveColumns.putAll(breakpoints);
+        getColumnConstraints().clear();
+        appliedColumns = 0;
         reflow();
     }
     public void addItem(Node child, int span) {

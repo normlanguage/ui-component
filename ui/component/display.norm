@@ -1,0 +1,484 @@
+package ui.component
+
+import ui.Widget
+import ui.NodeKey
+import ui.Binding
+import std.collections.MutableList
+import jdk.base.LocalDate
+import jdk.base.YearMonth
+import ui.component.fx.Avatar as AvatarControl
+import ui.component.fx.Badge as BadgeControl
+import ui.component.fx.Calendar as CalendarControl
+import ui.component.fx.Card as CardControl
+import ui.component.fx.Carousel as CarouselControl
+import ui.component.fx.Collapse as CollapseControl
+import ui.component.fx.Descriptions as DescriptionsControl
+import ui.component.fx.Empty as EmptyControl
+import ui.component.fx.Image as ImageControl
+import ui.component.fx.ListView as ListControl
+import ui.component.fx.Listy as ListyControl
+import ui.component.fx.QRCode as QRCodeControl
+import ui.component.fx.Segmented as SegmentedControl
+import ui.component.fx.Statistic as StatisticControl
+import ui.component.fx.Table as TableControl
+import ui.component.fx.Tag as TagControl
+import ui.component.fx.Timeline as TimelineControl
+import ui.component.fx.Tree as TreeControl
+import ui.component.fx.ValueLink
+import ui.component.fx.SelectionLink
+import ui.component.fx.TreeSelectionLink
+import ui.component.fx.TableSortState as NativeTableSort
+import ui.component.fx.TableSortLink
+import ui.component.fx.TreeCheckLink
+import ui.component.fx.tableSortStateNew
+import ui.component.fx.tableSortLinkNew
+import ui.component.fx.treeCheckLinkNew
+import ui.component.fx.avatarNew
+import ui.component.fx.calendarNew
+import ui.component.fx.carouselNew
+import ui.component.fx.descriptionsNew
+import ui.component.fx.emptyNew
+import ui.component.fx.imageNew
+import ui.component.fx.listViewNew
+import ui.component.fx.listyNew
+import ui.component.fx.qrCodeNew
+import ui.component.fx.segmented
+import ui.component.fx.tableNew
+import ui.component.fx.tagNew
+import ui.component.fx.timelineNew
+import ui.component.fx.treeNew
+import ui.component.fx.displayAdapterAvatarSource
+import ui.component.fx.displayAdapterBadge
+import ui.component.fx.displayAdapterBadgeContent
+import ui.component.fx.displayAdapterCalendarValue
+import ui.component.fx.displayAdapterCalendarMonth
+import ui.component.fx.displayAdapterCard
+import ui.component.fx.displayAdapterCardSlots
+import ui.component.fx.displayAdapterCarouselSlides
+import ui.component.fx.displayAdapterCollapse
+import ui.component.fx.displayAdapterCollapseContent
+import ui.component.fx.displayAdapterCollapseExpanded
+import ui.component.fx.displayAdapterDescriptions
+import ui.component.fx.displayAdapterItems
+import ui.component.fx.displayAdapterRows
+import ui.component.fx.displayAdapterSegmentedItems
+import ui.component.fx.displayAdapterSegmentedValue
+import ui.component.fx.displayAdapterSelected
+import ui.component.fx.displayAdapterStatistic
+import ui.component.fx.displayAdapterStatisticValue
+import ui.component.fx.displayAdapterTableSelected
+import ui.component.fx.displayAdapterTagOnClose
+import ui.component.fx.displayAdapterTimeline
+import ui.component.fx.displayAdapterTreeChildren
+import ui.component.fx.displayAdapterTreeSelected
+import ui.component.fx.hostItems
+import ui.component.fx.utilCloseNode
+
+value Avatar implements Widget {
+  String text
+  String? source = null
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<AvatarControl>(kind: "ui.component.Avatar",
+      create: () { avatarNew(text) }, node: (control) { control },
+      update: (control, scope) {
+        control.setText(text)
+        displayAdapterAvatarSource(arg0: control, arg1: source)
+      }, close: (control) { utilCloseNode(control) }, key: key)
+  }
+}
+
+value Badge implements Widget {
+  Widget content
+  Integer count = 0
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<BadgeControl>(kind: "ui.component.Badge",
+      create: () { displayAdapterBadge()!! }, node: (control) { control },
+      update: (control, scope) { control.setCount(count) }, children: [content],
+      arrange: (control, nodes) { displayAdapterBadgeContent(arg0: control, arg1: nodes[0]) },
+      close: (control) { utilCloseNode(control) }, key: key)
+  }
+}
+
+private class CalendarHost {
+  CalendarControl control
+  ValueLink<LocalDate?> selected
+  ValueLink<YearMonth?> month
+}
+
+value Calendar implements Widget {
+  Binding<LocalDate?> selected
+  Binding<YearMonth>? displayedMonth = null
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<CalendarHost>(kind: "ui.component.Calendar",
+      create: () {
+        var control = calendarNew()
+        CalendarHost(control: control, selected: displayAdapterCalendarValue(control)!!, month: displayAdapterCalendarMonth(control)!!)
+      }, node: (host) { host.control },
+      update: (host, scope) {
+        var selectedChanged = scope.bind((LocalDate? next) { selected.value = next })
+        host.selected.update(arg0: selected.value, arg1: selectedChanged)
+        var currentMonth = displayedMonth
+        if currentMonth != null {
+          var monthChanged = scope.bind((YearMonth? next) { currentMonth.value = next!! })
+          host.month.update(arg0: currentMonth.value, arg1: monthChanged)
+        } else { host.month.unbind() }
+      }, close: (host) {
+        host.selected.close()
+        host.month.close()
+        host.control.close()
+      }, key: key)
+  }
+}
+
+value Card implements Widget {
+  String title
+  Widget content
+  Widget? bottom = null
+  NodeKey? key = null
+
+  Widget build() {
+    List<Widget> children = [content]
+    var footer = bottom
+    if footer != null { children.add(footer) }
+    nativeComponent<CardControl>(kind: "ui.component.Card",
+      create: () { displayAdapterCard(title)!! }, node: (control) { control },
+      update: (control, scope) { control.setTitle(title) }, children: children,
+      arrange: (control, nodes) { displayAdapterCardSlots(arg0: control, arg1: nodes[0], arg2: if footer != null { nodes[1] } else { null }) },
+      close: (control) { utilCloseNode(control) }, key: key)
+  }
+}
+
+value Carousel implements Widget {
+  List<Widget> slides
+  Integer index = 0
+  Boolean autoPlay = false
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<CarouselControl>(kind: "ui.component.Carousel",
+      create: () { carouselNew() }, node: (control) { control },
+      update: (control, scope) {
+        control.setAutoPlay(autoPlay)
+      }, children: slides,
+      arrange: (control, nodes) {
+        displayAdapterCarouselSlides(arg0: control, arg1: hostItems(nodes))
+        if nodes.size() > index { control.setIndex(index) }
+      },
+      close: (control) { control.close() }, key: key)
+  }
+}
+
+private class CollapseHost {
+  CollapseControl control
+  ValueLink<Boolean?> expanded
+}
+
+value Collapse implements Widget {
+  String title
+  Widget content
+  Binding<Boolean> expanded
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<CollapseHost>(kind: "ui.component.Collapse",
+      create: () {
+        var control = displayAdapterCollapse(title)
+        CollapseHost(control: control!!, expanded: displayAdapterCollapseExpanded(control!!)!!)
+      }, node: (host) { host.control },
+      update: (host, scope) {
+        host.control.setText(title)
+        var changed = scope.bind((Boolean? next) { expanded.value = next!! })
+        host.expanded.update(arg0: expanded.value, arg1: changed)
+      }, children: [content],
+      arrange: (host, nodes) { displayAdapterCollapseContent(arg0: host.control, arg1: nodes[0]) },
+      close: (host) { host.expanded.close() host.control.close() }, key: key)
+  }
+}
+
+value Description {
+  String label
+  Widget content
+}
+
+value Descriptions implements Widget {
+  List<Description> items
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<DescriptionsControl>(kind: "ui.component.Descriptions",
+      create: () { descriptionsNew() }, node: (control) { control },
+      update: (control, scope) {}, children: [for (item : items) item.content],
+      arrange: (control, nodes) { displayAdapterDescriptions(arg0: control, arg1: hostItems([for (item : items) item.label]), arg2: hostItems(nodes)) },
+      close: (control) { utilCloseNode(control) }, key: key)
+  }
+}
+
+value Empty implements Widget {
+  String description
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<EmptyControl>(kind: "ui.component.Empty",
+      create: () { emptyNew(description) }, node: (control) { control },
+      update: (control, scope) { control.setDescription(description) },
+      close: (control) { utilCloseNode(control) }, key: key)
+  }
+}
+
+value Image implements Widget {
+  String source
+  Boolean previewable = false
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<ImageControl>(kind: "ui.component.Image",
+      create: () { imageNew(source) }, node: (control) { control },
+      update: (control, scope) {
+        control.setSource(source)
+        control.setPreviewable(previewable)
+      }, close: (control) { utilCloseNode(control) }, key: key)
+  }
+}
+
+private class ListHost<T> {
+  ListControl<T?> control
+  SelectionLink<T?> selected
+}
+
+value ListView<T> implements Widget {
+  List<T> items
+  Binding<T?>? selected = null
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<ListHost<T>>(kind: "ui.component.ListView",
+      create: () {
+        var control = listViewNew<T?>()
+        ListHost<T>(control: control, selected: displayAdapterSelected(control)!!)
+      }, node: (host) { host.control },
+      update: (host, scope) {
+        displayAdapterItems(arg0: host.control, arg1: hostItems(items))
+        var selection = selected
+        if selection != null {
+          var changed = scope.bind((T? next) { selection.value = next })
+          host.selected.update(arg0: selection.value, arg1: changed)
+        } else { host.selected.unbind() }
+      }, close: (host) { host.selected.close() utilCloseNode(host.control) }, key: key)
+  }
+}
+
+private class ListyHost<T> {
+  ListyControl<T?> control
+  SelectionLink<T?> selected
+}
+
+value Listy<T> implements Widget {
+  List<T> items
+  Double rowHeight = 32.0
+  Binding<T?>? selected = null
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<ListyHost<T>>(kind: "ui.component.Listy",
+      create: () {
+        var control = listyNew<T?>()
+        ListyHost<T>(control: control, selected: displayAdapterSelected(control)!!)
+      }, node: (host) { host.control },
+      update: (host, scope) {
+        host.control.setRowHeight(rowHeight)
+        displayAdapterItems(arg0: host.control, arg1: hostItems(items))
+        var selection = selected
+        if selection != null {
+          var changed = scope.bind((T? next) { selection.value = next })
+          host.selected.update(arg0: selection.value, arg1: changed)
+        } else { host.selected.unbind() }
+      }, close: (host) { host.selected.close() utilCloseNode(host.control) }, key: key)
+  }
+}
+
+value QRCode implements Widget {
+  String text
+  Integer size = 144
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<QRCodeControl>(kind: "ui.component.QRCode",
+      create: () { qrCodeNew(arg0: text, arg1: size) }, node: (control) { control },
+      update: (control, scope) { control.setText(text) control.setSize(size) },
+      close: (control) { utilCloseNode(control) }, key: key)
+  }
+}
+
+private class SegmentedHost<T> {
+  SegmentedControl<T?> control
+  ValueLink<T?> selected
+}
+
+value Segmented<T> implements Widget {
+  List<T> items
+  Binding<T?> selected
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<SegmentedHost<T>>(kind: "ui.component.Segmented",
+      create: () {
+        var control = segmented<T>(items)
+        SegmentedHost<T>(control: control, selected: displayAdapterSegmentedValue(control)!!)
+      }, node: (host) { host.control },
+      update: (host, scope) {
+        displayAdapterSegmentedItems(arg0: host.control, arg1: hostItems(items))
+        var changed = scope.bind((T? next) { selected.value = next })
+        host.selected.update(arg0: selected.value, arg1: changed)
+      }, close: (host) { host.selected.close() utilCloseNode(host.control) }, key: key)
+  }
+}
+
+value Statistic implements Widget {
+  String title
+  Integer value
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<StatisticControl>(kind: "ui.component.Statistic",
+      create: () { displayAdapterStatistic(arg0: title, arg1: value)!! }, node: (control) { control },
+      update: (control, scope) { displayAdapterStatisticValue(arg0: control, arg1: value) },
+      close: (control) { control.close() }, key: key)
+  }
+}
+
+value Column<T> {
+  String heading
+  Function<String(T)> display
+}
+
+value TableSort {
+  String heading
+  Boolean descending = false
+}
+
+private class TableHost<T> {
+  TableControl<T?> control
+  SelectionLink<T?> selected
+  TableSortLink<T?> sorting
+}
+
+value Table<T> implements Widget {
+  List<T> rows
+  List<Column<T>> columns
+  Binding<T?>? selected = null
+  Binding<TableSort?>? sort = null
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<TableHost<T>>(kind: "ui.component.Table",
+      create: () {
+        var control = tableNew<T?>()
+        TableHost<T>(control: control, selected: displayAdapterTableSelected(control)!!,
+          sorting: tableSortLinkNew<T?>(control))
+      }, node: (host) { host.control },
+      update: (host, scope) {
+        displayAdapterRows(arg0: host.control, arg1: hostItems(rows))
+        host.sorting.columns(arg0: hostItems([for (column : columns) column.heading]),
+          arg1: (T? item) { hostItems([for (column : columns) column.display(item!!)]) })
+        var selection = selected
+        if selection != null {
+          var changed = scope.bind((T? next) { selection.value = next })
+          host.selected.update(arg0: selection.value, arg1: changed)
+        } else { host.selected.unbind() }
+        var order = sort
+        if order != null {
+          var requested = order.value
+          host.sorting.update(arg0: if requested == null { null } else {
+              tableSortStateNew(arg0: requested.heading, arg1: requested.descending)
+            }, arg1: scope.bind((NativeTableSort? next) {
+              order.value = if next == null { null } else {
+                TableSort(heading: next.heading()!!, descending: next.descending())
+              }
+            }))
+        } else { host.sorting.unbind() }
+      }, close: (host) { host.selected.close() host.sorting.close() utilCloseNode(host.control) }, key: key)
+  }
+}
+
+value Tag implements Widget {
+  String text
+  Boolean closable = false
+  Function<Void()>? onClose = null
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<TagControl>(kind: "ui.component.Tag",
+      create: () { tagNew(text) }, node: (control) { control },
+      update: (control, scope) {
+        control.setText(text)
+        control.setClosable(closable)
+        var action = onClose
+        displayAdapterTagOnClose(arg0: control, arg1: if action != null { scope.bind(action) } else { null })
+      }, close: (control) { utilCloseNode(control) }, key: key)
+  }
+}
+
+value TimelineEntry {
+  String time
+  Widget content
+}
+
+value Timeline implements Widget {
+  List<TimelineEntry> entries
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<TimelineControl>(kind: "ui.component.Timeline",
+      create: () { timelineNew() }, node: (control) { control },
+      update: (control, scope) {}, children: [for (entry : entries) entry.content],
+      arrange: (control, nodes) {
+        displayAdapterTimeline(arg0: control, arg1: hostItems([for (entry : entries) entry.time]), arg2: hostItems(nodes))
+      }, close: (control) { utilCloseNode(control) }, key: key)
+  }
+}
+
+private class TreeHost<T> {
+  TreeControl<T?> control
+  TreeSelectionLink<T?> selected
+  TreeCheckLink<T?> checked
+}
+
+value Tree<T> implements Widget {
+  T root
+  Function<List<T>(T)> children
+  Binding<T?>? selected = null
+  Boolean checkable = false
+  Binding<List<T>>? checked = null
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<TreeHost<T>>(kind: "ui.component.Tree",
+      create: () {
+        var control = treeNew<T?>(root)
+        TreeHost<T>(control: control, selected: displayAdapterTreeSelected(control)!!,
+          checked: treeCheckLinkNew<T?>(control))
+      }, node: (host) { host.control },
+      update: (host, scope) {
+        displayAdapterTreeChildren(arg0: host.control, arg1: (T? value) { hostItems(children(value!!)) })
+        host.control.setCheckable(checkable)
+        var selection = selected
+        if selection != null {
+          var changed = scope.bind((T? next) { selection.value = next })
+          host.selected.update(arg0: selection.value, arg1: changed)
+        } else { host.selected.unbind() }
+        var checks = checked
+        if checks != null {
+          var changed = scope.bind((MutableList<T?>? next) {
+            checks.value = [for (item : next!!) item!!]
+          })
+          host.checked.update(arg0: hostItems(checks.value), arg1: changed)
+        } else { host.checked.unbind() }
+      }, close: (host) { host.selected.close() host.checked.close() utilCloseNode(host.control) }, key: key)
+  }
+}

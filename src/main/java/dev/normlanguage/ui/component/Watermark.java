@@ -31,6 +31,8 @@ public final class Watermark extends StackPane {
         });
         themePaint.fillProperty().addListener(observable -> requestLayout());
     }
+    public void setContent(Node value) { getChildren().set(0, value); }
+
     public Watermark(Node content, javafx.scene.image.Image image) {
         this(content, "");
         setImage(image);

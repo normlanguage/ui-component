@@ -18,5 +18,8 @@ public class Dropdown extends Button implements AutoCloseable {
     public boolean isShowing() { return popup.isShowing(); }
     public void show() { popup.show(); }
     public void hide() { popup.hide(); }
-    @Override public void close() { popup.close(); }
+    @Override public void close() {
+        popup.close();
+        super.close();
+    }
 }

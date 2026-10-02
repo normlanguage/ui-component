@@ -19,7 +19,8 @@ public final class Message {
         StackPane.setAlignment(queue, Pos.TOP_CENTER);
     }
     public int getVisibleCount() { return queue.getChildren().size(); }
-    public Handle show(String text, Duration duration) {
+    public Handle show(String text, Duration duration) { return show(text, duration, () -> {}); }
+    public Handle show(String text, Duration duration, Runnable dismissed) {
         Util.requireFxThread();
         var label = new Label(text);
         label.getStyleClass().add("norm-message");
@@ -27,11 +28,15 @@ public final class Message {
         var timer = new PauseTransition(duration);
         var motion = new Motion(label);
         class Entry implements Handle {
+            private boolean closed;
             @Override public void close() {
                 Util.requireFxThread();
+                if (closed) return;
+                closed = true;
                 motion.close();
                 timer.stop(); queue.getChildren().remove(label); app.release(this);
                 if (queue.getChildren().isEmpty()) app.getChildren().remove(queue);
+                dismissed.run();
             }
         }
         var entry = new Entry();

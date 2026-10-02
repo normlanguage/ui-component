@@ -16,6 +16,7 @@ public class Modal implements AutoCloseable {
     private Node previousFocus;
     private boolean initialized;
     private boolean closed;
+    private Runnable onHidden;
 
     public Modal(Node anchor, String title, Node body) { this(anchor, title, body, ContentOwnership.OWNED); }
     public Modal(Node anchor, String title, Node body, ContentOwnership ownership) {
@@ -28,12 +29,16 @@ public class Modal implements AutoCloseable {
         stage.setTitle(title);
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setScene(new Scene(content));
-        stage.setOnHidden(event -> disconnect());
+        stage.setOnHidden(event -> {
+            disconnect();
+            if (onHidden != null) onHidden.run();
+        });
         content.setOnKeyPressed(event -> {
             if (event.getCode() == javafx.scene.input.KeyCode.ESCAPE) { hide(); event.consume(); }
         });
     }
     public boolean isShowing() { return stage.isShowing(); }
+    public void setOnHidden(Runnable action) { onHidden = action; }
     public Window getWindow() { return stage; }
     public ConfigProvider getContentRoot() { return content; }
     public void show() {

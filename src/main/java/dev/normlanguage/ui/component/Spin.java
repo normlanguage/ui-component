@@ -16,6 +16,8 @@ public final class Spin extends StackPane {
         overlay.managedProperty().bind(spinning);
         getChildren().addAll(content, overlay);
     }
+    public void setContent(Node value) { getChildren().set(0, value); }
+
     public BooleanProperty spinningProperty() { return spinning; }
     public boolean isSpinning() { return spinning.get(); }
     public void setSpinning(boolean value) { spinning.set(value); }

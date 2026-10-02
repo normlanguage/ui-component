@@ -17,6 +17,7 @@ public class TreeSelect<T> extends HBox {
     private final Popover popup;
     private final ReadOnlyObjectWrapper<T> value = new ReadOnlyObjectWrapper<>(this, "value");
     private final StringProperty promptText = new SimpleStringProperty(this, "promptText", "Select item");
+    private boolean replacingRoot;
     public TreeSelect(TreeItem<T> root) {
         tree = new TreeView<>(Objects.requireNonNull(root));
         tree.setShowRoot(false);
@@ -32,17 +33,42 @@ public class TreeSelect<T> extends HBox {
             else popup.show();
         });
         tree.getSelectionModel().selectedItemProperty().addListener((observable, old, selected) -> {
-            if (selected != null) {
-                value.set(selected.getValue());
-                trigger.setText(String.valueOf(selected.getValue()));
-                popup.close();
-            }
+            if (replacingRoot) return;
+            value.set(selected == null ? null : selected.getValue());
+            trigger.setText(selected == null ? promptText.get() : String.valueOf(selected.getValue()));
+            if (selected != null) popup.close();
         });
         sceneProperty().addListener((observable, old, scene) -> { if (scene == null) popup.close(); });
         getChildren().add(trigger);
         getStyleClass().add("norm-tree-select");
     }
     public TreeItem<T> getRootItem() { return tree.getRoot(); }
+    public void setRootItem(TreeItem<T> root) {
+        Objects.requireNonNull(root);
+        var prior = getSelectedValue();
+        TreeItem<T> match = null;
+        if (prior != null) {
+            var queue = new java.util.ArrayDeque<TreeItem<T>>();
+            queue.add(root);
+            while (!queue.isEmpty()) {
+                var item = queue.removeFirst();
+                if (Objects.equals(item.getValue(), prior)) {
+                    match = item;
+                    break;
+                }
+                queue.addAll(item.getChildren());
+            }
+        }
+        replacingRoot = true;
+        try {
+            tree.setRoot(root);
+            root.setExpanded(true);
+            if (match == null) tree.getSelectionModel().clearSelection();
+            else tree.getSelectionModel().select(match);
+        } finally { replacingRoot = false; }
+        value.set(match == null ? null : match.getValue());
+        trigger.setText(match == null ? promptText.get() : String.valueOf(match.getValue()));
+    }
     public TreeView<T> getTreeView() { return tree; }
     public boolean isShowing() { return popup.isShowing(); }
     public StringProperty promptTextProperty() { return promptText; }

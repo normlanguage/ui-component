@@ -9,4 +9,8 @@ public class Descriptions extends GridPane {
         add(new Label(label), 0, rows);
         add(value, 1, rows++);
     }
+    public void clearItems() {
+        getChildren().clear();
+        rows = 0;
+    }
 }

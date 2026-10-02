@@ -1,0 +1,102 @@
+package gallery
+
+import ui.Widget
+import ui.Text
+import ui.Column as Vertical
+import ui.Binding
+import ui.component.Button as ActionButton
+import ui.component.Modal
+import ui.component.Drawer
+import ui.component.DrawerSide
+import ui.component.Popover
+import ui.component.Tooltip
+import ui.component.Popconfirm
+import ui.component.Tour
+import ui.component.TourStep
+
+class ModalExample implements Widget {
+  Boolean open = false
+
+  Widget build() {
+    Binding<Boolean> visibility = Binding<Boolean>(read: () { open }, write: (Boolean next) { open = next })
+    Vertical {
+      Modal(title: "删除记录", anchor: ActionButton(text: "打开对话框", action: () { open = true }),
+        content: Vertical {Text("这是一条需要确认的记录。") 
+          ActionButton(text: "关闭对话框", action: () { open = false })}, open: visibility) 
+      Text(if open { "对话框已打开" } else { "对话框已关闭" })
+    }
+  }
+}
+
+class DrawerExample implements Widget {
+  Boolean open = false
+
+  Widget build() {
+    Binding<Boolean> visibility = Binding<Boolean>(read: () { open }, write: (Boolean next) { open = next })
+    Vertical {
+      Drawer(anchor: ActionButton(text: "查看详情", action: () { open = true }),
+        content: Vertical {Text("右侧面板")  Text("这里展示当前项目的详细信息。") 
+          ActionButton(text: "完成", action: () { open = false })},
+        open: visibility, side: DrawerSide.Right) 
+      Text(if open { "详情面板已打开" } else { "详情面板已关闭" })
+    }
+  }
+}
+
+class PopoverExample implements Widget {
+  Boolean open = false
+
+  Widget build() {
+    Binding<Boolean> visibility = Binding<Boolean>(read: () { open }, write: (Boolean next) { open = next })
+    Vertical {
+      Popover(anchor: ActionButton(text: "更多操作", action: () { open = !open }),
+        content: Vertical {Text("可在这里执行当前项操作") 
+          ActionButton(text: "关闭", action: () { open = false })}, open: visibility) 
+      Text(if open { "操作菜单已打开" } else { "操作菜单已关闭" })
+    }
+  }
+}
+
+class TooltipExample implements Widget {
+  Boolean open = false
+
+  Widget build() {
+    Binding<Boolean> visibility = Binding<Boolean>(read: () { open }, write: (Boolean next) { open = next })
+    Vertical {
+      Tooltip(anchor: ActionButton(text: "悬停、聚焦或点击", action: () { open = !open }),
+        text: "提示会继承所在主题", open: visibility) 
+      Text("把焦点移到按钮上也能看到提示。")
+    }
+  }
+}
+
+class PopconfirmExample implements Widget {
+  Boolean open = false
+  Integer confirmed = 0
+
+  Widget build() {
+    Binding<Boolean> visibility = Binding<Boolean>(read: () { open }, write: (Boolean next) { open = next })
+    Vertical {
+      Popconfirm(anchor: ActionButton(text: "删除项目", action: () { open = true }),
+        question: "确定删除当前项目吗？", open: visibility,
+        confirmed: () { confirmed = confirmed + 1 }) 
+      Text("已确认 " + confirmed.toString() + " 次")
+    }
+  }
+}
+
+class TourExample implements Widget {
+  Boolean open = false
+
+  Widget build() {
+    Binding<Boolean> visibility = Binding<Boolean>(read: () { open }, write: (Boolean next) { open = next })
+    Vertical {
+      ActionButton(text: "开始引导", action: () { open = true }) 
+      Tour(steps: [
+        TourStep(target: ActionButton(text: "第一步 · 创建", action: () {}), title: "创建项目", description: "从这里创建新的项目。"),
+        TourStep(target: ActionButton(text: "第二步 · 设置", action: () {}), title: "配置项目", description: "调整主题和运行选项。")
+      ], open: visibility) 
+      Text(if open { "正在引导" } else { "引导未开始" })
+    }
+  }
+}

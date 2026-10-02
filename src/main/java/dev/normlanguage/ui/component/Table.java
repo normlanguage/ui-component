@@ -11,16 +11,19 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.BiConsumer;
 public class Table<T> extends TableView<T> {
+    private ObservableList<T> source;
     private FilteredList<T> filtered;
     private SortedList<T> sorted;
     public Table() { getStyleClass().add("norm-table"); }
     public void setSource(ObservableList<T> rows) {
         if (sorted != null) sorted.comparatorProperty().unbind();
+        source = java.util.Objects.requireNonNull(rows);
         filtered = new FilteredList<>(rows);
         sorted = new SortedList<>(filtered);
         sorted.comparatorProperty().bind(comparatorProperty());
         setItems(sorted);
     }
+    public ObservableList<T> getSource() { return source; }
     public void setPredicate(Predicate<T> predicate) {
         if (filtered == null) throw new IllegalStateException("Set source before filter");
         filtered.setPredicate(predicate);

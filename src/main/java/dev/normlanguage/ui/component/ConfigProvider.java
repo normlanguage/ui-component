@@ -18,6 +18,7 @@ public class ConfigProvider extends StackPane implements AutoCloseable {
     private static final PseudoClass THEMED = PseudoClass.getPseudoClass("themed");
     private ComponentConfig appliedConfig;
     private String configStylesheet;
+    private String applicationStylesheet;
     private Node content;
     private final ContentOwnership contentOwnership;
     private java.util.function.Function<java.util.function.Consumer<String>, Runnable> themeSource;
@@ -87,6 +88,21 @@ public class ConfigProvider extends StackPane implements AutoCloseable {
         if (closed) throw new IllegalStateException("Component scope is closed");
         themeSource = Objects.requireNonNull(subscribe);
         refreshSubscription();
+    }
+    public final void setStylesheet(String resource) {
+        Util.requireFxThread();
+        var next = resource == null ? null : Objects.requireNonNull(ConfigProvider.class.getResource(resource), "Stylesheet resource not found: " + resource).toExternalForm();
+        if (Objects.equals(applicationStylesheet, next)) return;
+        if (applicationStylesheet != null) getStylesheets().remove(applicationStylesheet);
+        applicationStylesheet = next;
+        if (next != null) getStylesheets().add(next);
+    }
+    public final void clearTheme() {
+        Util.requireFxThread();
+        if (closed) throw new IllegalStateException("Component scope is closed");
+        themeSource = null;
+        refreshSubscription();
+        setThemeCss("");
     }
     private void refreshSubscription() {
         long epoch;

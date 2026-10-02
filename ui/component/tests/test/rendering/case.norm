@@ -1,0 +1,46 @@
+package ui.component.test.rendering
+
+import std.testing.Test
+import ui.Widget
+import ui.Text
+import ui.ViewContent
+import ui.View
+import ui.Renderer
+import ui.RenderBackend
+import ui.RenderNode
+
+class Probe { Integer builds = 0 }
+
+class ObservedPage implements Widget {
+  private Integer page = 0
+  Probe probe
+
+  Void select(Integer next) { page = next }
+  Widget build() {
+    probe.builds = probe.builds + 1
+    Text("page:${page}")
+  }
+}
+
+class NoopNode implements RenderNode {
+  Void update(View view) {}
+  Void children(List<RenderNode> children) {}
+  Void close() {}
+}
+
+class NoopBackend implements RenderBackend {
+  RenderNode create(ViewContent content) { NoopNode() }
+}
+
+@Test
+Void directWidgetFieldMutationRefreshesAMountedWidget() {
+  var probe = Probe()
+  var widget = ObservedPage(probe: probe)
+  var renderer = Renderer(NoopBackend())
+  renderer.render(widget)
+  require(condition: probe.builds == 1, message: "initial widget build")
+  widget.select(1)
+  renderer.render(widget)
+  require(condition: probe.builds == 2, message: "direct field write refreshes widget")
+  renderer.close()
+}
