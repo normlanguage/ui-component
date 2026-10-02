@@ -19,6 +19,7 @@ public final class Tooltip implements AutoCloseable {
     private final ChangeListener<javafx.scene.Scene> sceneChanged;
     private App owner;
     private boolean closed;
+    private Runnable onHidden;
 
     public Tooltip(Node anchor, String text) {
         this.anchor = Objects.requireNonNull(anchor);
@@ -30,10 +31,12 @@ public final class Tooltip implements AutoCloseable {
         popup.setStyle("-fx-padding: 0; -fx-background-color: transparent;");
         popup.setShowDelay(focusDelay.getDuration());
         popup.setOnShowing(event -> {
-            attachOwner();
             theme.connect();
         });
-        popup.setOnHidden(event -> theme.close());
+        popup.setOnHidden(event -> {
+            theme.close();
+            if (onHidden != null) onHidden.run();
+        });
         focusDelay.setOnFinished(event -> {
             if (anchor.isFocused()) show();
         });
@@ -46,9 +49,7 @@ public final class Tooltip implements AutoCloseable {
         };
         sceneChanged = (observable, previous, current) -> {
             if (current == null) {
-                focusDelay.stop();
-                popup.hide();
-                if (owner != null && !owner.isClosed()) { owner.release(this); owner = null; }
+                close();
             } else attachOwner();
         };
         javafx.scene.control.Tooltip.install(anchor, popup);
@@ -64,19 +65,19 @@ public final class Tooltip implements AutoCloseable {
     }
     public ConfigProvider getContentRoot() { return contentRoot; }
     public boolean isShowing() { return popup.isShowing(); }
+    public void setOnHidden(Runnable action) { onHidden = action; }
     public boolean isClosed() { return closed; }
     public void show() {
         Util.requireFxThread();
         if (closed || popup.isShowing() || anchor.getScene() == null || anchor.getScene().getWindow() == null
                 || !anchor.getScene().getWindow().isShowing()) return;
         attachOwner();
-        if (owner == null) return;
         var bounds = anchor.localToScreen(anchor.getBoundsInLocal());
         if (bounds != null) popup.show(anchor, bounds.getMinX(), bounds.getMaxY() + 4);
     }
     public void hide() { Util.requireFxThread(); popup.hide(); }
     private void attachOwner() {
-        if (closed || owner != null || anchor.getScene() == null) return;
+        if (closed || owner != null) return;
         for (Node current = anchor; current != null; current = current.getParent()) {
             if (current instanceof App app && !app.isClosed()) {
                 owner = app;
@@ -95,6 +96,8 @@ public final class Tooltip implements AutoCloseable {
         javafx.scene.control.Tooltip.uninstall(anchor, popup);
         anchor.focusedProperty().removeListener(focusChanged);
         anchor.sceneProperty().removeListener(sceneChanged);
+        contentRoot.close();
+        popup.setGraphic(null);
         if (owner != null) { owner.release(this); owner = null; }
     }
 }

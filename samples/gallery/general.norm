@@ -1,0 +1,76 @@
+package gallery
+
+import ui.Widget
+import ui.Binding
+import ui.Text
+import ui.Column
+import ui.Row
+import theme.Tone
+import theme.Appearance
+import ui.component.Button
+import ui.component.FloatButton
+import ui.component.Icon
+import ui.component.Typography
+
+class ButtonExample implements Widget {
+  private Integer presses = 0
+
+  Widget build() {
+    Column {
+      Text("点击按钮，观察下方计数")
+      Row {
+        Button(text: "主要操作", action: () { presses = presses + 1 })
+        Button(text: "次要操作", tone: Tone.Neutral, appearance: Appearance.Outlined,
+          action: () { presses = presses + 1 })
+        Button(text: "危险操作", tone: Tone.Danger,
+          action: () { presses = presses + 1 })
+      }
+      Text("已操作 ${presses} 次")
+    }
+  }
+}
+
+class FloatButtonExample implements Widget {
+  private Integer drafts = 0
+
+  Widget build() {
+    Column {
+      FloatButton(text: "新建", content: Column {
+        Text("工作台")
+        Text("已有草稿 ${drafts} 份")
+        Text("悬浮操作固定在内容右下角")
+      }, action: () { drafts = drafts + 1 })
+    }
+  }
+}
+
+class IconExample implements Widget {
+  private Boolean large = false
+
+  Widget build() {
+    var size = if large { 32 } else { 20 }
+    Column {
+      Text("同一图标可按场景调整尺寸")
+      Row {
+        Icon(literal: "mdi2h-home", size: size)
+        Icon(literal: "mdi2m-magnify", size: size)
+        Icon(literal: "mdi2c-cog", size: size)
+      }
+      Button(text: if large { "缩小图标" } else { "放大图标" },
+        action: () { large = !large })
+    }
+  }
+}
+
+class TypographyExample implements Widget {
+  private String title = "项目进展说明"
+
+  Widget build() {
+    var edited = Binding<String>(read: () { title }, write: (String next) { title = next })
+    Column {
+      Text("通过原生右键菜单编辑或复制下方文字")
+      Typography(text: "项目进展说明", copyable: true, edited: edited)
+      Text("当前内容：${title}")
+    }
+  }
+}

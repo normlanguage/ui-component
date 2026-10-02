@@ -3,6 +3,7 @@ package dev.normlanguage.ui.component;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 public class FloatButton extends Button {
@@ -22,6 +23,8 @@ public class FloatButton extends Button {
         public Group(FloatButton... buttons) {
             super(8, buttons);
             getStyleClass().add("norm-float-button-group");
+            setAlignment(Pos.CENTER_RIGHT);
+            setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
         }
         public Group attachTo(StackPane layer) {
             if (getParent() != null) throw new IllegalStateException("Float button group already has a parent");

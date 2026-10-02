@@ -12,11 +12,14 @@ public class Dropdown extends Button implements AutoCloseable {
         getStyleClass().add("norm-dropdown");
         popup = new Popover(this, Objects.requireNonNull(content));
         setOnAction(event -> {
-            if (popup.isShowing()) popup.close(); else popup.show();
+            if (popup.isShowing()) popup.hide(); else popup.show();
         });
     }
     public boolean isShowing() { return popup.isShowing(); }
     public void show() { popup.show(); }
-    public void hide() { popup.close(); }
-    @Override public void close() { popup.close(); }
+    public void hide() { popup.hide(); }
+    @Override public void close() {
+        popup.close();
+        super.close();
+    }
 }

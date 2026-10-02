@@ -1,0 +1,174 @@
+package ui.component
+
+import ui.Widget
+import ui.NodeKey
+import ui.component.fx.javafx.geometry.Orientation
+import ui.component.fx.Divider as DividerControl
+import ui.component.fx.Flex as FlexControl
+import ui.component.fx.Grid as GridControl
+import ui.component.fx.Layout as LayoutControl
+import ui.component.fx.Masonry as MasonryControl
+import ui.component.fx.Space as SpaceControl
+import ui.component.fx.Splitter as SplitterControl
+import ui.component.fx.dividerNew
+import ui.component.fx.gridNew
+import ui.component.fx.layoutNew
+import ui.component.fx.masonryNew
+import ui.component.fx.navigationLayoutAdapterFlex
+import ui.component.fx.navigationLayoutAdapterSpace
+import ui.component.fx.navigationLayoutAdapterSplitter
+import ui.component.fx.navigationLayoutAdapterMasonry
+import ui.component.fx.utilCloseNode
+import ui.component.fx.navigationLayoutAdapterGrid
+import ui.component.fx.hostItems
+
+value Divider implements Widget {
+  Boolean vertical = false
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<DividerControl>(kind: "ui.component.Divider",
+      create: () { dividerNew() }, node: (control) { control },
+      update: (control, scope) {
+        control.setOrientation(if vertical { Orientation.VERTICAL } else { Orientation.HORIZONTAL })
+      },
+      close: (control) { utilCloseNode(control) }, key: key)
+  }
+}
+
+value FlexItem {
+  Widget content
+  Double grow = 0.0
+}
+
+value Flex implements Widget {
+  List<FlexItem> items
+  Boolean vertical = false
+  Boolean wrap = false
+  Double gap = 8.0
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<FlexControl>(kind: "ui.component.Flex",
+      create: () { navigationLayoutAdapterFlex()!! }, node: (control) { control },
+      update: (control, scope) {
+        control.setOrientation(if vertical { Orientation.VERTICAL } else { Orientation.HORIZONTAL })
+        control.setWrap(wrap)
+        control.setHgap(gap)
+        control.setVgap(gap)
+      }, children: [for (item : items) item.content],
+      arrange: (control, nodes) {
+        navigationLayoutAdapterFlex(arg0: control, arg1: hostItems(nodes),
+          arg2: hostItems([for (item : items) item.grow]))
+      }, close: (control) { utilCloseNode(control) }, key: key)
+  }
+}
+
+value GridItem {
+  Widget content
+  Integer span = 1
+}
+
+value GridBreakpoint {
+  Double minimumWidth
+  Integer columns
+}
+
+value Grid implements Widget {
+  List<GridItem> items
+  List<GridBreakpoint> breakpoints = []
+  Double gap = 8.0
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<GridControl>(kind: "ui.component.Grid",
+      create: () { gridNew() }, node: (control) { control },
+      update: (control, scope) {
+        control.setHgap(gap)
+        control.setVgap(gap)
+      }, children: [for (item : items) item.content],
+      arrange: (control, nodes) {
+        navigationLayoutAdapterGrid(arg0: control, arg1: hostItems(nodes),
+          arg2: hostItems([for (item : items) item.span]),
+          arg3: hostItems([for (breakpoint : breakpoints) breakpoint.minimumWidth]),
+          arg4: hostItems([for (breakpoint : breakpoints) breakpoint.columns]))
+      }, close: (control) { utilCloseNode(control) }, key: key)
+  }
+}
+
+value Layout implements Widget {
+  Widget? top = null
+  Widget? bottom = null
+  Widget? left = null
+  Widget? right = null
+  Widget? center = null
+  NodeKey? key = null
+
+  Widget build() {
+    List<Widget> content = []
+    if top != null { content.add(top!!) }
+    if bottom != null { content.add(bottom!!) }
+    if left != null { content.add(left!!) }
+    if right != null { content.add(right!!) }
+    if center != null { content.add(center!!) }
+    nativeComponent<LayoutControl>(kind: "ui.component.Layout",
+      create: () { layoutNew() }, node: (control) { control }, update: (control, scope) {},
+      children: content, arrange: (control, nodes) {
+        var index = 0
+        if top != null { control.setTop(nodes[index]) index = index + 1 } else { control.setTop(null) }
+        if bottom != null { control.setBottom(nodes[index]) index = index + 1 } else { control.setBottom(null) }
+        if left != null { control.setLeft(nodes[index]) index = index + 1 } else { control.setLeft(null) }
+        if right != null { control.setRight(nodes[index]) index = index + 1 } else { control.setRight(null) }
+        if center != null { control.setCenter(nodes[index]) } else { control.setCenter(null) }
+      }, close: (control) { utilCloseNode(control) }, key: key)
+  }
+}
+
+value Masonry implements Widget {
+  List<Widget> children
+  Double minimumColumnWidth = 180.0
+  Double gap = 8.0
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<MasonryControl>(kind: "ui.component.Masonry",
+      create: () { masonryNew() }, node: (control) { control },
+      update: (control, scope) {
+        control.setMinimumColumnWidth(minimumColumnWidth)
+        control.setGap(gap)
+      }, children: children,
+      arrange: (control, nodes) { navigationLayoutAdapterMasonry(arg0: control, arg1: hostItems(nodes)) },
+      close: (control) { utilCloseNode(control) }, key: key)
+  }
+}
+
+value Space implements Widget {
+  List<Widget> children
+  Double spacing = 8.0
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<SpaceControl>(kind: "ui.component.Space",
+      create: () { navigationLayoutAdapterSpace()!! }, node: (control) { control },
+      update: (control, scope) { control.setSpacing(spacing) }, children: children,
+      arrange: (control, nodes) { navigationLayoutAdapterSpace(arg0: control, arg1: hostItems(nodes)) },
+      close: (control) { utilCloseNode(control) }, key: key)
+  }
+}
+
+value Splitter implements Widget {
+  List<Widget> children
+  Boolean vertical = false
+  Double dividerPosition = 0.5
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<SplitterControl>(kind: "ui.component.Splitter",
+      create: () { navigationLayoutAdapterSplitter()!! }, node: (control) { control },
+      update: (control, scope) {
+        control.setOrientation(if vertical { Orientation.VERTICAL } else { Orientation.HORIZONTAL })
+      }, children: children,
+      arrange: (control, nodes) { navigationLayoutAdapterSplitter(arg0: control, arg1: hostItems(nodes), arg2: dividerPosition) },
+      close: (control) { utilCloseNode(control) }, key: key)
+  }
+}

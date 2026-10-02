@@ -1,0 +1,346 @@
+package gallery
+
+import ui.Widget
+import ui.Binding
+import ui.Text
+import ui.Column
+import ui.Row
+import ui.component.Button
+import ui.component.Input
+import ui.component.AutoComplete
+import ui.component.Cascader
+import ui.component.CascaderOption
+import ui.component.Checkbox
+import ui.component.ColorPicker
+import ui.component.DatePicker
+import ui.component.DateRangePicker
+import ui.component.DateRange
+import ui.component.Form
+import ui.component.FormField
+import ui.component.FormFieldState
+import ui.component.InputNumber
+import ui.component.Mentions
+import ui.component.Radio
+import ui.component.Rate
+import ui.component.Select
+import ui.component.MultipleSelect
+import ui.component.SearchSelect
+import ui.component.Slider
+import ui.component.RangeSlider
+import ui.component.NumericRange
+import ui.component.Switch
+import ui.component.TimePicker
+import ui.component.Transfer
+import ui.component.TreeSelect
+import ui.component.TreeOption
+import ui.component.Upload
+import jdk.base.LocalDate
+import jdk.base.LocalTime
+import jdk.base.BigDecimal
+import jdk.base.localDateOf
+import jdk.base.localTimeOf
+import jdk.base.bigDecimalNew
+import std.concurrent.startTask
+import std.concurrent.Task
+import std.core.Unit
+import std.filesystem.Path
+
+class InputExample implements Widget {
+  String project = ""
+
+  Widget build() {
+    var name = Binding<String>(read: () { project }, write: (String next) { project = next })
+    Column {
+      Text("项目名称")
+      Input(placeholder: "例如：设计系统", value: name)
+      Text(if project == "" { "输入名称后显示预览" } else { "项目：" + project })
+      Button(text: "填入示例", action: () { project = "组件库" })
+    }
+  }
+}
+
+class AutoCompleteExample implements Widget {
+  String city = ""
+
+  Widget build() {
+    var selected = Binding<String>(read: () { city }, write: (String next) { city = next })
+    Column {
+      Text("输入城市名称，观察候选项")
+      AutoComplete(placeholder: "搜索城市", value: selected,
+        suggestions: ["北京", "上海", "广州", "深圳", "杭州"])
+      Text(if city == "" { "尚未选择城市" } else { "出发城市：" + city })
+      Button(text: "清空搜索", action: () { city = "" })
+    }
+  }
+}
+
+class CascaderExample implements Widget {
+  List<String> department = []
+
+  Widget build() {
+    var selected = Binding<List<String>>(read: () { department }, write: (List<String> next) { department = next })
+    Column {
+      Text("选择所属团队")
+      Cascader<String>(options: [
+        CascaderOption(value: "产品", label: "产品", children: [
+          CascaderOption(value: "设计", label: "设计"),
+          CascaderOption(value: "研究", label: "研究")]),
+        CascaderOption(value: "研发", label: "研发", children: [
+          CascaderOption(value: "客户端", label: "客户端"),
+          CascaderOption(value: "服务端", label: "服务端")])
+      ], value: selected)
+      Text("已选层级：" + department.size().toString())
+      Button(text: "选择客户端", action: () { department = ["研发", "客户端"] })
+    }
+  }
+}
+
+class CheckboxExample implements Widget {
+  Boolean email = true
+  Boolean desktop = false
+
+  Widget build() {
+    var byEmail = Binding<Boolean>(read: () { email }, write: (Boolean next) { email = next })
+    var byDesktop = Binding<Boolean>(read: () { desktop }, write: (Boolean next) { desktop = next })
+    Column {
+      Text("选择通知渠道")
+      Row { Checkbox(text: "邮件", value: byEmail) Checkbox(text: "桌面", value: byDesktop) }
+      Text("邮件：" + email.toString() + "，桌面：" + desktop.toString())
+      Button(text: "全部开启", action: () { email = true desktop = true })
+    }
+  }
+}
+
+class ColorPickerExample implements Widget {
+  String color = "#1677ff"
+
+  Widget build() {
+    var selected = Binding<String>(read: () { color }, write: (String next) { color = next })
+    Column {
+      Text("选择品牌强调色")
+      ColorPicker(hex: selected)
+      Text("当前颜色：" + color)
+      Button(text: "恢复蓝色", action: () { color = "#1677ff" })
+    }
+  }
+}
+
+class DatePickerExample implements Widget {
+  LocalDate? date = localDateOf(arg0: 2026, arg1: 10, arg2: 2)!!
+  DateRange period = DateRange(start: null, end: null)
+
+  Widget build() {
+    var selected = Binding<LocalDate?>(read: () { date }, write: (LocalDate? next) { date = next })
+    var selectedPeriod = Binding<DateRange>(read: () { period }, write: (DateRange next) { period = next })
+    Column {
+      Text("选择交付日期")
+      DatePicker(value: selected)
+      Text("交付：" + if date == null { "未选" } else { date!!.toString()!! })
+      Text("选择查询区间")
+      DateRangePicker(value: selectedPeriod)
+      Text("起始：" + if period.start == null { "未选" } else { period.start!!.toString()!! })
+    }
+  }
+}
+
+class FormExample implements Widget {
+  String title = ""
+  String owner = ""
+  Integer submitted = 0
+  private FormFieldState<String> titleState = FormFieldState<String>(initial: "")
+  private FormFieldState<String> ownerState = FormFieldState<String>(initial: "")
+
+  Widget build() {
+    var titleValue = Binding<String>(read: () { title }, write: (String next) { title = next })
+    var ownerValue = Binding<String>(read: () { owner }, write: (String next) { owner = next })
+    Column {
+      Text("创建任务")
+      Form(fields: [
+        FormField<String>(name: "标题", state: titleState, control: Input(placeholder: "任务标题", value: titleValue),
+          value: titleValue, validator: (String next) { next != "" }, error: "请输入标题"),
+        FormField<String>(name: "负责人", state: ownerState, control: Input(placeholder: "负责人", value: ownerValue),
+          value: ownerValue, validator: (String next) { next != "" }, error: "请输入负责人")
+      ], onSubmit: () { submitted = submitted + 1 })
+      Text("已提交 " + submitted.toString() + " 次")
+      Text(if submitted == 0 { "填写两项后提交" } else { "最近任务：" + title + " · " + owner })
+    }
+  }
+}
+
+class InputNumberExample implements Widget {
+  BigDecimal budget = bigDecimalNew("1280.50")!!
+
+  Widget build() {
+    var amount = Binding<BigDecimal>(read: () { budget }, write: (BigDecimal next) { budget = next })
+    Column {
+      Text("预算金额")
+      InputNumber(value: amount, scale: 2)
+      Text("预算：" + budget.toPlainString()!!)
+      Button(text: "恢复预算", action: () { budget = bigDecimalNew("1280.50")!! })
+    }
+  }
+}
+
+class MentionsExample implements Widget {
+  String message = ""
+
+  Widget build() {
+    var draft = Binding<String>(read: () { message }, write: (String next) { message = next })
+    Column {
+      Text("输入 @ 提及团队成员")
+      Mentions(value: draft, suggestions: ["林安", "陈晨", "周一"], placeholder: "给团队留言")
+      Text(if message == "" { "尚未留言" } else { "草稿：" + message })
+      Button(text: "清空留言", action: () { message = "" })
+    }
+  }
+}
+
+class RadioExample implements Widget {
+  Boolean standard = true
+
+  Widget build() {
+    var selected = Binding<Boolean>(read: () { standard }, write: (Boolean next) { standard = next })
+    Column {
+      Text("选择标准配送")
+      Radio(text: "标准配送", value: selected)
+      Text(if standard { "标准配送已选" } else { "尚未选择配送方式" })
+      Button(text: "切换选择", action: () { standard = !standard })
+    }
+  }
+}
+
+class RateExample implements Widget {
+  Integer score = 3
+
+  Widget build() {
+    var selected = Binding<Integer>(read: () { score }, write: (Integer next) { score = next })
+    Column {
+      Text("给本次体验评分")
+      Rate(value: selected)
+      Text("评分：" + score.toString() + " / 5")
+      Button(text: "设为满分", action: () { score = 5 })
+    }
+  }
+}
+
+class SelectExample implements Widget {
+  String? priority = "普通"
+  List<String> assignees = ["林安"]
+  String? reviewer = null
+
+  Widget build() {
+    var selectedPriority = Binding<String?>(read: () { priority }, write: (String? next) { priority = next })
+    var selectedPeople = Binding<List<String>>(read: () { assignees }, write: (List<String> next) { assignees = next })
+    var selectedReviewer = Binding<String?>(read: () { reviewer }, write: (String? next) { reviewer = next })
+    Column {
+      Text("设置任务优先级")
+      Select<String>(options: ["紧急", "普通", "低"], value: selectedPriority)
+      Text("优先级：" + if priority == null { "未选" } else { priority!! })
+      Text("选择协作者与审核人")
+      MultipleSelect<String>(options: ["林安", "陈晨", "周一"], value: selectedPeople)
+      SearchSelect<String>(options: ["林安", "陈晨", "周一"], value: selectedReviewer)
+      Text("协作者 " + assignees.size().toString() + " 人，审核人：" + if reviewer == null { "未选" } else { reviewer!! })
+    }
+  }
+}
+
+class SliderExample implements Widget {
+  Double completion = 35.0
+  NumericRange capacity = NumericRange(start: 20.0, end: 70.0)
+
+  Widget build() {
+    var progress = Binding<Double>(read: () { completion }, write: (Double next) { completion = next })
+    var range = Binding<NumericRange>(read: () { capacity }, write: (NumericRange next) { capacity = next })
+    Column {
+      Text("调整完成度")
+      Slider(value: progress)
+      Text("当前完成度：" + completion.toString() + "%")
+      Text("选择可接受的容量区间")
+      RangeSlider(value: range)
+      Text("容量：" + capacity.start.toString() + "–" + capacity.end.toString())
+    }
+  }
+}
+
+class SwitchExample implements Widget {
+  Boolean automatic = true
+
+  Widget build() {
+    var selected = Binding<Boolean>(read: () { automatic }, write: (Boolean next) { automatic = next })
+    Column {
+      Text("自动保存")
+      Switch(text: "自动保存", value: selected)
+      Text(if automatic { "修改将自动保存" } else { "修改需手动保存" })
+      Button(text: if automatic { "关闭自动保存" } else { "开启自动保存" },
+        action: () { automatic = !automatic })
+    }
+  }
+}
+
+class TimePickerExample implements Widget {
+  LocalTime? meeting = localTimeOf(arg0: 13, arg1: 45)!!
+
+  Widget build() {
+    var selected = Binding<LocalTime?>(read: () { meeting }, write: (LocalTime? next) { meeting = next })
+    Column {
+      Text("安排会议开始时间")
+      TimePicker(value: selected, minuteStep: 15)
+      Text("开始时间：" + if meeting == null { "未选" } else { meeting!!.toString()!! })
+      Button(text: "改为下午三点", action: () { meeting = localTimeOf(arg0: 15, arg1: 0)!! })
+    }
+  }
+}
+
+class TransferExample implements Widget {
+  List<String> selected = ["设计评审"]
+
+  Widget build() {
+    var assigned = Binding<List<String>>(read: () { selected }, write: (List<String> next) { selected = next })
+    Column {
+      Text("将任务移至右侧待办清单")
+      Transfer<String>(options: ["设计评审", "接口联调", "回归测试", "上线检查"], value: assigned)
+      Text("待办数量：" + selected.size().toString())
+      Button(text: "清空待办", action: () { selected = [] })
+    }
+  }
+}
+
+class TreeSelectExample implements Widget {
+  String? team = null
+
+  Widget build() {
+    var selected = Binding<String?>(read: () { team }, write: (String? next) { team = next })
+    Column {
+      Text("选择归属团队")
+      TreeSelect<String>(options: [
+        TreeOption(value: "产品", children: [TreeOption(value: "设计"), TreeOption(value: "研究")]),
+        TreeOption(value: "研发", children: [TreeOption(value: "客户端"), TreeOption(value: "服务端")])
+      ], value: selected)
+      Text("当前团队：" + if team == null { "未选" } else { team!! })
+      Button(text: "选择客户端", action: () { team = "客户端" })
+    }
+  }
+}
+
+class UploadExample implements Widget {
+  List<Path> files = []
+
+  Task<Unit?> upload(Path file, Function<Void(Double)> progress) {
+    startTask<Unit?>(() {
+      progress(0.5)
+      progress(1.0)
+      null
+    })
+  }
+
+  Widget build() {
+    Column {
+      Text("选择文件或拖入上传区")
+      Upload(files: files, uploader: (Path file, Function<Void(Double)> progress) {
+        this.upload(file: file, progress: progress)
+      })
+      Text("已加入示例文件 " + files.size().toString() + " 个")
+      Button(text: "加入示例文件", action: () { files = [Path(value: "samples/gallery/module.norm")] })
+    }
+  }
+}

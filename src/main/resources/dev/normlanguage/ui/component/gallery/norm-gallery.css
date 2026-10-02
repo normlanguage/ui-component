@@ -1,0 +1,19 @@
+.norm-root { -fx-font-family: "Microsoft YaHei UI"; -fx-font-size: 14px; }
+.gallery-header { -fx-padding: 18 28; -fx-background-color: -norm-surface; }
+.gallery-header .norm-row { -fx-spacing: 24; -fx-alignment: center-left; }
+.gallery-sidebar { -fx-min-width: 260; -fx-pref-width: 260; -fx-max-width: 260; -fx-padding: 18 14 18 20; -fx-background-color: -norm-surface; }
+.gallery-sidebar .norm-column { -fx-spacing: 5; }
+.gallery-sidebar .button { -fx-alignment: center-left; -fx-max-width: infinity; }
+.gallery-sidebar .norm-muted { -fx-padding: 22 10 8 10; -fx-font-size: 12px; }
+.gallery-document { -fx-padding: 38 48 60 48; -fx-alignment: top-left; }
+.gallery-document > .norm-component { -fx-max-width: 1120; }
+.norm-column { -fx-spacing: 16; -fx-fill-width: true; }
+.norm-row { -fx-spacing: 12; -fx-alignment: center-left; }
+.norm-title { -fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: -norm-text; }
+.norm-muted { -fx-text-fill: -norm-muted; -fx-font-size: 13px; }
+.label { -fx-text-fill: -norm-text; }
+.gallery-preview { -fx-padding: 28; -fx-background-color: -norm-surface; -fx-background-radius: 8; -fx-alignment: top-left; }
+.gallery-preview .norm-component { -fx-alignment: top-left; }
+.gallery-code { -fx-padding: 20; -fx-background-color: -norm-surface; -fx-background-radius: 6; -fx-alignment: top-left; }
+.gallery-code .label { -fx-font-family: "Cascadia Code", "Consolas"; -fx-font-size: 13px; }
+.scroll-pane, .scroll-pane > .viewport { -fx-background-color: transparent; -fx-background-insets: 0; -fx-padding: 0; }

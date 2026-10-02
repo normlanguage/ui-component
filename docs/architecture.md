@@ -1,23 +1,17 @@
 # 架构与生命周期
 
-公开契约以 [Norm 模块声明](../ui/component/module.norm)、[主题连接](../ui/component/connection.norm)和 [Java 源码](../src/main/java/dev/normlanguage/ui/component)为准。此页只记录跨组件的边界。
+公开模块与依赖以 [`ui.component` 声明](../ui/component/module.norm)和 [`ui.component.fx` 绑定声明](../ui/component/fx/module.norm)为准。当前职责边界如下：
 
-```text
-应用 / ui.fx / 其他 JavaFX UI 库
-                  ↓
-          ui.component + JavaFX
-                  ↓
-                theme
-```
+| 层 | 唯一职责 | 源码入口 |
+| --- | --- | --- |
+| `ui.component` | 向 Norm 应用提供强类型 `Widget`、`Binding` 和组合式子内容 | [组件模块](../ui/component) |
+| `ui` / `ui.fx` | 响应式重绘、按类型与键复用、JavaFX 节点混排及作用域关闭 | [`ui` 仓库](https://github.com/normlanguage/ui) / [`ui.fx` 仓库](https://github.com/normlanguage/ui-fx) |
+| `ui.component.fx` | 将控件 JAR 和少量强类型投影桥暴露给 Norm Widget 实现 | [绑定声明](../ui/component/fx/module.norm) / [投影适配器](../src/main/java/dev/normlanguage/ui/component/NavigationLayoutAdapter.java) |
+| JavaFX 控件 JAR | 原生节点、属性、布局、弹层与资源释放 | [Java 源码](../src/main/java/dev/normlanguage/ui/component) |
+| `theme` | 由少量输入色生成完整主题；组件只消费结果 | [`theme` 仓库](https://github.com/normlanguage/theme) / [主题连接](../ui/component/fx/connection.norm) |
 
-`ui.component` 不引用上层 `ui` 的 Widget、渲染器或 DI。Java 工件依赖 JavaFX；Norm 适配层依赖 `fx.controls` 和 `theme`，并复用它们已拥有的公开类型。颜色推导只发生在 `theme`；[connection.norm](../ui/component/connection.norm)把主题快照映射为 JavaFX 样式变量。
+Widget 普通字段由 `ui` 观察；字段变化重建描述，同类同键的原生节点和子节点由渲染器保留。组件专属 JavaFX 投影在 [原生组件桥](../ui/component/native.norm)中创建，并由渲染器作用域负责回调失效和释放。原生 JavaFX 资源仍由相应控件的 `close()` 或 [通用关闭入口](../src/main/java/dev/normlanguage/ui/component/Util.java)处理。复杂容器把 Norm 子 Widget 交给统一子树协调，再把最终 JavaFX 节点列表投影进原生布局。
 
-日期、时间、数值精度和区域值由 [`jdk.base`](https://github.com/normlanguage/jdk-base) 的 `jdk/base/module.norm` 定义。[本模块的依赖声明](../ui/component/module.norm)引用它；调用方使用这些类型时也需声明 `jdk.base` 依赖。
+应用根与局部主题作用域分别由 [App](../src/main/java/dev/normlanguage/ui/component/App.java)和 [ConfigProvider](../src/main/java/dev/normlanguage/ui/component/ConfigProvider.java)持有。组件配置的定义位于 [ComponentConfig](../src/main/java/dev/normlanguage/ui/component/ComponentConfig.java)，颜色映射位于 [主题连接](../ui/component/fx/connection.norm)，样式入口位于 [components.css](../src/main/resources/dev/normlanguage/ui/component/components.css)。JavaFX 节点变更、弹层显示和关闭在 JavaFX 应用线程执行。
 
-一个 [App](../src/main/java/dev/normlanguage/ui/component/App.java) 是一个组件树的资源所有者，可放进现有 `Scene`。它不启动 JavaFX，也不关闭传入的 `ThemeSource`。[ConfigProvider](../src/main/java/dev/normlanguage/ui/component/ConfigProvider.java)连接或覆盖局部主题。场景挂载时订阅主题，临时脱离场景时解除订阅，重新挂载时重新连接；最终 `close()` 停止后续连接并释放根节点拥有的资源。主题通知可以来自其他线程，进入 JavaFX 后再更新样式；其它控件变更和关闭操作遵守 JavaFX 应用线程规则。
-
-[ComponentConfig](../src/main/java/dev/normlanguage/ui/component/ComponentConfig.java)集中保存字体、密度、圆角、动效和区域设置。`ConfigProvider` 分别保存主题 CSS 与可继承的组件配置，合并字体声明，并为密度、圆角加载作用于本子树的实际 JavaFX 样式表。弹层继承触发点的配置；动画控件读取当前作用域的动效开关。区域设置是类型化配置值，具体组件的文案与格式以各自实现为准。
-
-弹层使用触发控件所属的根节点和最近的局部主题。[ThemeConnection](../src/main/java/dev/normlanguage/ui/component/ThemeConnection.java)是 Popover、Modal、Drawer 的主题继承入口；各弹层分别管理自己的显示、焦点与关闭。`Message` 与 `Notification` 归所属 `App` 管理，不创建全局窗口服务。异步和动画控件的关闭入口可由组件索引定位到各自实现。
-
-[组件索引](components.md)列出公开范围；[Gallery](../src/main/java/dev/normlanguage/ui/component/gallery/Gallery.java)提供每项可操作示例；[测试目录](../src/test/java/dev/normlanguage/ui/component)验证实际 JavaFX 窗口、主题与交互。
+日期、时间和其他 JDK 类型由 [`jdk.base`](https://github.com/normlanguage/jdk-base) 定义。组件范围以 [模块导出](../ui/component/module.norm)和 [Gallery 示例](../samples/gallery)为索引，实际交互验证见 [Norm 测试](../ui/component/tests)及 [Java 测试](../src/test/java/dev/normlanguage/ui/component)。

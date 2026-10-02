@@ -17,19 +17,26 @@ public final class Drawer implements AutoCloseable {
     private final ConfigProvider panel;
     private final StackPane overlay = new StackPane();
     private final ThemeConnection theme;
+    private final Motion motion;
+    private final Side side;
     private Window window;
     private final javafx.beans.InvalidationListener detached;
     private final javafx.beans.InvalidationListener windowHidden = observable -> {
-        if (window != null && !window.isShowing()) close();
+        if (window != null && !window.isShowing()) hide();
     };
-    private App app;
+    private OverlayHost host;
     private Node previousFocus;
+    private boolean closed;
+    private Runnable onHidden;
 
-    public Drawer(Node anchor, Node content, Side side) {
+    public Drawer(Node anchor, Node content, Side side) { this(anchor, content, side, ContentOwnership.OWNED); }
+    public Drawer(Node anchor, Node content, Side side, ContentOwnership ownership) {
         this.anchor = Objects.requireNonNull(anchor);
+        this.side = Objects.requireNonNull(side);
         detached = observable -> { if (anchor.getScene() == null) close(); };
-        panel = new ConfigProvider(Objects.requireNonNull(content));
+        panel = new ConfigProvider(Objects.requireNonNull(content), ownership);
         theme = new ThemeConnection(anchor, panel);
+        motion = new Motion(panel);
         panel.getStyleClass().add("norm-card");
         panel.setMaxWidth(360);
         StackPane.setAlignment(panel, switch (side) {
@@ -40,9 +47,9 @@ public final class Drawer implements AutoCloseable {
         });
         overlay.getChildren().add(panel);
         overlay.setStyle("-fx-background-color: -norm-scrim;");
-        overlay.setOnMouseClicked(event -> { if (event.getTarget() == overlay) close(); });
+        overlay.setOnMouseClicked(event -> { if (event.getTarget() == overlay) hide(); });
         overlay.addEventFilter(javafx.scene.input.KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode() == KeyCode.ESCAPE) { close(); event.consume(); }
+            if (event.getCode() == KeyCode.ESCAPE) { hide(); event.consume(); }
             else if (event.getCode() == KeyCode.TAB) {
                 var nodes = new ArrayList<Node>();
                 collectFocusable(panel, nodes);
@@ -58,41 +65,54 @@ public final class Drawer implements AutoCloseable {
         });
         overlay.setFocusTraversable(true);
     }
-    public boolean isShowing() { return app != null; }
+    public boolean isShowing() { return host != null; }
+    public void setOnHidden(Runnable action) { onHidden = action; }
     public ConfigProvider getContentRoot() { return panel; }
     public void show() {
         Util.requireFxThread();
-        if (app != null) return;
-        var owner = Util.app(anchor);
+        if (closed) throw new IllegalStateException("Drawer is closed");
+        if (host != null) return;
+        var owner = OverlayHost.nearest(anchor);
         if (anchor.getScene() == null || anchor.getScene().getWindow() == null
                 || !anchor.getScene().getWindow().isShowing())
             throw new IllegalStateException("Drawer requires a visible window");
         previousFocus = anchor.getScene().getFocusOwner();
         window = anchor.getScene().getWindow();
-        app = owner;
+        host = owner;
         try {
-            owner.own(this);
             theme.connect();
             anchor.sceneProperty().addListener(detached);
             window.showingProperty().addListener(windowHidden);
-            owner.getChildren().add(overlay);
+            owner.overlayLayer().getChildren().add(overlay);
+            motion.enter(side == Side.LEFT ? -360 : side == Side.RIGHT ? 360 : 0,
+                    side == Side.TOP ? -240 : side == Side.BOTTOM ? 240 : 0);
             var nodes = new ArrayList<Node>();
             collectFocusable(panel, nodes);
             if (nodes.isEmpty()) overlay.requestFocus(); else nodes.getFirst().requestFocus();
-        } catch (RuntimeException failure) { close(); throw failure; }
+        } catch (RuntimeException failure) { hide(); throw failure; }
     }
-    @Override public void close() {
+    public void hide() {
         Util.requireFxThread();
-        if (app == null) return;
-        app.getChildren().remove(overlay);
-        app.release(this);
-        app = null;
+        if (host == null) return;
+        motion.finish();
+        host.overlayLayer().getChildren().remove(overlay);
+        host = null;
         theme.close();
         anchor.sceneProperty().removeListener(detached);
         if (window != null) window.showingProperty().removeListener(windowHidden);
         window = null;
         if (previousFocus != null && previousFocus.getScene() != null) previousFocus.requestFocus();
         previousFocus = null;
+        if (onHidden != null) onHidden.run();
+    }
+    @Override public void close() {
+        Util.requireFxThread();
+        if (closed) return;
+        closed = true;
+        hide();
+        motion.close();
+        panel.close();
+        overlay.getChildren().clear();
     }
     private void collectFocusable(Node node, List<Node> result) {
         if (!node.isVisible() || node.isDisabled()) return;

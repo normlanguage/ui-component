@@ -1,0 +1,145 @@
+package gallery.test.rendering
+
+import std.testing.Test
+import std.filesystem.Path
+import gallery.Gallery
+import gallery.GalleryPage
+import gallery.galleryPages
+import ui.Renderer
+import ui.JavaFxBackend
+import ui.JavaFxScheduler
+import ui.fxHandle
+import ui.fx.FxApplication
+import ui.fx.withFxRuntime
+import ui.component.fx.utilCapture
+import ui.component.fx.utilRequireButton
+import theme.ThemeManager
+import theme.ThemeDefinition
+import theme.Color
+
+class RenderProgress {
+  Integer count = 0
+  String failure = ""
+  Boolean completed = false
+}
+
+class CaptureSequence {
+  FxApplication application
+  Renderer renderer
+  Gallery gallery
+  RenderProgress progress
+  private List<GalleryPage> pages = galleryPages()
+
+  Void begin() {
+    gallery.select(pages[1])
+    renderer.render(gallery)
+    var selected = utilRequireButton(arg0: application.scene(), arg1: "FloatButton  悬浮按钮")!!
+    var previous = utilRequireButton(arg0: application.scene(), arg1: "Button  按钮")!!
+    if !selected.getStyle()!!.contains(value: "-norm-primary-soft") || !previous.getStyle()!!.contains(value: "-norm-neutral-plain") {
+      this.fail("Programmatic selection did not update the sidebar")
+      return
+    }
+    gallery.select(pages[0])
+    renderer.render(gallery)
+    this.next()
+  }
+
+  Void next() {
+    if progress.count == pages.size() {
+      this.inspectInvalidForm()
+      return
+    }
+    var page = pages[progress.count]
+    utilRequireButton(arg0: application.scene(), arg1: page.name + "  " + page.chinese)!!.fire()
+    renderer.render(gallery)
+    utilCapture(arg0: application.scene(), arg1: Path(value: "build/screenshots/norm/" + page.name + ".png"), arg2: 1440, arg3: 1000,
+      arg4: () {
+        var selected = utilRequireButton(arg0: application.scene(), arg1: page.name + "  " + page.chinese)!!
+        if !selected.getStyle()!!.contains(value: "-norm-primary-soft") {
+          progress.failure = "Sidebar selection did not follow " + page.name
+          application.close()
+          return
+        }
+        if page.name != "Button" && !utilRequireButton(arg0: application.scene(), arg1: "Button  按钮")!!.getStyle()!!.contains(value: "-norm-neutral-plain") {
+          progress.failure = "Previous sidebar selection was retained on " + page.name
+          application.close()
+          return
+        }
+        progress.count = progress.count + 1
+        application.later(() { this.next() })
+      },
+      arg5: (String? failure) {
+        this.fail(if failure != null { failure } else { "Unknown capture failure" })
+      })
+  }
+
+  Void inspectInvalidForm() {
+    utilRequireButton(arg0: application.scene(), arg1: "Form  表单")!!.fire()
+    utilRequireButton(arg0: application.scene(), arg1: "提交")!!.fire()
+    renderer.render(gallery)
+    utilCapture(arg0: application.scene(), arg1: Path(value: "build/screenshots/norm/interactions/Form-invalid.png"), arg2: 1440, arg3: 1000,
+      arg4: () { application.later(() { this.inspectSourcePage() }) },
+      arg5: (String? failure) { this.fail(if failure != null { failure } else { "Form capture failed" }) })
+  }
+
+  Void inspectSourcePage() {
+    utilRequireButton(arg0: application.scene(), arg1: "Button  按钮")!!.fire()
+    utilRequireButton(arg0: application.scene(), arg1: "查看 Norm 源码")!!.fire()
+    renderer.render(gallery)
+    utilCapture(arg0: application.scene(), arg1: Path(value: "build/screenshots/norm/interactions/Button-source.png"), arg2: 1440, arg3: 1000,
+      arg4: () {
+        utilRequireButton(arg0: application.scene(), arg1: "收起源码")
+        application.later(() { this.inspectApiPage() })
+      }, arg5: (String? failure) { this.fail(if failure != null { failure } else { "Source capture failed" }) })
+  }
+
+  Void inspectApiPage() {
+    utilRequireButton(arg0: application.scene(), arg1: "收起源码")!!.fire()
+    utilRequireButton(arg0: application.scene(), arg1: "组件 API")!!.fire()
+    renderer.render(gallery)
+    utilCapture(arg0: application.scene(), arg1: Path(value: "build/screenshots/norm/interactions/Button-api.png"), arg2: 1440, arg3: 1000,
+      arg4: () {
+        utilRequireButton(arg0: application.scene(), arg1: "收起 API")
+        application.later(() { this.inspectDarkPage() })
+      }, arg5: (String? failure) { this.fail(if failure != null { failure } else { "API capture failed" }) })
+  }
+
+  Void inspectDarkPage() {
+    utilRequireButton(arg0: application.scene(), arg1: "Table  表格")!!.fire()
+    utilRequireButton(arg0: application.scene(), arg1: "深色")!!.fire()
+    renderer.render(gallery)
+    utilCapture(arg0: application.scene(), arg1: Path(value: "build/screenshots/norm/interactions/Table-dark.png"), arg2: 1440, arg3: 1000,
+      arg4: () {
+        utilRequireButton(arg0: application.scene(), arg1: "浅色")
+        progress.completed = true
+        application.close()
+      }, arg5: (String? failure) { this.fail(if failure != null { failure } else { "Dark capture failed" }) })
+  }
+
+  Void fail(String message) {
+    progress.failure = message
+    application.close()
+  }
+}
+
+@Test
+Void renderEveryDocumentPageInJavaFx() {
+  var progress = RenderProgress()
+  var theme = ThemeManager(ThemeDefinition(primary: Color(hex: "#1677FF"), neutral: Color(hex: "#808080")))
+  try {
+    withFxRuntime(() {
+      var application = FxApplication(title: "Norm Gallery verification", width: 1440.0, height: 1000.0)
+      var renderer = Renderer(backend: JavaFxBackend(application), scheduler: JavaFxScheduler(application))
+      var gallery = Gallery(theme: theme)
+      application.run(build: () {
+        renderer.render(gallery)
+        application.root(fxHandle(renderer.node()))
+        var captures = CaptureSequence(application: application, renderer: renderer, gallery: gallery, progress: progress)
+        application.later(() { captures.begin() })
+      }, dispose: renderer.close)
+    })
+    require(condition: progress.failure.isBlank, message: "Gallery capture failed: " + progress.failure)
+    require(condition: progress.count == 73, message: "All 73 pages must complete real rendering")
+    require(condition: progress.completed, message: "Gallery interaction captures must finish")
+  } finally { theme.close() }
+}

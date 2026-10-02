@@ -1,11 +1,8 @@
 Module module() {
-  module(name: "gallery", version: 1,
-    exports: ["Gallery", "FxHarness", "application"],
-    dependencies: [dependency(repository: "github", name: "ui.component", version: 1), dependency(repository: "github", name: "theme", version: 1), dependency(repository: "github", name: "fx.controls", version: 2), dependency(repository: "github", name: "jdk.base", version: 1)],
-    binding: jarBinding(
-      target: mavenJar(group: "dev.normlanguage", artifact: "ui-component", version: "1", resolution: sha256("72ce8f66b60ae882922e0fc6926bf72f8818418a8038303e030c358cc8897cd5")),
-      api: [
-        jarType(name: "dev.normlanguage.ui.component.gallery.Gallery", members: ["open", "saveThemes"]),
-        jarType(name: "dev.normlanguage.ui.component.gallery.FxHarness", members: ["run", "stop"])
-      ]))
+  module(name: "gallery", version: 2,
+    exports: ["application", "catalog", "general", "layout", "navigation", "inputs", "display", "overlays", "status"],
+    dependencies: [dependency(repository: "github", name: "ui.component.fx", version: 1), dependency(repository: "github", name: "ui.fx", version: 3), dependency(repository: "github", name: "ui.component", version: 2),
+      dependency(repository: "github", name: "ui", version: 4),
+      dependency(repository: "github", name: "theme", version: 1),
+      dependency(repository: "github", name: "jdk.base", version: 1)])
 }

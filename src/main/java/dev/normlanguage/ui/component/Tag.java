@@ -11,17 +11,22 @@ public class Tag extends HBox {
     private final Label label;
     private final Button close = new Button("×");
     private final BooleanProperty closable = new SimpleBooleanProperty(this, "closable");
+    private Runnable onClose;
     public Tag(String text) {
         getStyleClass().add("norm-tag");
         label = new Label(text);
         getChildren().addAll(label, close);
         close.visibleProperty().bind(closable);
         close.managedProperty().bind(closable);
-        close.setOnAction(event -> fireEvent(new Event(CLOSE)));
+        close.setOnAction(event -> {
+            fireEvent(new Event(CLOSE));
+            if (onClose != null) onClose.run();
+        });
     }
     public String getText() { return label.getText(); }
     public void setText(String text) { label.setText(text); }
     public boolean isClosable() { return closable.get(); }
     public void setClosable(boolean value) { closable.set(value); }
     public BooleanProperty closableProperty() { return closable; }
+    public void setOnClose(Runnable action) { onClose = action; }
 }

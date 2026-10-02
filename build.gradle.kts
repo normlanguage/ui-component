@@ -5,13 +5,13 @@ plugins {
 }
 
 group = "dev.normlanguage"
-version = "1"
+version = "2"
 
 repositories { mavenCentral() }
 
 java { toolchain { languageVersion = JavaLanguageVersion.of(25) } }
 providers.gradleProperty("testSource").orNull?.let { selected ->
-    sourceSets.test { java { include("**/FxTest.java", "**/$selected.java") } }
+    sourceSets.test { java { include("**/FxTest.java"); selected.split(",").forEach { include("**/$it.java") } } }
 }
 
 javafx {
@@ -29,7 +29,14 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-tasks.withType<JavaCompile>().configureEach { options.encoding = "UTF-8" }
+tasks.withType<JavaCompile>().configureEach {
+    options.encoding = "UTF-8"
+    options.compilerArgs.add("-parameters")
+}
+tasks.processResources {
+    from("samples/gallery") { include("**/*.norm"); exclude("tests/**"); into("norm-source/samples/gallery") }
+    from("ui/component") { include("*.norm"); into("norm-source/ui/component") }
+}
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
     jvmArgs("--enable-native-access=ALL-UNNAMED")
@@ -38,7 +45,7 @@ tasks.withType<Test>().configureEach {
 
 tasks.named<Test>("test") {
     useJUnitPlatform {
-        if (providers.gradleProperty("testSource").orNull != "ThemeRenderingTest") {
+        if (!providers.gradleProperty("testSource").isPresent) {
             excludeTags("theme-rendering")
         }
     }

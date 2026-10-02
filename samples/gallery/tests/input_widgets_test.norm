@@ -1,0 +1,96 @@
+package gallery
+
+import std.testing.Test
+import ui.Widget
+import ui.Binding
+import ui.component.Input
+import ui.component.DatePicker
+import ui.component.TimePicker
+import ui.component.InputNumber
+import ui.component.Cascader
+import ui.component.CascaderOption
+import ui.component.Transfer
+import ui.component.Upload
+import jdk.base.LocalDate
+import jdk.base.LocalTime
+import jdk.base.BigDecimal
+import jdk.base.localDateOf
+import jdk.base.localTimeOf
+import jdk.base.bigDecimalNew
+import std.filesystem.Path
+import std.concurrent.startTask
+import std.core.Unit
+
+class UploadProgressRecord {
+  Integer callbacks = 0
+  Double latest = 0.0
+}
+
+@Test
+Void allInputExamplesBuildFromNormWidgets() {
+  List<Widget> examples = [InputExample(), AutoCompleteExample(), CascaderExample(), CheckboxExample(),
+    ColorPickerExample(), DatePickerExample(), FormExample(), InputNumberExample(), MentionsExample(),
+    RadioExample(), RateExample(), SelectExample(), SliderExample(), SwitchExample(), TimePickerExample(),
+    TransferExample(), TreeSelectExample(), UploadExample()]
+  require(condition: examples.size() == 18, message: "all input pages have native Norm examples")
+  for example : examples { example.build() }
+}
+
+@Test
+Void dateTimeAndDecimalExamplesKeepCanonicalValues() {
+  var date = DatePickerExample()
+  date.date = localDateOf(arg0: 2024, arg1: 2, arg2: 29)!!
+  date.build()
+  require(condition: date.date!!.toEpochDay() == localDateOf(arg0: 2024, arg1: 2, arg2: 29)!!.toEpochDay(),
+    message: "leap day remains a JDK LocalDate")
+  var time = TimePickerExample()
+  time.meeting = localTimeOf(arg0: 13, arg1: 45)!!
+  time.build()
+  require(condition: time.meeting!!.toSecondOfDay() == 49500,
+    message: "meeting time remains a JDK LocalTime")
+  var amount = InputNumberExample()
+  amount.budget = bigDecimalNew("0.1")!!.add(bigDecimalNew("0.2")!!)!!
+  amount.build()
+  require(condition: amount.budget.toPlainString() == "0.3",
+    message: "decimal editor uses exact BigDecimal arithmetic")
+}
+
+@Test
+Void collectionExamplesRetainTypedSelections() {
+  var transfer = TransferExample()
+  transfer.selected = ["接口联调", "回归测试"]
+  transfer.build()
+  require(condition: transfer.selected.size() == 2 && transfer.selected[0] == "接口联调",
+    message: "transfer values stay typed in a Norm list")
+  var cascader = CascaderExample()
+  cascader.department = ["研发", "客户端"]
+  cascader.build()
+  require(condition: cascader.department[1] == "客户端", message: "cascader path stays typed")
+  var select = SelectExample()
+  select.assignees = ["林安", "陈晨"]
+  select.build()
+  require(condition: select.assignees.size() == 2, message: "multiple selection stays typed")
+}
+
+@Test
+Void formAndUploadExamplesOwnBusinessState() {
+  var form = FormExample()
+  form.build()
+  form.title = "交付组件库"
+  form.owner = "林安"
+  require(condition: form.title == "交付组件库" && form.owner == "林安",
+    message: "form bindings write ordinary Norm fields")
+  var upload = UploadExample()
+  upload.files = [Path(value: "samples/gallery/module.norm")]
+  upload.build()
+  require(condition: upload.files.size() == 1,
+    message: "upload file list is a Norm path collection")
+  var progress = UploadProgressRecord()
+  var task = upload.upload(file: upload.files[0], progress: (Double value) {
+    progress.callbacks = progress.callbacks + 1
+    progress.latest = value
+  })
+  task.await()
+  require(condition: progress.callbacks == 2 && progress.latest == 1.0,
+    message: "Norm upload task reports progress and completes")
+}

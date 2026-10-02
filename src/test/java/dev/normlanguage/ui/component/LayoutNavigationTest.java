@@ -7,7 +7,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
-import dev.normlanguage.ui.component.gallery.NavigationExamples;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 
@@ -107,17 +106,6 @@ class LayoutNavigationTest extends FxTest {
             ((javafx.scene.control.TextField) text.getGraphic()).setText("Canceled");
             text.cancelEdit();
             assertEquals("Final", text.getText());
-        });
-    }
-
-    @Test void gallerySuppliesEveryNavigationExample() throws Exception {
-        fx(() -> {
-            var app = new App();
-            try {
-                var examples = NavigationExamples.examples(app);
-                assertEquals(17, examples.size());
-                examples.values().forEach(factory -> assertNotNull(factory.get()));
-            } finally { app.close(); }
         });
     }
 

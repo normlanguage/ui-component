@@ -27,6 +27,10 @@ public class Transfer<T> extends HBox {
     }
     public ObservableList<T> getAvailableItems() { return FXCollections.unmodifiableObservableList(available); }
     public ObservableList<T> getSelectedItems() { return FXCollections.unmodifiableObservableList(selected); }
+    public void setItems(List<T> items) {
+        selected.removeIf(item -> !items.contains(item));
+        available.setAll(items.stream().filter(item -> !selected.contains(item)).toList());
+    }
     public ListView<T> getAvailableView() { return left; }
     public ListView<T> getSelectedView() { return right; }
     public void select(T item) {

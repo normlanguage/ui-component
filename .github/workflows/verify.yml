@@ -18,11 +18,23 @@ jobs:
           - LayoutNavigationTest
           - InputControlsTest
           - DisplayControlsTest
+          - ImageResourceTest
+          - UtilCaptureTest
           - FeedbackTest
-          - GalleryTest
           - ConfigurationTest
           - PropertyInvariantTest
           - WatermarkTest
+          - MotionTest
+          - NavigationLayoutAdapterTest
+          - InputAdapterTest
+          - DisplayAdapterTest
+          - DisplayStateLinkTest
+          - FeedbackContentTest
+          - NoticeHostTest
+          - OverlayAdapterTest
+          - OverlayLifecycleTest
+          - SelectionLinkTest
+          - ValueLinkTest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4

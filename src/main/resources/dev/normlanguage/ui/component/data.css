@@ -1,0 +1,171 @@
+.table-view, .list-view, .tree-view {
+    -fx-background-insets: 0;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 0;
+}
+.norm-root:themed .table-view, .norm-root:themed .list-view, .norm-root:themed .tree-view {
+    -fx-background-color: -norm-surface-raised;
+    -fx-border-color: -norm-divider;
+    -fx-table-cell-border-color: transparent;
+}
+.norm-root:themed .table-view:focused, .norm-root:themed .list-view:focused,
+.norm-root:themed .tree-view:focused {
+    -fx-border-color: -norm-focus;
+}
+.norm-root:themed .table-view .column-header-background,
+.norm-root:themed .table-view .column-header,
+.norm-root:themed .table-view .filler {
+    -fx-background-color: -norm-surface-raised;
+    -fx-background-insets: 0;
+    -fx-effect: null;
+}
+.table-view .column-header, .table-view .filler {
+    -fx-padding: 10 12;
+    -fx-border-width: 0 0 1 0;
+}
+.norm-root:themed .table-view .column-header, .norm-root:themed .table-view .filler {
+    -fx-border-color: -norm-divider;
+}
+.norm-root:themed .table-view .column-header .label {
+    -fx-text-fill: -norm-muted;
+    -fx-font-weight: bold;
+}
+.norm-root:themed .table-view .table-row-cell,
+.norm-root:themed .list-view .list-cell,
+.norm-root:themed .tree-view .tree-cell {
+    -fx-background-color: -norm-surface-raised;
+    -fx-text-fill: -norm-text;
+    -fx-border-color: transparent transparent -norm-divider transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-background-insets: 0;
+}
+.table-view .table-row-cell, .list-view .list-cell, .tree-view .tree-cell {
+    -fx-padding: 8 12;
+    -fx-cell-size: 38;
+}
+.norm-root:themed .table-view .table-row-cell:hover,
+.norm-root:themed .list-view .list-cell:hover,
+.norm-root:themed .tree-view .tree-cell:hover {
+    -fx-background-color: -norm-neutral-soft-hovered-background;
+}
+.norm-root:themed .table-view .table-row-cell:selected,
+.norm-root:themed .list-view .list-cell:selected,
+.norm-root:themed .tree-view .tree-cell:selected {
+    -fx-background-color: -norm-primary-soft-normal-background;
+    -fx-text-fill: -norm-primary-soft-normal-foreground;
+    -fx-border-color: transparent;
+}
+.norm-root:themed .table-view .table-row-cell:empty,
+.norm-root:themed .list-view .list-cell:empty,
+.norm-root:themed .tree-view .tree-cell:empty {
+    -fx-background-color: -norm-surface-raised;
+    -fx-border-color: transparent;
+}
+.norm-root:themed .table-view .table-cell {
+    -fx-text-fill: -norm-text;
+    -fx-border-color: transparent;
+}
+.norm-root:themed .table-view .table-row-cell:selected .table-cell {
+    -fx-text-fill: -norm-primary-soft-normal-foreground;
+}
+.norm-root:themed .table-view .placeholder,
+.norm-root:themed .list-view .placeholder,
+.norm-root:themed .tree-view .placeholder {
+    -fx-background-color: -norm-surface-raised;
+}
+.norm-calendar { -fx-padding: 12; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-width: 1; }
+.norm-calendar-header { -fx-alignment: center; -fx-spacing: 8; -fx-padding: 0 0 10 0; }
+.norm-calendar-heading { -fx-alignment: center; -fx-min-width: 126; -fx-font-weight: bold; }
+.norm-calendar-days { -fx-hgap: 3; -fx-vgap: 3; -fx-alignment: center; }
+.norm-calendar-weekday { -fx-alignment: center; -fx-min-width: 36; -fx-pref-width: 36; -fx-padding: 5 0; }
+.norm-calendar .norm-calendar-day, .norm-calendar .norm-calendar-nav {
+    -fx-background-insets: 0;
+    -fx-background-radius: 5;
+    -fx-border-width: 0;
+    -fx-min-width: 38;
+    -fx-pref-width: 38;
+    -fx-max-width: 38;
+    -fx-min-height: 38;
+    -fx-pref-height: 38;
+    -fx-max-height: 38;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+.norm-root:themed .norm-calendar { -fx-background-color: -norm-surface-raised; -fx-border-color: -norm-divider; }
+.norm-root:themed .norm-calendar-heading { -fx-text-fill: -norm-text; }
+.norm-root:themed .norm-calendar-weekday { -fx-text-fill: -norm-muted; }
+.norm-root:themed .norm-calendar-day, .norm-root:themed .norm-calendar-nav {
+    -fx-background-color: transparent;
+    -fx-text-fill: -norm-text;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+.norm-root:themed .norm-calendar-day.outside-month { -fx-text-fill: -norm-muted; }
+.norm-root:themed .norm-calendar-day:hover, .norm-root:themed .norm-calendar-nav:hover {
+    -fx-background-color: -norm-neutral-soft-hovered-background;
+}
+.norm-root:themed .norm-calendar-day.today { -fx-border-color: -norm-primary-soft-normal-border; -fx-border-width: 1; -fx-border-radius: 5; }
+.norm-root:themed .norm-calendar-day.selected,
+.norm-root:themed .norm-calendar-day.selected:hover {
+    -fx-background-color: -norm-primary-filled-normal-background;
+    -fx-text-fill: -norm-primary-filled-normal-foreground;
+    -fx-border-color: -norm-primary-filled-normal-border;
+}
+.norm-root:themed .norm-tabs .tab-header-area .tab-header-background { -fx-background-color: -norm-surface-raised; -fx-effect: null; }
+.norm-root:themed .norm-tabs .tab { -fx-background-color: transparent; -fx-border-color: transparent; -fx-border-width: 0 0 2 0; -fx-background-insets: 0; -fx-padding: 9 14; }
+.norm-root:themed .norm-tabs .tab:hover { -fx-background-color: -norm-neutral-soft-hovered-background; }
+.norm-root:themed .norm-tabs .tab:selected { -fx-border-color: -norm-primary-filled-normal-background; }
+.norm-root:themed .norm-tabs .tab:focused { -fx-border-color: -norm-focus; }
+.norm-root:themed .norm-tabs .tab .focus-indicator { -fx-border-color: transparent; -fx-background-color: transparent; }
+.norm-root:themed .norm-tabs .tab .tab-label { -fx-text-fill: -norm-muted; }
+.norm-root:themed .norm-tabs .tab:selected .tab-label { -fx-text-fill: -norm-primary-soft-normal-foreground; }
+.norm-root:themed .norm-tabs .tab-content-area { -fx-background-color: -norm-surface-raised; }
+.norm-root:themed .norm-menu { -fx-background-color: -norm-surface-raised; -fx-border-color: -norm-divider; -fx-border-width: 0 0 1 0; }
+.norm-root:themed .norm-menu .menu:hover, .norm-root:themed .norm-menu .menu:showing { -fx-background-color: -norm-neutral-soft-hovered-background; }
+.norm-root:themed .norm-menu .menu .label { -fx-text-fill: -norm-text; }
+.norm-pagination { -fx-alignment: center-left; -fx-spacing: 8; }
+.norm-root:themed .norm-pagination .button {
+    -fx-background-color: -norm-surface-raised;
+    -fx-text-fill: -norm-text;
+    -fx-border-color: -norm-divider;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5 10;
+}
+.norm-root:themed .norm-pagination .button:hover { -fx-background-color: -norm-neutral-soft-hovered-background; }
+.norm-root:themed .norm-pagination .button:disabled { -fx-opacity: 0.55; }
+.norm-root:themed .norm-pagination .label { -fx-text-fill: -norm-muted; }
+.norm-steps { -fx-alignment: center-left; -fx-spacing: 8; }
+.norm-steps .label { -fx-padding: 7 10; -fx-background-radius: 5; }
+.norm-root:themed .norm-steps .norm-step-complete { -fx-text-fill: -norm-primary-soft-normal-foreground; }
+.norm-root:themed .norm-steps .norm-step-current { -fx-background-color: -norm-primary-soft-normal-background; -fx-text-fill: -norm-primary-soft-normal-foreground; }
+.norm-root:themed .norm-steps .norm-step-waiting { -fx-text-fill: -norm-muted; }
+.norm-collapse { -fx-border-width: 0 0 1 0; }
+.norm-root:themed .norm-collapse { -fx-border-color: -norm-divider; }
+.norm-root:themed .norm-collapse > .title { -fx-background-color: -norm-surface-raised; -fx-background-insets: 0; -fx-padding: 11 14; }
+.norm-root:themed .norm-collapse > .title:hover { -fx-background-color: -norm-neutral-soft-hovered-background; }
+.norm-root:themed .norm-collapse > .title .text { -fx-fill: -norm-text; }
+.norm-root:themed .norm-collapse > .content { -fx-background-color: -norm-surface-raised; -fx-border-color: transparent; }
+.norm-card, .norm-popover, .norm-message { -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-width: 1; -fx-padding: 16; }
+.norm-root:themed.norm-card, .norm-root:themed.norm-popover,
+.norm-root:themed .norm-card, .norm-root:themed .norm-popover, .norm-root:themed .norm-message {
+    -fx-background-color: -norm-surface-raised;
+    -fx-border-color: -norm-divider;
+}
+.norm-card-title { -fx-font-weight: bold; -fx-padding: 0 0 10 0; }
+.norm-root:themed .norm-card-title { -fx-text-fill: -norm-text; }
+.norm-avatar { -fx-background-radius: 50; -fx-padding: 10; }
+.norm-root:themed .norm-avatar { -fx-background-color: -norm-primary-soft-normal-background; }
+.norm-root:themed .norm-avatar .label { -fx-text-fill: -norm-primary-soft-normal-foreground; -fx-font-weight: bold; }
+.norm-badge-indicator { -fx-background-radius: 100; -fx-padding: 2 6; -fx-font-size: 10; -fx-font-weight: bold; }
+.norm-root:themed .norm-badge-indicator { -fx-background-color: -norm-danger-filled-normal-background; -fx-text-fill: -norm-danger-filled-normal-foreground; }
+.norm-tag { -fx-alignment: center; -fx-spacing: 4; -fx-background-radius: 5; -fx-padding: 4 8; }
+.norm-root:themed .norm-tag { -fx-background-color: -norm-neutral-soft-normal-background; }
+.norm-root:themed .norm-tag .label { -fx-text-fill: -norm-neutral-soft-normal-foreground; }
+.norm-root:themed .norm-tag .button { -fx-background-color: transparent; -fx-border-color: transparent; -fx-border-width: 0; -fx-text-fill: -norm-neutral-soft-normal-foreground; -fx-padding: 0 3; }
+.norm-root:themed .norm-tag .button:hover { -fx-background-color: -norm-neutral-soft-hovered-background; }
+.norm-root:themed .progress-bar .track, .norm-root:themed .progress-indicator .track { -fx-background-color: -norm-neutral-soft-normal-background; -fx-background-insets: 0; -fx-background-radius: 100; }
+.norm-root:themed .progress-bar .bar { -fx-background-color: -norm-primary-filled-normal-background; -fx-background-insets: 0; -fx-background-radius: 100; }
+.norm-root:themed .progress-indicator { -fx-progress-color: -norm-primary-filled-normal-background; }

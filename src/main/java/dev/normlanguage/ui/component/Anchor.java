@@ -12,7 +12,8 @@ import javafx.scene.layout.VBox;
 
 import java.util.Objects;
 
-public class Anchor extends VBox {
+public class Anchor extends VBox implements AutoCloseable {
+    private final Motion motion = new Motion(this);
     public record Item(String text, Node target) {
         public Item {
             Objects.requireNonNull(text);
@@ -84,9 +85,17 @@ public class Anchor extends VBox {
         getChildren().clear();
         for (var item : items) {
             var link = new Hyperlink(item.text());
-            link.setOnAction(event -> scrollTo(item));
+            link.setOnAction(event -> {
+                var pane = getScrollPane();
+                double before = pane.getVvalue();
+                scrollTo(item);
+                double destination = pane.getVvalue();
+                pane.setVvalue(before);
+                motion.animate(Motion.ENTER, new javafx.animation.KeyValue(pane.vvalueProperty(), destination, Motion.EASING));
+            });
             if (item == activeItem.get()) link.getStyleClass().add("norm-anchor-active");
             getChildren().add(link);
         }
     }
+    @Override public void close() { motion.close(); }
 }

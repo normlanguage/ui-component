@@ -8,7 +8,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.geometry.VPos;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -30,14 +35,23 @@ public class Calendar extends BorderPane implements AutoCloseable {
 
     public Calendar() {
         getStyleClass().add("norm-calendar");
+        setMaxWidth(Double.MAX_VALUE);
         var previous = new Button("‹");
         var next = new Button("›");
+        previous.getStyleClass().add("norm-calendar-nav");
+        next.getStyleClass().add("norm-calendar-nav");
+        heading.getStyleClass().add("norm-calendar-heading");
         previous.setOnAction(event -> previousMonth());
         next.setOnAction(event -> nextMonth());
         var header = new HBox(previous, heading, next);
         header.getStyleClass().add("norm-calendar-header");
         setTop(header);
         days.getStyleClass().add("norm-calendar-days");
+        for (int column = 0; column < 7; column++) {
+            var constraint = new ColumnConstraints();
+            constraint.setPercentWidth(100.0 / 7);
+            days.getColumnConstraints().add(constraint);
+        }
         setCenter(days);
         value.addListener((o,a,b) -> render());
         displayedMonth.addListener((o,a,b) -> render());
@@ -65,7 +79,10 @@ public class Calendar extends BorderPane implements AutoCloseable {
         int firstWeekday = WeekFields.of(locale).getFirstDayOfWeek().getValue();
         for (int column = 0; column < 7; column++) {
             var weekday = DayOfWeek.of((firstWeekday - 1 + column) % 7 + 1);
-            days.add(new Label(weekday.getDisplayName(TextStyle.SHORT, locale)), column, 0);
+            var weekdayLabel = new Label(weekday.getDisplayName(TextStyle.SHORT, locale));
+            weekdayLabel.getStyleClass().add("norm-calendar-weekday");
+            GridPane.setHalignment(weekdayLabel, HPos.CENTER);
+            days.add(weekdayLabel, column, 0);
         }
         var first = month.atDay(1);
         var start = first.minusDays(Math.floorMod(first.getDayOfWeek().getValue() - firstWeekday, 7));
@@ -74,10 +91,18 @@ public class Calendar extends BorderPane implements AutoCloseable {
             var day = new Button(Integer.toString(date.getDayOfMonth()));
             day.getStyleClass().add("norm-calendar-day");
             day.setOnAction(event -> setValue(date));
+            if (date.equals(LocalDate.now())) day.getStyleClass().add("today");
             if (!YearMonth.from(date).equals(month)) day.getStyleClass().add("outside-month");
             if (date.equals(value.get())) day.getStyleClass().add("selected");
             var content = dayContentFactory == null ? null : dayContentFactory.apply(date);
-            days.add(content == null ? day : new VBox(day, content), offset % 7, offset / 7 + 1);
+            var contentSlot = new StackPane();
+            contentSlot.getStyleClass().add("norm-calendar-content");
+            if (content != null) contentSlot.getChildren().add(content);
+            var cell = new VBox(day, contentSlot);
+            cell.getStyleClass().add("norm-calendar-cell");
+            cell.setAlignment(Pos.TOP_CENTER);
+            GridPane.setValignment(cell, VPos.TOP);
+            days.add(cell, offset % 7, offset / 7 + 1);
         }
     }
     @Override public void close() { configuration.close(); }

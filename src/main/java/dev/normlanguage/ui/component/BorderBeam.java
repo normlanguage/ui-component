@@ -45,6 +45,8 @@ public final class BorderBeam extends StackPane implements AutoCloseable {
         animated.addListener(visibility);
         configuration.connect();
     }
+    public void setContent(Node value) { getChildren().set(0, value); }
+
     public javafx.beans.property.BooleanProperty animatedProperty() { return animated; }
     public void setAnimated(boolean value) { animated.set(value); }
     public boolean isAnimating() { return motion.getStatus() == Animation.Status.RUNNING; }

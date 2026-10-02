@@ -1,16 +1,57 @@
+@import "inputs.css";
+@import "data.css";
+
+.norm-root { -fx-font-smoothing-type: gray; }
+.norm-root .label.norm-destructive { -fx-text-fill: -norm-danger-plain-normal-foreground; }
 .norm-root:themed {
     -fx-base: -norm-surface;
     -fx-background: -norm-canvas;
-    -fx-control-inner-background: -norm-surface;
+    -fx-control-inner-background: -norm-surface-raised;
     -fx-text-background-color: -norm-text;
     -fx-text-base-color: -norm-text;
     -fx-accent: -norm-primary-filled-normal-background;
     -fx-focus-color: -norm-focus;
     -fx-faint-focus-color: transparent;
     -fx-background-color: -norm-canvas;
+    -fx-selection-bar: -norm-primary-soft-selected-normal-background;
+    -fx-selection-bar-text: -norm-primary-filled-normal-foreground;
+    -fx-selection-bar-non-focused: -norm-neutral-soft-selected-normal-background;
 }
-.norm-button { -fx-background-radius: 6; -fx-border-radius: 6; -fx-border-width: 1; -fx-padding: 8 16; }
-.norm-card, .norm-popover, .norm-message { -fx-background-radius: 8; -fx-padding: 16; -fx-border-radius: 8; }
+.button, .toggle-button, .menu-button {
+    -fx-background-color: -fx-control-inner-background;
+    -fx-background-insets: 0;
+    -fx-border-width: 1;
+    -fx-border-insets: 0;
+    -fx-effect: null;
+    -fx-cursor: hand;
+    -fx-alignment: center;
+    -fx-content-display: left;
+    -fx-graphic-text-gap: 8;
+}
+.norm-root:themed .button, .norm-root:themed .toggle-button, .norm-root:themed .menu-button {
+    -fx-background-color: -norm-surface-raised;
+    -fx-text-fill: -norm-text;
+    -fx-border-color: -norm-divider;
+}
+.norm-root:themed .button:hover, .norm-root:themed .menu-button:hover {
+    -fx-text-fill: -norm-primary-plain-hovered-foreground;
+    -fx-border-color: -norm-primary-outlined-hovered-border;
+}
+.norm-root:themed .button:pressed, .norm-root:themed .menu-button:showing {
+    -fx-background-color: -norm-primary-soft-pressed-background;
+    -fx-border-color: -norm-primary-outlined-pressed-border;
+}
+.norm-root:themed .toggle-button:selected {
+    -fx-background-color: -norm-primary-soft-selected-normal-background;
+    -fx-border-color: transparent;
+    -fx-text-fill: -norm-primary-soft-selected-normal-foreground;
+}
+.norm-root:themed .button:disabled, .norm-root:themed .toggle-button:disabled {
+    -fx-background-color: -norm-neutral-soft-disabled-background;
+    -fx-text-fill: -norm-neutral-soft-disabled-foreground;
+    -fx-border-color: -norm-neutral-outlined-disabled-border;
+    -fx-opacity: 1;
+}
 .norm-root:themed .norm-button {
     -norm-button-normal-background: -norm-primary-filled-normal-background;
     -norm-button-normal-foreground: -norm-primary-filled-normal-foreground;
@@ -31,20 +72,62 @@
 .norm-root:themed .norm-button:hover { -fx-background-color: -norm-button-hovered-background; -fx-text-fill: -norm-button-hovered-foreground; -fx-border-color: -norm-button-hovered-border; }
 .norm-root:themed .norm-button:pressed { -fx-background-color: -norm-button-pressed-background; -fx-text-fill: -norm-button-pressed-foreground; -fx-border-color: -norm-button-pressed-border; }
 .norm-root:themed .norm-button:disabled { -fx-background-color: -norm-button-disabled-background; -fx-text-fill: -norm-button-disabled-foreground; -fx-border-color: -norm-button-disabled-border; -fx-opacity: 1; }
-.norm-root:themed .norm-button:focused { -fx-border-color: -norm-focus; }
-.norm-root:themed .norm-button:loading { -fx-opacity: 0.6; }
-.norm-input { -fx-background-radius: 6; -fx-padding: 8 10; }
-.norm-root:themed.norm-card, .norm-root:themed.norm-popover, .norm-root:themed .norm-card, .norm-root:themed .norm-popover, .norm-root:themed .norm-message {
-    -fx-background-color: -norm-surface;
-    -fx-border-color: -norm-outline;
-}
+.norm-root:themed .button:focused, .norm-root:themed .norm-button:focused { -fx-border-color: -norm-focus; }
+.norm-root:themed .norm-button:loading { -fx-opacity: 0.65; }
 .norm-root:themed .norm-muted { -fx-text-fill: -norm-muted; }
 .norm-root:themed .norm-icon { -fx-icon-color: -norm-text; }
-.norm-root:themed .norm-error { -fx-text-fill: -norm-danger-filled-normal-background; }
-.norm-root:themed .text-input:invalid { -fx-border-color: -norm-danger-filled-normal-background; }
-.norm-switch { -fx-background-radius: 20; }
-.norm-root:themed .norm-tag { -fx-padding: 4 8; -fx-background-radius: 4; -fx-background-color: -norm-neutral-soft-normal-background; }
-.norm-root:themed .norm-avatar { -fx-background-color: -norm-primary-soft-normal-background; -fx-background-radius: 50; -fx-padding: 10; }
-.norm-root:themed .norm-badge { -fx-background-color: -norm-danger-filled-normal-background; -fx-text-fill: -norm-danger-filled-normal-foreground; -fx-background-radius: 20; -fx-padding: 2 6; }
-.norm-timeline { -fx-spacing: 16; }
-.norm-root:themed :tour-target { -fx-effect: dropshadow(gaussian, -norm-focus, 12, 0.4, 0, 0); }
+.norm-root:themed .norm-error { -fx-text-fill: -norm-danger-plain-normal-foreground; }
+.norm-root:themed .text-input:invalid { -fx-border-color: -norm-danger-outlined-normal-border; }
+.norm-root:themed .separator .line { -fx-border-color: -norm-divider; -fx-border-width: 1 0 0 0; -fx-background-color: transparent; }
+.norm-root:themed :tour-target { -fx-effect: dropshadow(gaussian, -norm-focus, 12, 0.25, 0, 0); }
+.split-pane { -fx-background-insets: 0; -fx-padding: 0; }
+.split-pane > .split-pane-divider { -fx-background-insets: 0; -fx-padding: 0 2; -fx-border-width: 0; }
+.split-pane:vertical > .split-pane-divider { -fx-padding: 2 0; }
+.norm-root:themed .split-pane { -fx-background-color: -norm-surface-raised; }
+.norm-root:themed .split-pane > .split-pane-divider { -fx-background-color: -norm-divider; }
+.norm-root:themed .split-pane > .split-pane-divider:hover { -fx-background-color: -norm-focus; }
+
+.norm-root:themed .norm-button.outlined {
+    -norm-button-normal-background: transparent;
+    -norm-button-normal-foreground: -norm-primary-outlined-normal-foreground;
+    -norm-button-normal-border: -norm-divider;
+    -norm-button-hovered-background: -norm-primary-outlined-hovered-background;
+    -norm-button-hovered-foreground: -norm-primary-outlined-hovered-foreground;
+    -norm-button-hovered-border: -norm-primary-outlined-hovered-border;
+    -norm-button-pressed-background: -norm-primary-outlined-pressed-background;
+    -norm-button-pressed-foreground: -norm-primary-outlined-pressed-foreground;
+    -norm-button-pressed-border: -norm-primary-outlined-pressed-border;
+    -norm-button-disabled-background: -norm-primary-outlined-disabled-background;
+    -norm-button-disabled-foreground: -norm-primary-outlined-disabled-foreground;
+    -norm-button-disabled-border: -norm-primary-outlined-disabled-border;
+}
+
+.norm-root:themed .norm-button.danger {
+    -norm-button-normal-background: -norm-danger-filled-normal-background;
+    -norm-button-normal-foreground: -norm-danger-filled-normal-foreground;
+    -norm-button-normal-border: -norm-danger-filled-normal-border;
+    -norm-button-hovered-background: -norm-danger-filled-hovered-background;
+    -norm-button-hovered-foreground: -norm-danger-filled-hovered-foreground;
+    -norm-button-hovered-border: -norm-danger-filled-hovered-border;
+    -norm-button-pressed-background: -norm-danger-filled-pressed-background;
+    -norm-button-pressed-foreground: -norm-danger-filled-pressed-foreground;
+    -norm-button-pressed-border: -norm-danger-filled-pressed-border;
+    -norm-button-disabled-background: -norm-danger-filled-disabled-background;
+    -norm-button-disabled-foreground: -norm-danger-filled-disabled-foreground;
+    -norm-button-disabled-border: -norm-danger-filled-disabled-border;
+}
+
+.norm-root:themed .norm-button.text {
+    -norm-button-normal-background: transparent;
+    -norm-button-normal-foreground: -norm-primary-plain-normal-foreground;
+    -norm-button-normal-border: transparent;
+    -norm-button-hovered-background: -norm-primary-plain-hovered-background;
+    -norm-button-hovered-foreground: -norm-primary-plain-hovered-foreground;
+    -norm-button-hovered-border: -norm-primary-plain-hovered-border;
+    -norm-button-pressed-background: -norm-primary-plain-pressed-background;
+    -norm-button-pressed-foreground: -norm-primary-plain-pressed-foreground;
+    -norm-button-pressed-border: -norm-primary-plain-pressed-border;
+    -norm-button-disabled-background: -norm-primary-plain-disabled-background;
+    -norm-button-disabled-foreground: -norm-primary-plain-disabled-foreground;
+    -norm-button-disabled-border: -norm-primary-plain-disabled-border;
+}

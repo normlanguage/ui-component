@@ -11,6 +11,23 @@ import java.util.Locale;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ConfigurationTest extends FxTest {
+    @Test void clearingLocalThemeDisconnectsAndRestoresInheritance() throws Exception {
+        fx(() -> {
+            var provider = new ConfigProvider(new Label("Content"));
+            var detached = new java.util.concurrent.atomic.AtomicInteger();
+            var stage = new Stage();
+            stage.setScene(new Scene(provider));
+            provider.connectTheme(receiver -> { receiver.accept("-fx-accent: red;"); return detached::incrementAndGet; });
+            assertFalse(provider.getThemeCss().isBlank());
+            provider.clearTheme();
+            assertEquals(1, detached.get());
+            assertEquals("", provider.getThemeCss());
+            provider.close();
+            assertEquals(1, detached.get());
+            stage.close();
+        });
+    }
+
     @Test void defaultsMatchCurrentComponentGeometry() throws Exception {
         fx(() -> {
             var config = ComponentConfig.defaults();
