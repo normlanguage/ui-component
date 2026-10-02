@@ -108,3 +108,11 @@ String themeCss(Theme theme) {
 private String stateCss(String prefix, ControlState state) {
   prefix + "-background: " + state.background.hex() + ";" + prefix + "-foreground: " + state.foreground.hex() + ";" + prefix + "-border: " + state.border.hex() + ";"
 }
+
+Void styleSurface(Node control, Tone tone = Tone.Neutral, Appearance appearance = Appearance.Soft) {
+  var prefix = "-norm-" + toneName(tone) + "-" + appearanceName(appearance)
+  utilStyle(arg0: control, arg1: "-norm-surface-background: " + prefix + "-normal-background;"
+    + "-norm-surface-foreground: " + prefix + "-normal-foreground;"
+    + "-norm-surface-border: " + prefix + "-normal-border;"
+    + "-norm-surface-hover: " + prefix + "-hovered-background;")
+}

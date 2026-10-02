@@ -2,6 +2,9 @@ package ui.component
 
 import ui.Widget
 import ui.NodeKey
+import theme.Tone
+import theme.Appearance
+import ui.component.fx.styleSurface
 import ui.Binding
 import std.collections.MutableList
 import jdk.base.LocalDate
@@ -137,19 +140,30 @@ value Calendar implements Widget {
 }
 
 value Card implements Widget {
-  String title
   Widget content
+  String title = ""
+  Widget? header = null
+  Tone tone = Tone.Neutral
+  Appearance appearance = Appearance.Plain
   Widget? bottom = null
   NodeKey? key = null
 
   Widget build() {
     List<Widget> children = [content]
     var footer = bottom
+    var heading = header
     if footer != null { children.add(footer) }
+    if heading != null { children.add(heading) }
     nativeComponent<CardControl>(kind: "ui.component.Card",
       create: () { displayAdapterCard(title)!! }, node: (control) { control },
-      update: (control, scope) { control.setTitle(title) }, children: children,
-      arrange: (control, nodes) { displayAdapterCardSlots(arg0: control, arg1: nodes[0], arg2: if footer != null { nodes[1] } else { null }) },
+      update: (control, scope) {
+        control.setTitle(title)
+        styleSurface(control: control, tone: tone, appearance: appearance)
+      }, children: children,
+      arrange: (control, nodes) {
+        displayAdapterCardSlots(arg0: control, arg1: nodes[0], arg2: if footer != null { nodes[1] } else { null })
+        control.setHeader(if heading != null { nodes[if footer != null { 2 } else { 1 }] } else { null })
+      },
       close: (control) { utilCloseNode(control) }, key: key)
   }
 }
@@ -408,6 +422,8 @@ value Table<T> implements Widget {
 
 value Tag implements Widget {
   String text
+  Tone tone = Tone.Neutral
+  Appearance appearance = Appearance.Soft
   Boolean closable = false
   Function<Void()>? onClose = null
   NodeKey? key = null
@@ -418,6 +434,7 @@ value Tag implements Widget {
       update: (control, scope) {
         control.setText(text)
         control.setClosable(closable)
+        styleSurface(control: control, tone: tone, appearance: appearance)
         var action = onClose
         displayAdapterTagOnClose(arg0: control, arg1: if action != null { scope.bind(action) } else { null })
       }, close: (control) { utilCloseNode(control) }, key: key)

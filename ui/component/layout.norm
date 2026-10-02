@@ -2,6 +2,7 @@ package ui.component
 
 import ui.Widget
 import ui.NodeKey
+import ui.component.fx.javafx.geometry.Pos
 import ui.component.fx.javafx.geometry.Orientation
 import ui.component.fx.Divider as DividerControl
 import ui.component.fx.Flex as FlexControl
@@ -36,6 +37,8 @@ value Divider implements Widget {
   }
 }
 
+enum Alignment { Start, Center, End }
+
 value FlexItem {
   Widget content
   Double grow = 0.0
@@ -44,6 +47,7 @@ value FlexItem {
 value Flex implements Widget {
   List<FlexItem> items
   Boolean vertical = false
+  Alignment alignment = Alignment.Start
   Boolean wrap = false
   Double gap = 8.0
   NodeKey? key = null
@@ -53,6 +57,11 @@ value Flex implements Widget {
       create: () { navigationLayoutAdapterFlex()!! }, node: (control) { control },
       update: (control, scope) {
         control.setOrientation(if vertical { Orientation.VERTICAL } else { Orientation.HORIZONTAL })
+        control.setAlignment(switch alignment {
+          case Start { break if vertical { Pos.TOP_CENTER } else { Pos.CENTER_LEFT } }
+          case Center { break Pos.CENTER }
+          case End { break if vertical { Pos.BOTTOM_CENTER } else { Pos.CENTER_RIGHT } }
+        })
         control.setWrap(wrap)
         control.setHgap(gap)
         control.setVgap(gap)

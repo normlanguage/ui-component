@@ -1,8 +1,8 @@
 Module module() {
   module(name: "gallery", version: 2,
     exports: ["application", "catalog", "general", "layout", "navigation", "inputs", "display", "overlays", "status"],
-    dependencies: [dependency(repository: "github", name: "ui.component.fx", version: 1), dependency(repository: "github", name: "ui.fx", version: 3), dependency(repository: "github", name: "ui.component", version: 2),
-      dependency(repository: "github", name: "ui", version: 4),
+    dependencies: [dependency(repository: "github", name: "ui.component.fx", version: 1), dependency(repository: "github", name: "ui.fx", version: 3), dependency(repository: "github", name: "ui.component", version: 4),
+      dependency(repository: "github", name: "ui", version: 5),
       dependency(repository: "github", name: "theme", version: 1),
       dependency(repository: "github", name: "jdk.base", version: 1)])
 }
