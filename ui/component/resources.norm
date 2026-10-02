@@ -1,5 +1,0 @@
-package ui.component
-
-import ui.component.fx.utilResourceText
-
-String resourceText(String path) { utilResourceText(path)!! }

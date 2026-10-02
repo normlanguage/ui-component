@@ -1,11 +1,11 @@
 package gallery
 
 import ui.Widget
-import ui.DesktopApp
-import ui.Text
-import ui.Column
-import ui.Row
-import ui.Scroll
+import ui.fx.DesktopApp
+import ui.kit.Text
+import ui.kit.Column
+import ui.kit.Row
+import ui.kit.Scroll
 import ui.WidgetRole
 import ui.Binding
 import theme.ThemeManager
@@ -14,14 +14,14 @@ import theme.ThemeMode
 import theme.Color
 import theme.Tone
 import theme.Appearance
-import ui.component.configuration
-import ui.component.App
-import ui.component.Button
-import ui.component.Input
-import ui.component.Layout
-import ui.component.Surface
-import ui.component.Typography
-import ui.component.resourceText
+import ui.kit.configuration
+import ui.kit.App
+import ui.kit.Button
+import ui.kit.Input
+import ui.kit.Layout
+import ui.kit.Surface
+import ui.kit.Typography
+import ui.kit.resourceText
 
 Void main() {
   var theme = ThemeManager(ThemeDefinition(primary: Color(hex: "#1677FF"), neutral: Color(hex: "#808080")))

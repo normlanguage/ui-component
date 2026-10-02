@@ -1,6 +1,0 @@
-Module module() {
-  module(name: "ui.component", version: 4,
-    exports: ["general", "inputs", "layout", "navigation", "display", "feedback", "configuration", "status", "notices", "surface", "resources"],
-    dependencies: [dependency(repository: "github", name: "jdk.base", version: 1), dependency(repository: "github", name: "theme", version: 1), dependency(repository: "github", name: "ui.fx", version: 3), dependency(repository: "github", name: "fx.controls", version: 2), dependency(repository: "github", name: "ui", version: 5),
-      dependency(repository: "github", name: "ui.component.fx", version: 1)])
-}
