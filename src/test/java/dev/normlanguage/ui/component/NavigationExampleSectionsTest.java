@@ -8,22 +8,16 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Tag("theme-rendering")
 class NavigationExampleSectionsTest extends FxTest {
     @Test void floatingGroupStaysAtBottomRightAndResponsiveGridFillsColumns() throws Exception {
-        var css = Files.readString(Path.of("build", "themes", "light.css"));
         fx(() -> {
             var app = new App();
-            app.setThemeCss(css);
             var layer = new StackPane(new Label("内容"));
             var group = new FloatButton.Group(new FloatButton("新建"), new FloatButton("帮助")).attachTo(layer);
             app.setContent(layer);
@@ -60,10 +54,8 @@ class NavigationExampleSectionsTest extends FxTest {
     }
 
     @Test void everyGeneralLayoutAndNavigationExampleHasDistinctLiveSections() throws Exception {
-        var css = Files.readString(Path.of("build", "themes", "light.css"));
         fx(() -> {
             var app = new App();
-            app.setThemeCss(css);
             var host = new VBox();
             app.setContent(host);
             var stage = new Stage();
@@ -95,10 +87,8 @@ class NavigationExampleSectionsTest extends FxTest {
     }
 
     @Test void keyLayoutAndNavigationDemosHaveObservableBehavior() throws Exception {
-        var css = Files.readString(Path.of("build", "themes", "light.css"));
         fx(() -> {
             var app = new App();
-            app.setThemeCss(css);
             var host = new VBox();
             app.setContent(host);
             var stage = new Stage();
