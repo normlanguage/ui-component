@@ -1,0 +1,38 @@
+package ui.component
+
+import std.collections.MutableList
+
+private MutableList<T?> hostItems<T>(List<T> values) {
+  var result = utilEmptyItems<T>()!!
+  for value : values { result.add(value) }
+  result
+}
+
+CascaderItem<T?> cascaderItem<T>(T value, String label, List<CascaderItem<T?>> children, Boolean lazy = false) {
+  MutableList<CascaderItem<T?>?> copied = hostItems(children)
+  cascaderItemNew<T>(arg0: value, arg1: label, arg2: copied, arg3: lazy)
+}
+
+Cascader<T?> cascader<T>(List<CascaderItem<T?>> items) {
+  cascaderNew(hostItems(items))
+}
+
+Transfer<T?> transfer<T>(List<T> items) {
+  transferNew(hostItems(items))
+}
+
+Segmented<T?> segmented<T>(List<T> items) {
+  segmentedNew(hostItems(items))
+}
+
+Tour tour(List<TourStep> steps) {
+  tourNew(hostItems(steps))
+}
+
+Void autoCompleteSuggestions(AutoComplete control, List<String> values) {
+  control.setSuggestions(hostItems(values))
+}
+
+Void mentionsSuggestions(Mentions control, List<String> values) {
+  control.setSuggestions(hostItems(values))
+}

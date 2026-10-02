@@ -1,0 +1,35 @@
+name: Verify JavaFX components
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  javafx:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        suite:
+          - LifecycleTest
+          - LayoutNavigationTest
+          - InputControlsTest
+          - DisplayControlsTest
+          - FeedbackTest
+          - GalleryTest
+          - ConfigurationTest
+          - PropertyInvariantTest
+          - WatermarkTest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Verify ${{ matrix.suite }}
+        shell: pwsh
+        run: .\gradlew.bat test -PtestSource=${{ matrix.suite }} --tests '*${{ matrix.suite }}' --console=plain

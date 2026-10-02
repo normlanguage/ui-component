@@ -1,0 +1,15 @@
+package gallery
+
+import theme.Color
+import theme.ThemeDefinition
+import theme.ThemeMode
+import theme.generateTheme
+import ui.component.themeCss
+
+Void main() {
+  var definition = ThemeDefinition(primary: Color(hex: "#6750A4"))
+  galleryOpen(
+    arg0: themeCss(generateTheme(definition, mode: ThemeMode.Light)),
+    arg1: themeCss(generateTheme(definition, mode: ThemeMode.Dark))
+  )
+}

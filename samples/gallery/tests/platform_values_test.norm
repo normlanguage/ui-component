@@ -1,0 +1,48 @@
+package gallery
+
+import std.testing.Test
+import jdk.base.localDateOf
+import jdk.base.localTimeOf
+import jdk.base.yearMonthOf
+import jdk.base.bigDecimalNew
+import ui.component.datePickerNew
+import ui.component.timePickerNew
+import ui.component.calendarNew
+import ui.component.inputNumberNew
+import ui.component.componentConfigDefaults
+import ui.component.configProviderNew
+
+@Test
+Void platformValuesCrossComponentBoundary() {
+  try {
+    fxHarnessRun(() {
+      var date = localDateOf(arg0: 2024, arg1: 2, arg2: 29)!!
+      var picker = datePickerNew()
+      picker.setValue(date)
+      require(condition: picker.getValue()!!.toEpochDay() == date.toEpochDay(), message: "date retains canonical JDK identity")
+      var time = localTimeOf(arg0: 13, arg1: 45)!!
+      var clock = timePickerNew()
+      clock.setValue(time)
+      require(condition: clock.getValue()!!.toSecondOfDay() == time.toSecondOfDay(), message: "time retains canonical JDK identity")
+      var scope = configProviderNew()
+      try {
+        var config = componentConfigDefaults()!!
+        scope.setConfig(config)
+        require(condition: scope.getEffectiveConfig()!!.locale()!!.toLanguageTag() == config.locale()!!.toLanguageTag(), message: "configuration shares the canonical locale")
+      } finally {
+        scope.close()
+      }
+      var calendar = calendarNew()
+      try {
+        calendar.setDisplayedMonth(yearMonthOf(arg0: 2024, arg1: 2))
+        calendar.setValue(date)
+        require(condition: calendar.getValue()!!.toEpochDay() == date.toEpochDay(), message: "calendar accepts canonical date")
+        var decimal = inputNumberNew()
+        decimal.setValue(bigDecimalNew("0.1").add(bigDecimalNew("0.2")))
+        require(condition: decimal.getValue()!!.toPlainString() == "0.3", message: "decimal input preserves exact decimal arithmetic")
+      } finally {
+        calendar.close()
+      }
+    })
+  } finally { fxHarnessStop() }
+}

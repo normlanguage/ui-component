@@ -1,0 +1,50 @@
+.norm-root:themed {
+    -fx-base: -norm-surface;
+    -fx-background: -norm-canvas;
+    -fx-control-inner-background: -norm-surface;
+    -fx-text-background-color: -norm-text;
+    -fx-text-base-color: -norm-text;
+    -fx-accent: -norm-primary-filled-normal-background;
+    -fx-focus-color: -norm-focus;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: -norm-canvas;
+}
+.norm-button { -fx-background-radius: 6; -fx-border-radius: 6; -fx-border-width: 1; -fx-padding: 8 16; }
+.norm-card, .norm-popover, .norm-message { -fx-background-radius: 8; -fx-padding: 16; -fx-border-radius: 8; }
+.norm-root:themed .norm-button {
+    -norm-button-normal-background: -norm-primary-filled-normal-background;
+    -norm-button-normal-foreground: -norm-primary-filled-normal-foreground;
+    -norm-button-normal-border: -norm-primary-filled-normal-border;
+    -norm-button-hovered-background: -norm-primary-filled-hovered-background;
+    -norm-button-hovered-foreground: -norm-primary-filled-hovered-foreground;
+    -norm-button-hovered-border: -norm-primary-filled-hovered-border;
+    -norm-button-pressed-background: -norm-primary-filled-pressed-background;
+    -norm-button-pressed-foreground: -norm-primary-filled-pressed-foreground;
+    -norm-button-pressed-border: -norm-primary-filled-pressed-border;
+    -norm-button-disabled-background: -norm-primary-filled-disabled-background;
+    -norm-button-disabled-foreground: -norm-primary-filled-disabled-foreground;
+    -norm-button-disabled-border: -norm-primary-filled-disabled-border;
+    -fx-background-color: -norm-button-normal-background;
+    -fx-text-fill: -norm-button-normal-foreground;
+    -fx-border-color: -norm-button-normal-border;
+}
+.norm-root:themed .norm-button:hover { -fx-background-color: -norm-button-hovered-background; -fx-text-fill: -norm-button-hovered-foreground; -fx-border-color: -norm-button-hovered-border; }
+.norm-root:themed .norm-button:pressed { -fx-background-color: -norm-button-pressed-background; -fx-text-fill: -norm-button-pressed-foreground; -fx-border-color: -norm-button-pressed-border; }
+.norm-root:themed .norm-button:disabled { -fx-background-color: -norm-button-disabled-background; -fx-text-fill: -norm-button-disabled-foreground; -fx-border-color: -norm-button-disabled-border; -fx-opacity: 1; }
+.norm-root:themed .norm-button:focused { -fx-border-color: -norm-focus; }
+.norm-root:themed .norm-button:loading { -fx-opacity: 0.6; }
+.norm-input { -fx-background-radius: 6; -fx-padding: 8 10; }
+.norm-root:themed.norm-card, .norm-root:themed.norm-popover, .norm-root:themed .norm-card, .norm-root:themed .norm-popover, .norm-root:themed .norm-message {
+    -fx-background-color: -norm-surface;
+    -fx-border-color: -norm-outline;
+}
+.norm-root:themed .norm-muted { -fx-text-fill: -norm-muted; }
+.norm-root:themed .norm-icon { -fx-icon-color: -norm-text; }
+.norm-root:themed .norm-error { -fx-text-fill: -norm-danger-filled-normal-background; }
+.norm-root:themed .text-input:invalid { -fx-border-color: -norm-danger-filled-normal-background; }
+.norm-switch { -fx-background-radius: 20; }
+.norm-root:themed .norm-tag { -fx-padding: 4 8; -fx-background-radius: 4; -fx-background-color: -norm-neutral-soft-normal-background; }
+.norm-root:themed .norm-avatar { -fx-background-color: -norm-primary-soft-normal-background; -fx-background-radius: 50; -fx-padding: 10; }
+.norm-root:themed .norm-badge { -fx-background-color: -norm-danger-filled-normal-background; -fx-text-fill: -norm-danger-filled-normal-foreground; -fx-background-radius: 20; -fx-padding: 2 6; }
+.norm-timeline { -fx-spacing: 16; }
+.norm-root:themed :tour-target { -fx-effect: dropshadow(gaussian, -norm-focus, 12, 0.4, 0, 0); }
