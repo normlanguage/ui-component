@@ -19,6 +19,7 @@ jobs:
           - InputControlsTest
           - DisplayControlsTest
           - ImageResourceTest
+          - UtilCaptureTest
           - FeedbackTest
           - ConfigurationTest
           - PropertyInvariantTest
