@@ -29,7 +29,16 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-tasks.withType<JavaCompile>().configureEach { options.encoding = "UTF-8" }
+tasks.withType<JavaCompile>().configureEach {
+    options.encoding = "UTF-8"
+    options.compilerArgs.add("-parameters")
+}
+tasks.processResources {
+    from("src/main/java") {
+        include("dev/normlanguage/ui/component/**/*.java")
+        into("gallery-source")
+    }
+}
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
     jvmArgs("--enable-native-access=ALL-UNNAMED")

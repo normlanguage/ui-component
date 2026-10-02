@@ -302,18 +302,22 @@ public final class GalleryView extends BorderPane implements AutoCloseable {
         clearExamples();
         var title = new Label(selection.name() + " " + selection.chinese());
         title.getStyleClass().add("gallery-page-title");
-        var header = new VBox(10, title);
-        if (selection.name().equals("Button")) {
-            var description = new Label("触发一个操作。");
-            description.getStyleClass().add("gallery-secondary");
-            header.getChildren().add(description);
-        }
+        var documentation = GalleryDocumentation.page(selection.name());
+        var description = DocumentationView.paragraph(documentation.summary(), "gallery-doc-lead");
+        description.setId("gallery-doc-summary");
+        var header = new VBox(12, title, description);
+        var when = DocumentationView.section("when", "何时使用");
+        when.getChildren().add(DocumentationView.paragraph(documentation.whenToUse(), "gallery-doc-paragraph"));
+        sectionIndex.getItems().add(new Anchor.Item("何时使用", when));
         currentSections = GalleryExamples.create(selection, app);
         for (var section : currentSections) {
             activeExamples.add(section.content());
             var heading = new Label(section.title());
             heading.getStyleClass().add("gallery-section-heading");
-            var block = new VBox(24, heading, section.content());
+            var explanation = documentation.example(section.id());
+            var introduction = DocumentationView.paragraph(explanation.explanation(), "gallery-doc-paragraph");
+            var interaction = DocumentationView.paragraph(explanation.interaction(), "gallery-doc-interaction");
+            var block = new VBox(16, heading, introduction, section.content(), interaction);
             block.setId("gallery-section-" + section.id());
             block.getStyleClass().add("gallery-section");
             block.setMinWidth(0);
@@ -321,7 +325,17 @@ public final class GalleryView extends BorderPane implements AutoCloseable {
             sectionBlocks.add(block);
             sectionIndex.getItems().add(new Anchor.Item(section.title(), block));
         }
-        var page = new VBox(40, header, sections);
+        var examplesHeading = DocumentationView.paragraph("代码演示", "gallery-section-heading");
+        var api = DocumentationView.api(selection);
+        var notes = DocumentationView.section("notes", "使用说明");
+        for (var note : documentation.notes()) {
+            var item = new VBox(6, DocumentationView.paragraph(note.title(), "gallery-doc-note-title"),
+                    DocumentationView.paragraph(note.body(), "gallery-doc-paragraph"));
+            notes.getChildren().add(item);
+        }
+        var source = DocumentationView.source(selection);
+        sectionIndex.getItems().addAll(new Anchor.Item("API", api), new Anchor.Item("使用说明", notes), new Anchor.Item("示例源码", source));
+        var page = new VBox(36, header, when, examplesHeading, sections, api, notes, source);
         if (!sectionIndex.getItems().isEmpty()) sectionIndex.activeItemProperty().set(sectionIndex.getItems().getFirst());
         page.setId("gallery-detail");
         page.getStyleClass().add("gallery-page");
@@ -374,5 +388,6 @@ public final class GalleryView extends BorderPane implements AutoCloseable {
         if (closed) return;
         closed = true;
         clearExamples();
+        sectionIndex.close();
     }
 }

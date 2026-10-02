@@ -140,8 +140,8 @@ public final class InputExampleSections {
         return button;
     }
 
-    private static void preview(Region region, Color color) {
-        region.setBackground(new Background(new BackgroundFill(color, new CornerRadii(6), javafx.geometry.Insets.EMPTY)));
+    private static void preview(Region region, javafx.beans.value.ObservableValue<Color> color) {
+        region.backgroundProperty().bind(color.map(value -> new Background(new BackgroundFill(value, new CornerRadii(6), javafx.geometry.Insets.EMPTY))));
     }
 
     private static Node citySearch() {
@@ -192,10 +192,9 @@ public final class InputExampleSections {
         swatch.setPrefSize(68, 32);
         swatch.setMinSize(68, 32);
         swatch.getStyleClass().add("gallery-input-swatch");
-        preview(swatch, picker.getValue());
+        preview(swatch, picker.valueProperty());
         var result = caption("品牌主色 #1677FF");
         picker.valueProperty().addListener((observable, old, color) -> {
-            preview(swatch, color);
             result.setText("RGBA " + toHex(color) + " · 透明度 " + Math.round(color.getOpacity() * 100) + "%");
         });
         return surface(row(picker, swatch), result);
@@ -440,9 +439,10 @@ public final class InputExampleSections {
         var preview = new Label("实时预览 · 色彩搭配");
         preview.getStyleClass().add("gallery-input-color-preview");
         var result = caption("文字 " + toHex(foreground.getValue()) + " · 背景 " + toHex(background.getValue()));
+        preview.setId("demo-color-preview");
+        preview.textFillProperty().bind(foreground.valueProperty());
+        preview(preview, background.valueProperty());
         Runnable update = () -> {
-            preview.setTextFill(foreground.getValue());
-            preview(preview, background.getValue());
             result.setText("文字 " + toHex(foreground.getValue()) + " · 背景 " + toHex(background.getValue()));
         };
         foreground.valueProperty().addListener((observable, old, color) -> update.run());

@@ -5,13 +5,11 @@
     -fx-min-height: 32;
     -fx-pref-height: 32;
     -fx-max-height: 32;
-    -fx-background-radius: 6;
     -fx-border-radius: 6;
 }
 .norm-root:themed .gallery-input-swatch { -fx-border-color: -norm-divider; }
 .gallery-input-color-preview {
     -fx-padding: 12 16;
-    -fx-background-radius: 6;
 }
 .gallery-demo-surface .norm-form { -fx-spacing: 8; }
 .gallery-demo-surface .norm-transfer { -fx-spacing: 8; }

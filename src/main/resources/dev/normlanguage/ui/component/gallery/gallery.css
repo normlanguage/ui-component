@@ -59,3 +59,17 @@
 .gallery-root:compact .gallery-toolbar .choice-box { -fx-pref-width: 90; }
 
 .gallery-sidebar-footer .norm-switch { -fx-font-size: 14px; }
+.gallery-doc-lead { -fx-font-size: 18px; -fx-text-fill: -norm-muted; -fx-line-spacing: 5; }
+.gallery-doc-paragraph { -fx-font-size: 16px; -fx-text-fill: -norm-text; -fx-line-spacing: 5; }
+.gallery-doc-interaction { -fx-font-size: 15px; -fx-text-fill: -norm-muted; -fx-line-spacing: 4; }
+.gallery-doc-note-title { -fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: -norm-text; }
+.gallery-api-row { -fx-padding: 10 12; -fx-background-color: -norm-surface; -fx-background-radius: 4; }
+.gallery-api-kind { -fx-font-size: 13px; -fx-text-fill: -norm-muted; }
+.gallery-api-signature { -fx-font-family: Consolas, monospace; -fx-font-size: 14px; -fx-text-fill: -norm-text; -fx-line-spacing: 4; }
+.gallery-source-text { -fx-font-family: Consolas, monospace; -fx-font-size: 14px; }
+.gallery-source-toolbar { -fx-alignment: center-left; }
+.gallery-source-toolbar .button, .gallery-source-toolbar .text-field { -fx-font-size: 14px; }
+.gallery-source-panel > .title { -fx-background-color: -norm-surface; -fx-background-insets: 0; -fx-background-radius: 5; -fx-padding: 12 14; }
+.gallery-source-panel > .title > .arrow-button > .arrow { -fx-background-color: -norm-muted; -fx-effect: null; }
+.gallery-source-panel { -fx-text-fill: -norm-text; -fx-font-size: 15px; }
+.gallery-source-panel > .content { -fx-background-color: -norm-surface-raised; -fx-border-width: 0; -fx-padding: 14 0; }

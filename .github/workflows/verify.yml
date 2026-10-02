@@ -28,6 +28,7 @@ jobs:
           - InputExampleSectionsTest
           - NavigationExampleSectionsTest
           - DisplayExampleSectionsTest
+          - GalleryDocumentationTest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4

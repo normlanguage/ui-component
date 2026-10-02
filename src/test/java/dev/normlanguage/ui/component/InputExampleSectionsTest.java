@@ -16,6 +16,32 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InputExampleSectionsTest extends FxTest {
+    @Test void colorPreviewKeepsSelectedPaintAfterCssAndConfigurationChanges() throws Exception {
+        fx(() -> {
+            var app = new App();
+            var stage = new javafx.stage.Stage();
+            try {
+                var component = InputExamples.components(app).stream().filter(entry -> entry.name().equals("ColorPicker")).findFirst().orElseThrow();
+                var sections = GalleryExamples.create(component, app);
+                app.setContent(new javafx.scene.layout.VBox(sections.getFirst().content(), sections.getLast().content()));
+                stage.setScene(new Scene(app, 900, 700)); stage.show();
+                app.applyCss(); app.layout();
+                var swatch = (Region) app.lookup("#demo-brand-swatch");
+                assertNotNull(swatch.getBackground());
+                assertEquals(javafx.scene.paint.Color.web("#1677FF"), swatch.getBackground().getFills().getFirst().getFill());
+                var preview = (Label) app.lookup("#demo-color-preview");
+                assertEquals(javafx.scene.paint.Color.web("#1677FF"), preview.getTextFill());
+                assertEquals(javafx.scene.paint.Color.web("#f0f5ff"), preview.getBackground().getFills().getFirst().getFill());
+                var picker = (ColorPicker) app.lookup(".norm-color-picker");
+                picker.setValue(javafx.scene.paint.Color.TOMATO);
+                app.applyCss(); app.layout();
+                assertEquals(javafx.scene.paint.Color.TOMATO, swatch.getBackground().getFills().getFirst().getFill());
+                app.setConfig(new ComponentConfig("System", 16, ComponentConfig.Density.COMPACT, 6, false, java.util.Locale.US));
+                app.applyCss(); app.layout();
+                assertEquals(javafx.scene.paint.Color.TOMATO, swatch.getBackground().getFills().getFirst().getFill());
+            } finally { app.close(); stage.close(); }
+        });
+    }
     @Test void everyInputPageHasDistinctUsefulExamples() throws Exception {
         fx(() -> {
             var app = new App();

@@ -27,3 +27,5 @@
 Gallery 页面结构见 [GalleryView](../src/main/java/dev/normlanguage/ui/component/gallery/GalleryView.java)，示例分组见 [GalleryExamples](../src/main/java/dev/normlanguage/ui/component/gallery/GalleryExamples.java)；导航和页内目录由同一组件目录与示例列表派生。
 
 有限动效共用 [Motion](../src/main/java/dev/normlanguage/ui/component/Motion.java) 的节奏和生命周期，读取现有 `ComponentConfig.motionEnabled`。分组示例按领域放在 [gallery](../src/main/java/dev/normlanguage/ui/component/gallery) 中；[GalleryInteractionTest](../src/test/java/dev/normlanguage/ui/component/GalleryInteractionTest.java) 验证并截图真实弹层。
+
+Gallery 的组件说明由 [GalleryDocumentation](../src/main/java/dev/normlanguage/ui/component/gallery/GalleryDocumentation.java) 汇总，各领域说明对应同一份示例分组。API 从编译类型派生，源码由 [构建配置](../build.gradle.kts) 打包；[GalleryDocumentationTest](../src/test/java/dev/normlanguage/ui/component/GalleryDocumentationTest.java) 校验覆盖范围和源码一致性。

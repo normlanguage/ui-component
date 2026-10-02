@@ -1,6 +1,7 @@
 package dev.normlanguage.ui.component;
 
 import dev.normlanguage.ui.component.gallery.Gallery;
+import dev.normlanguage.ui.component.gallery.GalleryDocumentation;
 import dev.normlanguage.ui.component.gallery.GalleryView;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
@@ -18,6 +19,49 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("theme-rendering")
 class GalleryBrowserTest extends FxTest {
+    @Test void documentationNavigationSourceSearchAndCopyWorkInRealScene() throws Exception {
+        var light = Files.readString(Path.of("build/themes/light.css"));
+        fx(() -> {
+            var app = new App();
+            var defaults = Gallery.defaultConfig();
+            app.setConfig(new ComponentConfig(defaults.fontFamily(), defaults.fontSize(), defaults.density(), defaults.radius(), false, defaults.locale()));
+            var view = Gallery.createView(app, java.util.List.of(new Gallery.Palette("Blue", light, light)));
+            app.setContent(view);
+            var stage = new javafx.stage.Stage();
+            stage.setScene(new javafx.scene.Scene(app, 1487, 1058));
+            stage.show();
+            try {
+                view.selectComponent("Input");
+                app.applyCss(); app.layout(); app.layout();
+                var anchor = (Anchor) view.lookup("#gallery-section-index");
+                assertEquals(java.util.List.of("何时使用", "实时预览", "密码与备注", "API", "使用说明", "示例源码"),
+                        anchor.getItems().stream().map(Anchor.Item::text).toList());
+                var scroll = (javafx.scene.control.ScrollPane) view.getCenter();
+                scroll.setVvalue(1);
+                app.layout();
+                var source = (javafx.scene.control.TitledPane) view.lookup("#gallery-source-panel-0");
+                source.setExpanded(true);
+                app.applyCss(); app.layout(); app.layout();
+                var copy = (javafx.scene.control.Button) view.lookup("#gallery-source-copy-0");
+                copy.fire();
+                assertEquals(GalleryDocumentation.source(GalleryDocumentation.sources(view.catalog().stream()
+                        .filter(component -> component.name().equals("Input")).findFirst().orElseThrow()).getFirst()),
+                        javafx.scene.input.Clipboard.getSystemClipboard().getString());
+                var search = (javafx.scene.control.TextField) source.lookup(".text-field");
+                search.setText("greetingInput");
+                search.fireEvent(new javafx.event.ActionEvent());
+                var code = (javafx.scene.control.TextArea) source.lookup(".text-area");
+                assertEquals("greetingInput", code.getSelectedText());
+                scroll.setVvalue(1); app.layout();
+                FxTest.capture(app, Path.of("build/previews/documentation-source-wide.png"));
+                app.resize(900, 720); app.layout(); app.applyCss(); app.layout();
+                scroll.setVvalue(1); app.layout();
+                var toolbar = source.lookup(".gallery-source-toolbar");
+                assertTrue(toolbar.getBoundsInParent().getWidth() <= 610);
+                FxTest.capture(app, Path.of("build/previews/documentation-source-compact.png"));
+            } finally { app.close(); stage.close(); }
+        });
+    }
     @Test void documentationLayoutGroupsNavigationAndExamplesWithoutOverflow() throws Exception {
         var light = Files.readString(Path.of("build/themes/light.css"));
         fx(() -> {
@@ -38,10 +82,10 @@ class GalleryBrowserTest extends FxTest {
                 assertNotNull(view.lookup("#gallery-nav-Input"));
                 view.selectComponent("Button");
                 app.applyCss(); app.layout(); app.layout();
-                assertEquals(6, ((Anchor) view.lookup("#gallery-section-index")).getItems().size());
+                assertEquals(10, ((Anchor) view.lookup("#gallery-section-index")).getItems().size());
                 var sections = (javafx.scene.layout.VBox) view.lookup("#gallery-sections");
                 assertEquals(4, sections.getChildren().size());
-                assertTrue(sections.getBoundsInParent().getHeight() < 850);
+                assertTrue(sections.getBoundsInParent().getHeight() < 1400);
                 view.selectComponent("Masonry");
                 app.applyCss(); app.layout(); app.layout();
                 assertTrue(sections.getHeight() < 1600);
