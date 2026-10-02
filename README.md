@@ -26,7 +26,7 @@ class SaveExample implements Widget {
 Module module() {
   module(dependencies: [
     dependency(repository: "github", name: "ui", version: 5),
-    dependency(repository: "github", name: "ui.component", version: 3),
+    dependency(repository: "github", name: "ui.component", version: 4),
     dependency(repository: "github", name: "theme", version: 1)
   ])
 }

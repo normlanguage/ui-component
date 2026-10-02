@@ -1,7 +1,24 @@
 {
   "reflection": [
-    {"type": "com.sun.scenario.effect.impl.prism.ps.PPSLinearConvolveShadowPeer", "allDeclaredConstructors": true},
-    {"type": "com.sun.scenario.effect.impl.sw.java.JSWLinearConvolveShadowPeer", "allDeclaredConstructors": true},
-    {"type": "com.sun.scenario.effect.impl.sw.sse.SSELinearConvolveShadowPeer", "allDeclaredConstructors": true}
+    {
+      "type": "com.sun.scenario.effect.impl.prism.ps.PPSLinearConvolveShadowPeer",
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.sun.scenario.effect.impl.sw.java.JSWLinearConvolveShadowPeer",
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.sun.scenario.effect.impl.sw.sse.SSELinearConvolveShadowPeer",
+      "allDeclaredConstructors": true
+    }
+  ],
+  "resources": [
+    {
+      "glob": "com/sun/scenario/effect/impl/hw/d3d/hlsl/LinearConvolveShadow_*.obj"
+    },
+    {
+      "glob": "com/sun/scenario/effect/impl/es2/glsl/LinearConvolveShadow*"
+    }
   ]
 }
