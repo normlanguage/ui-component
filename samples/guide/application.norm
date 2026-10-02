@@ -1,0 +1,71 @@
+package guide
+
+import ui.Widget
+import ui.Binding
+import ui.ForEach
+import ui.ValueKey
+import ui.NodeKey
+import ui.fx.DesktopApp
+import ui.kit.App
+import ui.kit.ConfigProvider
+import ui.kit.configuration
+import ui.kit.Column
+import ui.kit.Row
+import ui.kit.Text
+import ui.kit.Input
+import ui.kit.Button
+import ui.kit.Tabs
+import ui.kit.Tab
+import theme.ThemeManager
+import theme.ThemeDefinition
+import theme.ThemeMode
+import theme.Color
+import theme.Tone
+import theme.Appearance
+
+class Notes implements Widget {
+  ThemeManager theme
+  String draft = ""
+  List<String> notes = []
+  Integer selected = 0
+  Boolean dark = false
+
+  Void save() {
+    if draft.isBlank { return }
+    for note : notes { if note == draft { return } }
+    List<String> next = [for (note : notes) note]
+    next.add(draft)
+    notes = next
+    draft = ""
+  }
+
+  Widget build() {
+    App(theme: theme, content: Tabs(selected: Binding<Integer>(
+      read: () { selected }, write: (Integer next) { selected = next }), tabs: [
+      Tab(title: "笔记", key: NodeKey.Named("notes"), content: Column {
+        Row {
+          Input(placeholder: "输入笔记", value: Binding<String>(
+            read: () { draft }, write: (String next) { draft = next }), submit: this.save)
+          Button(text: "保存", action: this.save, enabled: !draft.isBlank)
+        }
+        ForEach<String>(items: notes, identity: (String note) { ValueKey<String>(note) },
+          child: (String note) { Text(note) })
+      }),
+      Tab(title: "设置", key: NodeKey.Named("settings"), content: ConfigProvider(
+        config: configuration(fontSize: 16.0), content: Column {
+          Text("局部字号与全局主题")
+          Button(text: if dark { "浅色" } else { "深色" }, tone: Tone.Neutral,
+            appearance: Appearance.Soft, action: () {
+              dark = !dark
+              theme.setMode(if dark { ThemeMode.Dark } else { ThemeMode.Light })
+            })
+        }))
+    ]))
+  }
+}
+
+Void main() {
+  var theme = ThemeManager(ThemeDefinition(primary: Color(hex: "#2563EB")))
+  try { DesktopApp(title: "Norm 笔记", home: Notes(theme: theme)).run() }
+  finally { theme.close() }
+}

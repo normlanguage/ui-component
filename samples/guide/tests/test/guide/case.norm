@@ -1,0 +1,53 @@
+package guide.test.guide
+
+import std.testing.Test
+import std.core.Exception
+import guide.Notes
+import ui.Renderer
+import ui.fx.FxApplication
+import ui.fx.JavaFxBackend
+import ui.fx.JavaFxScheduler
+import ui.fx.fxHandle
+import ui.fx.withFxRuntime
+import ui.kit.fx.utilRequireButton
+import theme.ThemeManager
+import theme.ThemeDefinition
+import theme.Color
+
+class Progress { Boolean completed = false Boolean closed = false String? failure = null }
+
+@Test
+Void mountsGuideAndRunsNativeActions() {
+  withFxRuntime(() {
+    var application = FxApplication("Guide verification")
+    var renderer = Renderer(backend: JavaFxBackend(application), scheduler: JavaFxScheduler(application))
+    var theme = ThemeManager(ThemeDefinition(primary: Color(hex: "#2563EB")))
+    var notes = Notes(theme: theme)
+    var progress = Progress()
+    application.run(build: () {
+      try {
+        notes.draft = "first"
+        renderer.render(notes)
+        application.root(fxHandle(renderer.node()))
+        application.later(() {
+          try {
+            utilRequireButton(arg0: application.scene(), arg1: "保存")!!.fire()
+            renderer.render(notes)
+            require(condition: notes.notes.size() == 1 && notes.notes[0] == "first" && notes.draft == "", message: "Native save updates the note list and input")
+            notes.selected = 1
+            renderer.render(notes)
+            utilRequireButton(arg0: application.scene(), arg1: "深色")!!.fire()
+            renderer.render(notes)
+            require(condition: notes.dark, message: "Native settings action changes theme state")
+            notes.selected = 0
+            renderer.render(notes)
+            require(condition: notes.notes.size() == 1 && notes.notes[0] == "first", message: "Notes survive tab switching")
+            progress.completed = true
+          } catch Exception failure { progress.failure = failure.message }
+          finally { application.close() }
+        })
+      } catch Exception failure { progress.failure = failure.message application.close() }
+    }, dispose: () { renderer.close() theme.close() progress.closed = true })
+    require(condition: progress.completed && progress.closed, message: if progress.failure == null { "Guide native actions and cleanup must complete" } else { progress.failure!! })
+  })
+}

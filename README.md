@@ -20,9 +20,9 @@ class SaveExample implements Widget {
 }
 ```
 
-模块依赖以 [ui.kit/module.norm](ui/kit/module.norm) 为准。
+从 [ui 与 ui.kit 使用指南](docs/usage.md)开始；完整可运行示例位于 [samples/guide](samples/guide)。模块依赖以 [ui.kit/module.norm](ui/kit/module.norm) 为准。
 
-发布制品使用 `norm package ui/kit/fx --output build/repository` 和 `norm package ui/kit --output build/repository` 生成；GitHub Release 提供 `.nar` 与对应 `.sha256`。底层运行依赖由包携带，应用无需复制库源码。
+当前依赖发布状态与工具链要求见 [使用指南](docs/usage.md)。发布制品使用 `norm package ui/kit/fx --output build/repository` 和 `norm package ui/kit --output build/repository` 生成；GitHub Release 提供 `.nar` 与对应 `.sha256`。底层运行依赖由包携带，应用无需复制库源码。
 
 公开入口见 [ui.kit 模块](ui/kit/module.norm)及 [组件索引](docs/components.md)。[Norm 示例](samples/gallery)展示实际交互；可直接使用的 JavaFX 控件和绑定位于 [Java 源码](src/main/java/dev/normlanguage/ui/component)及底层模块 [`ui.kit.fx`](ui/kit/fx/module.norm)。应用代码以 Widget 层为入口，JavaFX 原生扩展通过 [`ui` 原生视图协议](https://github.com/normlanguage/ui)接入同一渲染树。
 
