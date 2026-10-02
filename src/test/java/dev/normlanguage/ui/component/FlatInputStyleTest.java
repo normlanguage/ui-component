@@ -193,6 +193,8 @@ class FlatInputStyleTest extends FxTest {
         fx(() -> {
             var control = new Switch("Notifications");
             var app = new App(control);
+            var config = ComponentConfig.defaults();
+            app.setConfig(new ComponentConfig(config.fontFamily(), config.fontSize(), config.density(), config.radius(), false, config.locale()));
             var stage = new Stage();
             stage.setScene(new Scene(app, 200, 120));
             stage.show();

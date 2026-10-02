@@ -25,3 +25,5 @@
 [组件索引](components.md)列出公开范围；[Gallery](../src/main/java/dev/normlanguage/ui/component/gallery/Gallery.java)提供每项可操作示例；[测试目录](../src/test/java/dev/normlanguage/ui/component)验证实际 JavaFX 窗口、主题与交互。
 
 Gallery 页面结构见 [GalleryView](../src/main/java/dev/normlanguage/ui/component/gallery/GalleryView.java)，示例分组见 [GalleryExamples](../src/main/java/dev/normlanguage/ui/component/gallery/GalleryExamples.java)；导航和页内目录由同一组件目录与示例列表派生。
+
+有限动效共用 [Motion](../src/main/java/dev/normlanguage/ui/component/Motion.java) 的节奏和生命周期，读取现有 `ComponentConfig.motionEnabled`。分组示例按领域放在 [gallery](../src/main/java/dev/normlanguage/ui/component/gallery) 中；[GalleryInteractionTest](../src/test/java/dev/normlanguage/ui/component/GalleryInteractionTest.java) 验证并截图真实弹层。

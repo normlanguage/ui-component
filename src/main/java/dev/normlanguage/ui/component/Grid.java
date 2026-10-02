@@ -2,6 +2,8 @@ package dev.normlanguage.ui.component;
 
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.Priority;
 
 import java.util.ArrayList;
 import java.util.NavigableMap;
@@ -11,6 +13,7 @@ public class Grid extends GridPane {
     private record Item(Node node, int span) {}
     private final ArrayList<Item> items = new ArrayList<>();
     private final NavigableMap<Double, Integer> responsiveColumns = new TreeMap<>();
+    private int appliedColumns;
 
     public Grid() {
         getStyleClass().add("norm-grid");
@@ -18,7 +21,9 @@ public class Grid extends GridPane {
         setVgap(8);
         responsiveColumns.put(0.0, 1);
         widthProperty().addListener(observable -> reflow());
-        getChildren().addListener((javafx.collections.ListChangeListener<Node>) change -> items.removeIf(item -> !getChildren().contains(item.node())));
+        getChildren().addListener((javafx.collections.ListChangeListener<Node>) change -> {
+            if (items.removeIf(item -> !getChildren().contains(item.node()))) reflow();
+        });
     }
     public void add(Node child, int column, int row, int columnSpan, int rowSpan) {
         super.add(child, column, row, columnSpan, rowSpan);
@@ -38,6 +43,24 @@ public class Grid extends GridPane {
     public int getCurrentColumns() { return responsiveColumns.floorEntry(Math.max(0, getWidth())).getValue(); }
     private void reflow() {
         int columns = getCurrentColumns();
+        if (items.isEmpty()) {
+            if (appliedColumns != 0) {
+                getColumnConstraints().clear();
+                appliedColumns = 0;
+            }
+            return;
+        }
+        if (!items.isEmpty() && columns != appliedColumns) {
+            getColumnConstraints().clear();
+            for (int i = 0; i < columns; i++) {
+                var constraint = new ColumnConstraints();
+                constraint.setPercentWidth(100.0 / columns);
+                constraint.setHgrow(Priority.ALWAYS);
+                constraint.setFillWidth(true);
+                getColumnConstraints().add(constraint);
+            }
+            appliedColumns = columns;
+        }
         int column = 0;
         int row = 0;
         for (var item : items) {

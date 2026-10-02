@@ -69,14 +69,14 @@ class GalleryExamplesTest extends FxTest {
         });
     }
 
-    @Test void otherComponentsReuseTheirRegisteredExampleAndDisabledState() throws Exception {
+    @Test void otherComponentsOfferDistinctInteractiveScenarios() throws Exception {
         var light = Files.readString(Path.of("build", "themes", "light.css"));
         fx(() -> {
             var app = new App();
             app.setThemeCss(light);
             var checkbox = Gallery.components(app).stream().filter(component -> component.name().equals("Checkbox")).findFirst().orElseThrow();
             var sections = GalleryExamples.create(checkbox, app);
-            assertEquals(List.of("basic", "disabled"), sections.stream().map(GalleryExamples.Section::id).toList());
+            assertEquals(List.of("scenario", "variations"), sections.stream().map(GalleryExamples.Section::id).toList());
             var content = new VBox(sections.stream().map(GalleryExamples.Section::content).toArray(javafx.scene.Node[]::new));
             app.setContent(content);
             var stage = new Stage();
@@ -84,8 +84,10 @@ class GalleryExamplesTest extends FxTest {
             stage.show();
             try {
                 app.applyCss(); app.layout();
-                assertInstanceOf(Checkbox.class, app.lookup("#gallery-example"));
-                assertTrue(((Checkbox) sections.get(1).content()).isDisabled());
+                assertNotNull(app.lookup("#gallery-example"));
+                assertFalse(sections.get(0).content().isDisabled());
+                assertFalse(sections.get(1).content().isDisabled());
+                assertNotEquals(sections.get(0).title(), sections.get(1).title());
             } finally { app.close(); stage.close(); }
         });
     }

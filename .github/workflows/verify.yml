@@ -23,6 +23,11 @@ jobs:
           - ConfigurationTest
           - PropertyInvariantTest
           - WatermarkTest
+          - MotionTest
+          - FeedbackExamplesTest
+          - InputExampleSectionsTest
+          - NavigationExampleSectionsTest
+          - DisplayExampleSectionsTest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4

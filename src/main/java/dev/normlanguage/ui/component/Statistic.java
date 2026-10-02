@@ -15,6 +15,8 @@ public class Statistic extends VBox implements AutoCloseable {
     public Statistic(String title, Number initial) {
         getStyleClass().add("norm-statistic");
         this.title.setText(title);
+        this.title.getStyleClass().add("norm-statistic-title");
+        display.getStyleClass().add("norm-statistic-value");
         getChildren().addAll(this.title, display);
         value.addListener((o,a,b) -> render());
         setValue(initial);

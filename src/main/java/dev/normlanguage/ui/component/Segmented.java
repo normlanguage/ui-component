@@ -10,6 +10,7 @@ import javafx.scene.layout.HBox;
 import java.util.List;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Objects;
 public class Segmented<T> extends HBox {
     private final ObservableList<T> items = FXCollections.observableArrayList();
     private final ObjectProperty<T> value = new SimpleObjectProperty<>(this, "value");
@@ -20,7 +21,7 @@ public class Segmented<T> extends HBox {
         items.addAll(choices);
         items.addListener((ListChangeListener<T>) change -> rebuild());
         value.addListener((o,a,b) -> {
-            for (var toggle : group.getToggles()) if (toggle.getUserData() == b || toggle.getUserData() != null && toggle.getUserData().equals(b)) {
+            for (var toggle : group.getToggles()) if (Objects.equals(values.get(toggle), b)) {
                 group.selectToggle(toggle);
                 return;
             }

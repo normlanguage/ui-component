@@ -14,9 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -39,7 +37,8 @@ public final class GalleryView extends BorderPane implements AutoCloseable {
     private final ToggleButton darkToggle = new ToggleButton();
     private final Anchor sectionIndex = new Anchor(content);
     private final EnumSet<Gallery.Category> expanded = EnumSet.of(Gallery.Category.GENERAL);
-    private final GridPane sections = new GridPane();
+    private final VBox sections = new VBox();
+    private final List<Region> sectionBlocks = new ArrayList<>();
     private List<GalleryExamples.Section> currentSections = List.of();
     private final List<Node> activeExamples = new ArrayList<>();
     private Gallery.Palette palette;
@@ -47,6 +46,7 @@ public final class GalleryView extends BorderPane implements AutoCloseable {
     private String query = "";
     private boolean closed;
     private int columns;
+    private dev.normlanguage.ui.component.Motion pageMotion;
 
     GalleryView(App app, List<Gallery.Palette> palettes, List<Gallery.Component> catalog) {
         this.app = Objects.requireNonNull(app);
@@ -118,6 +118,7 @@ public final class GalleryView extends BorderPane implements AutoCloseable {
         Util.requireFxThread();
         selection = catalog.stream().filter(component -> component.name().equals(name)).findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Unknown component: " + name));
+        expanded.clear();
         expanded.add(selection.category());
         renderNavigation();
         renderDetail();
@@ -207,7 +208,14 @@ public final class GalleryView extends BorderPane implements AutoCloseable {
         VBox.setVgrow(scroll, Priority.ALWAYS);
         var total = new Label("共 " + catalog.size() + " 个组件");
         var caption = new Label("Norm UI · JavaFX");
-        var footer = new VBox(10, total, caption);
+        var motionToggle = new dev.normlanguage.ui.component.Switch("顺滑动效");
+        motionToggle.setId("gallery-motion-toggle");
+        motionToggle.setSelected(app.getEffectiveConfig().motionEnabled());
+        motionToggle.selectedProperty().addListener((observable, old, enabled) -> {
+            var c = app.getEffectiveConfig();
+            app.setConfig(new ComponentConfig(c.fontFamily(), c.fontSize(), c.density(), c.radius(), enabled, c.locale()));
+        });
+        var footer = new VBox(14, motionToggle, total, caption);
         footer.getStyleClass().add("gallery-sidebar-footer");
         var sidebar = new VBox(16, scroll, footer);
         sidebar.getStyleClass().add("gallery-sidebar");
@@ -285,6 +293,8 @@ public final class GalleryView extends BorderPane implements AutoCloseable {
         }
         if (visibleComponents().isEmpty()) page.getChildren().add(new Label("没有匹配的组件"));
         content.setContent(page);
+        pageMotion = new dev.normlanguage.ui.component.Motion(page);
+        pageMotion.enter(0, 12);
         content.setVvalue(0);
         refreshLayout();
     }
@@ -308,7 +318,7 @@ public final class GalleryView extends BorderPane implements AutoCloseable {
             block.getStyleClass().add("gallery-section");
             block.setMinWidth(0);
             if (section.content() instanceof Region region) region.setMinWidth(0);
-            sections.getChildren().add(block);
+            sectionBlocks.add(block);
             sectionIndex.getItems().add(new Anchor.Item(section.title(), block));
         }
         var page = new VBox(40, header, sections);
@@ -316,6 +326,8 @@ public final class GalleryView extends BorderPane implements AutoCloseable {
         page.setId("gallery-detail");
         page.getStyleClass().add("gallery-page");
         content.setContent(page);
+        pageMotion = new dev.normlanguage.ui.component.Motion(page);
+        pageMotion.enter(0, 12);
         content.setVvalue(0);
         columns = 0;
         refreshLayout();
@@ -326,29 +338,33 @@ public final class GalleryView extends BorderPane implements AutoCloseable {
         int next = content.getViewportBounds().getWidth() >= 760 ? 2 : 1;
         if (next == columns) return;
         columns = next;
-        sections.getColumnConstraints().clear();
-        for (int i = 0; i < columns; i++) {
-            var column = new ColumnConstraints();
-            column.setPercentWidth(100.0 / columns);
-            column.setHgrow(Priority.ALWAYS);
-            column.setMinWidth(0);
-            sections.getColumnConstraints().add(column);
+        sections.getChildren().clear();
+        for (var block : sectionBlocks) {
+            block.prefWidthProperty().unbind();
+            block.setPrefWidth(Region.USE_COMPUTED_SIZE);
         }
-        int row = 0;
-        int col = 0;
         for (int i = 0; i < currentSections.size(); i++) {
-            var node = sections.getChildren().get(i);
-            boolean full = currentSections.get(i).fullWidth();
-            if (full && col != 0) { row++; col = 0; }
-            GridPane.setConstraints(node, col, row, full ? columns : 1, 1);
-            GridPane.setValignment(node, javafx.geometry.VPos.TOP);
-            if (full || ++col == columns) { row++; col = 0; }
+            var block = sectionBlocks.get(i);
+            if (columns == 2 && !currentSections.get(i).fullWidth()
+                    && i + 1 < currentSections.size() && !currentSections.get(i + 1).fullWidth()) {
+                var nextBlock = sectionBlocks.get(++i);
+                var row = new HBox(30, block, nextBlock);
+                row.setFillHeight(false);
+                for (var cell : List.of(block, nextBlock)) {
+                    cell.prefWidthProperty().bind(row.widthProperty().subtract(row.spacingProperty()).divide(2));
+                    HBox.setHgrow(cell, Priority.ALWAYS);
+                }
+                sections.getChildren().add(row);
+            } else sections.getChildren().add(block);
         }
     }
+
     private void clearExamples() {
+        if (pageMotion != null) { pageMotion.close(); pageMotion = null; }
         sectionIndex.getItems().clear();
         content.setContent(null);
         sections.getChildren().clear();
+        sectionBlocks.clear();
         for (var example : activeExamples) Util.closeTree(example);
         activeExamples.clear();
         currentSections = List.of();

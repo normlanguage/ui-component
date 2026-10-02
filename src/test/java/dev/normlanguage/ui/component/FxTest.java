@@ -20,4 +20,15 @@ abstract class FxTest {
         Platform.runLater(task);
         task.get(20, TimeUnit.SECONDS);
     }
+    static void capture(javafx.scene.Node node, java.nio.file.Path file) {
+        var image = node.snapshot(null, null);
+        var pixels = image.getPixelReader();
+        var output = new java.awt.image.BufferedImage((int) image.getWidth(), (int) image.getHeight(), java.awt.image.BufferedImage.TYPE_INT_ARGB);
+        for (int y = 0; y < output.getHeight(); y++)
+            for (int x = 0; x < output.getWidth(); x++) output.setRGB(x, y, pixels.getArgb(x, y));
+        try {
+            java.nio.file.Files.createDirectories(file.getParent());
+            javax.imageio.ImageIO.write(output, "png", file.toFile());
+        } catch (java.io.IOException error) { throw new java.io.UncheckedIOException(error); }
+    }
 }

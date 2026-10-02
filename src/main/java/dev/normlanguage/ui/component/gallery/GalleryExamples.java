@@ -8,7 +8,6 @@ import dev.normlanguage.ui.component.Icon;
 import dev.normlanguage.ui.component.Util;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Control;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
@@ -20,7 +19,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,28 +37,19 @@ public final class GalleryExamples {
         Util.requireFxThread();
         Objects.requireNonNull(component);
         Objects.requireNonNull(app);
-        var sections = component.name().equals("Button") ? buttonSections(component, app) : basicSections(component);
+        var sections = component.name().equals("Button") ? buttonSections(component, app) : switch (component.category()) {
+            case INPUT -> InputExampleSections.create(component, app);
+            case GENERAL, LAYOUT, NAVIGATION -> NavigationExampleSections.create(component, app);
+            case DISPLAY -> java.util.Set.of("Popover", "Tooltip", "Tour").contains(component.name())
+                    ? FeedbackExamples.create(component, app) : DisplayExampleSections.create(component, app);
+            case FEEDBACK, OTHER -> FeedbackExamples.create(component, app);
+        };
         var stylesheet = Objects.requireNonNull(GalleryExamples.class.getResource("examples.css")).toExternalForm();
         for (var section : sections) {
             if (section.content() instanceof FlowPane flow) flow.prefWrapLengthProperty().bind(flow.widthProperty());
             if (section.content() instanceof Parent parent) parent.getStylesheets().add(stylesheet);
         }
         return List.copyOf(sections);
-    }
-
-    private static List<Section> basicSections(Gallery.Component component) {
-        var demo = component.factory().get();
-        demo.setId("gallery-example");
-        var sections = new ArrayList<Section>();
-        sections.add(new Section("basic", "基础用法", demo, true));
-        if (demo instanceof Control) {
-            var disabled = component.factory().get();
-            if (disabled instanceof Control control) {
-                control.setDisable(true);
-                sections.add(new Section("disabled", "禁用状态", control, true));
-            } else Util.closeTree(disabled);
-        }
-        return sections;
     }
 
     private static List<Section> buttonSections(Gallery.Component component, App app) {

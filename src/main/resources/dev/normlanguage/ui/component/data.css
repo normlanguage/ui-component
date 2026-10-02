@@ -80,13 +80,17 @@
 .norm-calendar-heading { -fx-alignment: center; -fx-min-width: 126; -fx-font-weight: bold; }
 .norm-calendar-days { -fx-hgap: 3; -fx-vgap: 3; -fx-alignment: center; }
 .norm-calendar-weekday { -fx-alignment: center; -fx-min-width: 36; -fx-pref-width: 36; -fx-padding: 5 0; }
-.norm-calendar-day, .norm-calendar-nav {
+.norm-calendar .norm-calendar-day, .norm-calendar .norm-calendar-nav {
     -fx-background-insets: 0;
     -fx-background-radius: 5;
     -fx-border-width: 0;
-    -fx-min-width: 36;
-    -fx-min-height: 34;
-    -fx-padding: 6;
+    -fx-min-width: 38;
+    -fx-pref-width: 38;
+    -fx-max-width: 38;
+    -fx-min-height: 38;
+    -fx-pref-height: 38;
+    -fx-max-height: 38;
+    -fx-padding: 0;
     -fx-cursor: hand;
 }
 .norm-root:themed .norm-calendar { -fx-background-color: -norm-surface-raised; -fx-border-color: -norm-divider; }

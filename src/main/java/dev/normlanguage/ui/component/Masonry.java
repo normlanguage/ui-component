@@ -3,6 +3,7 @@ package dev.normlanguage.ui.component;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Node;
+import javafx.geometry.Orientation;
 import javafx.scene.layout.Pane;
 
 import java.util.Arrays;
@@ -38,6 +39,7 @@ public class Masonry extends Pane {
     public void setGap(double value) {
         gap.set(value);
     }
+    @Override public Orientation getContentBias() { return Orientation.HORIZONTAL; }
     @Override protected double computePrefHeight(double width) { return measure(width, false); }
     @Override protected double computePrefWidth(double height) { return getMinimumColumnWidth() + snappedLeftInset() + snappedRightInset(); }
     @Override protected void layoutChildren() { measure(getWidth(), true); }

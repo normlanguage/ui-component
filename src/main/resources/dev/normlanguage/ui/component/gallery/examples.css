@@ -66,3 +66,10 @@
 }
 
 .gallery-example-row > .norm-root { -fx-background-color: transparent; }
+
+.gallery-demo-surface { -fx-background-color: -norm-canvas; -fx-background-radius: 8; -fx-padding: 24; }
+.gallery-demo-title { -fx-font-size: 19px; -fx-font-weight: bold; -fx-text-fill: -norm-text; }
+.gallery-demo-caption { -fx-font-size: 14px; -fx-text-fill: -norm-muted; }
+.gallery-demo-row { -fx-alignment: center-left; }
+.gallery-demo-surface .progress-bar { -fx-pref-width: 440; }
+.gallery-demo-surface > .text-field { -fx-max-width: 480; }

@@ -1,0 +1,87 @@
+.nav-floating-stage {
+    -fx-background-color: -norm-surface;
+    -fx-border-color: -norm-divider;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 16;
+}
+
+.nav-floating-content {
+    -fx-padding: 12;
+    -fx-alignment: center-left;
+}
+
+.nav-icon-sample {
+    -fx-alignment: center;
+    -fx-background-color: -norm-surface;
+    -fx-border-color: -norm-divider;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-min-width: 96;
+    -fx-min-height: 94;
+}
+
+.nav-layout-tile {
+    -fx-background-color: -norm-primary-soft-normal-background;
+    -fx-text-fill: -norm-primary-soft-normal-foreground;
+    -fx-background-radius: 6;
+    -fx-padding: 16;
+    -fx-min-height: 64;
+}
+
+.nav-app-layout {
+    -fx-border-color: -norm-divider;
+    -fx-border-radius: 6;
+    -fx-background-color: -norm-surface-raised;
+}
+
+.nav-layout-header {
+    -fx-background-color: -norm-primary-soft-normal-background;
+    -fx-padding: 14 18;
+}
+
+.nav-layout-sidebar {
+    -fx-background-color: -norm-surface;
+    -fx-border-color: transparent -norm-divider transparent transparent;
+    -fx-padding: 16;
+    -fx-min-width: 130;
+}
+
+.nav-layout-main {
+    -fx-padding: 22;
+}
+
+.nav-layout-footer {
+    -fx-padding: 10 18;
+    -fx-border-color: -norm-divider transparent transparent transparent;
+    -fx-text-fill: -norm-muted;
+}
+
+.nav-masonry-tile {
+    -fx-background-color: -norm-primary-soft-normal-background;
+    -fx-border-color: -norm-primary-soft-normal-border;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 14;
+}
+
+.nav-anchor-content {
+    -fx-background-color: -norm-surface;
+    -fx-border-color: -norm-divider;
+    -fx-padding: 16;
+}
+
+.nav-type-heading {
+    -fx-font-size: 22px;
+    -fx-font-weight: 700;
+}
+
+.nav-type-caption {
+    -fx-text-fill: -norm-muted;
+}
+
+.nav-splitter-list {
+    -fx-background-color: -norm-surface;
+    -fx-padding: 14;
+    -fx-min-width: 160;
+}

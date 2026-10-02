@@ -27,7 +27,7 @@ try {
         if ($LASTEXITCODE -ne 0) { throw 'Norm asynchronous upload integration failed' }
         & (Join-Path $PSScriptRoot 'norm.ps1') test $sample --filter gallery.normListsCreateCollectionControls --format json
         if ($LASTEXITCODE -ne 0) { throw 'Norm collection integration failed' }
-        & (Join-Path $root 'gradlew.bat') -p $root themeRenderingTest '-PtestSource=ThemeRenderingTest,FlatFoundationTest,FlatInputStyleTest,FlatDataStyleTest,GalleryBrowserTest,GalleryExamplesTest' --console=plain
+        & (Join-Path $root 'gradlew.bat') -p $root themeRenderingTest '-PtestSource=ThemeRenderingTest,FlatFoundationTest,FlatInputStyleTest,FlatDataStyleTest,GalleryBrowserTest,GalleryExamplesTest,GalleryInteractionTest' --console=plain
     } else {
         & (Join-Path $PSScriptRoot 'norm.ps1') run $sample
     }

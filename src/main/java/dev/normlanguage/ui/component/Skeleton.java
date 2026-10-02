@@ -11,7 +11,7 @@ public final class Skeleton extends VBox {
             var line = new Region();
             line.setMinHeight(16);
             line.setPrefHeight(16);
-            line.setStyle("-fx-background-color: -norm-outline; -fx-background-radius: 4;");
+            line.setStyle("-fx-background-color: -norm-divider; -fx-background-radius: 4;");
             if (index == lines - 1) line.maxWidthProperty().bind(widthProperty().multiply(0.65));
             getChildren().add(line);
         }

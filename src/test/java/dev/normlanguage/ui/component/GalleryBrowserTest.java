@@ -6,15 +6,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -27,6 +22,9 @@ class GalleryBrowserTest extends FxTest {
         var light = Files.readString(Path.of("build/themes/light.css"));
         fx(() -> {
             var app = new App();
+            var presentation = Gallery.defaultConfig();
+            app.setConfig(new ComponentConfig(presentation.fontFamily(), presentation.fontSize(), presentation.density(),
+                    presentation.radius(), false, presentation.locale()));
             var view = Gallery.createView(app, List.of(new Gallery.Palette("Blue", light, light)));
             app.setContent(view);
             var stage = new Stage();
@@ -41,13 +39,18 @@ class GalleryBrowserTest extends FxTest {
                 view.selectComponent("Button");
                 app.applyCss(); app.layout(); app.layout();
                 assertEquals(6, ((Anchor) view.lookup("#gallery-section-index")).getItems().size());
-                var sections = (javafx.scene.layout.GridPane) view.lookup("#gallery-sections");
-                assertEquals(2, sections.getColumnConstraints().size());
+                var sections = (javafx.scene.layout.VBox) view.lookup("#gallery-sections");
+                assertEquals(4, sections.getChildren().size());
                 assertTrue(sections.getBoundsInParent().getHeight() < 850);
+                view.selectComponent("Masonry");
+                app.applyCss(); app.layout(); app.layout();
+                assertTrue(sections.getHeight() < 1600);
+                view.selectComponent("Button");
+                app.applyCss(); app.layout(); app.layout();
                 app.resize(900, 720);
                 app.layout(); app.applyCss(); app.layout(); view.layout();
                 assertFalse(view.getRight().isManaged());
-                assertEquals(1, sections.getColumnConstraints().size());
+                assertEquals(6, sections.getChildren().size());
                 capture(app, "gallery-button-compact.png");
                 assertTrue(view.lookup("#gallery-dark-toggle").localToScene(view.lookup("#gallery-dark-toggle").getBoundsInLocal()).getMaxX() <= 900, () -> "Toolbar: " + view.getTop().getBoundsInParent() + " toggle: " + view.lookup("#gallery-dark-toggle").localToScene(view.lookup("#gallery-dark-toggle").getBoundsInLocal()));
             } finally { app.close(); stage.close(); }
@@ -96,7 +99,7 @@ class GalleryBrowserTest extends FxTest {
             stage.show();
             try {
                 view.selectComponent("Input");
-                var input = (Input) ((javafx.scene.layout.VBox) view.lookup("#gallery-example")).getChildren().getFirst();
+                var input = (Input) view.lookup("#gallery-example").lookup(".text-field");
                 input.setText("Draft value");
                 ((ChoiceBox<String>) view.lookup("#gallery-palette")).getSelectionModel().select("Alternate");
                 assertEquals(dark, app.getThemeCss());
@@ -122,9 +125,9 @@ class GalleryBrowserTest extends FxTest {
         var stage = new Stage[1];
         fx(() -> {
             app[0] = new App();
-            var defaults = ComponentConfig.defaults();
+            var defaults = Gallery.defaultConfig();
             app[0].setConfig(new ComponentConfig(defaults.fontFamily(), 18, defaults.density(),
-                    defaults.radius(), defaults.motionEnabled(), defaults.locale()));
+                    defaults.radius(), false, defaults.locale()));
             view[0] = Gallery.createView(app[0], List.of(new Gallery.Palette("Default", light, dark)));
             app[0].setContent(view[0]);
             stage[0] = new Stage();
@@ -150,6 +153,12 @@ class GalleryBrowserTest extends FxTest {
                     assertNotNull(example, component.name());
                     assertTrue(example.getBoundsInParent().getWidth() > 0, component.name());
                     assertTrue(example.getBoundsInParent().getHeight() > 0, component.name());
+                    assertTrue(((Anchor) view[0].lookup("#gallery-section-index")).getItems().size() >= 2, component.name());
+                    capture(app[0], "audit-after/light/" + component.name() + ".png");
+                    FxTest.capture(((ScrollPane) view[0].getCenter()).getContent(), Path.of("build/previews/audit-after/full", component.name() + ".png"));
+                    view[0].setDark(true);
+                    capture(app[0], "audit-after/dark/" + component.name() + ".png");
+                    view[0].setDark(false);
                     if (component.name().equals("Input")) capture(app[0], "gallery-input-light.png");
                     if (component.name().equals("Table")) capture(app[0], "gallery-table-light.png");
                 });
@@ -164,15 +173,6 @@ class GalleryBrowserTest extends FxTest {
 
     private static void capture(App app, String name) {
         app.applyCss(); app.layout();
-        var file = Path.of("build", "previews", name);
-        try {
-            Files.createDirectories(file.getParent());
-            WritableImage image = app.snapshot(null, null);
-            var pixels = image.getPixelReader();
-            var output = new BufferedImage((int) image.getWidth(), (int) image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            for (int y = 0; y < output.getHeight(); y++)
-                for (int x = 0; x < output.getWidth(); x++) output.setRGB(x, y, pixels.getArgb(x, y));
-            ImageIO.write(output, "png", file.toFile());
-        } catch (IOException error) { throw new UncheckedIOException(error); }
+        FxTest.capture(app, Path.of("build", "previews", name));
     }
 }
