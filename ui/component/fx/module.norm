@@ -3,7 +3,7 @@ Module module() {
     exports: ["FormField", "UploadItem", "UploadStatus", "ComponentConfig", "Density", "DateRange", "App", "ConfigProvider", "ThemeSink", "Button", "Input", "Popover", "Modal", "Message", "Notification", "Handle", "FloatButton", "Icon", "Typography", "Divider", "Flex", "Grid", "Layout", "Masonry", "Space", "Splitter", "Anchor", "Breadcrumb", "Dropdown", "Menu", "Pagination", "Steps", "Tabs", "AutoComplete", "Cascader", "Checkbox", "ColorPicker", "DatePicker", "Form", "InputNumber", "Mentions", "Radio", "Rate", "Select", "Slider", "Switch", "TimePicker", "Transfer", "TreeSelect", "Upload", "Avatar", "Badge", "Calendar", "Card", "Carousel", "Collapse", "Descriptions", "Empty", "Image", "ListView", "Listy", "QRCode", "Segmented", "Statistic", "Table", "Tag", "Timeline", "Tooltip", "Tour", "Tree", "Alert", "Drawer", "Popconfirm", "Progress", "Result", "Skeleton", "Spin", "Watermark", "Affix", "BorderBeam", "Util", "AnchorItem", "BreadcrumbItem", "CascaderItem", "TourStep", "FloatButtonGroup", "SliderRange", "DatePickerRange", "SelectMultiple", "SelectSearchable", "ValueLink", "ContentOwnership", "OverlayHost", "DisplayAdapter", "SelectionLink", "TreeSelectionLink", "InputAdapter", "NavigationLayoutAdapter", "AnchorHost", "DropdownHost", "FloatButtonHost", "IndexLink", "OverlayAdapter", "FeedbackAdapter", "AffixHost", "NoticeHost", "InputAdapterProgress", "TableSortState", "TableSortLink", "TreeCheckLink", "Surface", "connection", "collections"],
     dependencies: [dependency(repository: "github", name: "jdk.base", version: 1), dependency(repository: "github", name: "fx.controls", version: 2), dependency(repository: "github", name: "theme", version: 1)],
     binding: jarBinding(
-      target: mavenJar(group: "dev.normlanguage", artifact: "ui-component", version: "2", resolution: sha256("5ce11a61a8e45d35b5c6b407c268b307aafbf6390441bd9e85b9b43690ad8643")),
+      target: mavenJar(group: "dev.normlanguage", artifact: "ui-component", version: "2", resolution: sha256("8cf1ccb5b5a488e3da1d8ed21bd5697ab017ab089d8a28d62203392f345e6bcb")),
       api: [
         jarType(name: "dev.normlanguage.ui.component.Form.Field", members: ["getName", "getControl", "valueProperty", "getValue", "validate", "reset"]),
         jarType(name: "dev.normlanguage.ui.component.Upload.Item", members: ["getFile", "getStatus", "getProgress", "statusProperty", "progressProperty"]),
@@ -50,7 +50,7 @@ Module module() {
         jarType(name: "dev.normlanguage.ui.component.Rate", members: ["new", "getValue", "setValue", "valueProperty"]),
         jarType(name: "dev.normlanguage.ui.component.Select", members: ["new", "getItems", "getValue", "setValue", "multiple", "searchable", "valueProperty"]),
         jarType(name: "dev.normlanguage.ui.component.Slider", members: ["new", "getValue", "setValue", "setShowTickMarks", "setShowTickLabels", "valueProperty", "setMin", "setMax"]),
-        jarType(name: "dev.normlanguage.ui.component.Switch", members: ["new", "isSelected", "setSelected", "selectedProperty", "setText", "close"]),
+        jarType(name: "dev.normlanguage.ui.component.Switch", members: ["fire", "new", "isSelected", "setSelected", "selectedProperty", "setText", "close"]),
         jarType(name: "dev.normlanguage.ui.component.TimePicker", members: ["new", "getValue", "setValue", "setMinuteStep", "getMinuteStep", "setAllowedRange", "getEarliest", "getLatest", "valueProperty"]),
         jarType(name: "dev.normlanguage.ui.component.Transfer", members: ["new", "getSelectedItems", "getAvailableItems", "select", "remove"]),
         jarType(name: "dev.normlanguage.ui.component.TreeSelect", members: ["new", "getSelectedValue", "getSelectedItem", "getRootItem", "select", "valueProperty"]),
@@ -85,7 +85,7 @@ Module module() {
         jarType(name: "dev.normlanguage.ui.component.Watermark", members: ["new", "textProperty", "colorProperty", "getImage", "setImage", "setContent"]),
         jarType(name: "dev.normlanguage.ui.component.Affix", members: ["new", "close"]),
         jarType(name: "dev.normlanguage.ui.component.BorderBeam", members: ["new", "setAnimated", "close", "setContent"]),
-        jarType(name: "dev.normlanguage.ui.component.Util", members: ["style", "app", "emptyItems", "closeNode", "capture", "requireButton", "resourceText"]),
+        jarType(name: "dev.normlanguage.ui.component.Util", members: ["style", "app", "emptyItems", "closeNode", "capture", "requireButton", "requireSwitch", "resourceText"]),
         jarType(name: "dev.normlanguage.ui.component.Anchor.Item", members: ["new", "text", "target"]),
         jarType(name: "dev.normlanguage.ui.component.Breadcrumb.Item", members: ["new", "text"]),
         jarType(name: "dev.normlanguage.ui.component.Cascader.Item", members: ["new", "value", "label", "children"]),

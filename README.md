@@ -46,3 +46,5 @@ Module module() {
 ```
 
 模块分层、主题和生命周期边界见 [架构](docs/architecture.md)。
+
+原生开关、动画和绑定验证：[samples/native/application.norm](samples/native/application.norm)。使用 `norm build samples/native/application.norm` 构建并运行产物；该验证无需截图或 AWT。

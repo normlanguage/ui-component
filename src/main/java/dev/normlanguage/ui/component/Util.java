@@ -25,19 +25,25 @@ public final class Util {
         }
     }
     public static Button requireButton(javafx.scene.Scene scene, String text) {
+        return requireControl(scene, text, Button.class);
+    }
+    public static Switch requireSwitch(javafx.scene.Scene scene, String text) {
+        return requireControl(scene, text, Switch.class);
+    }
+    private static <T extends javafx.scene.control.Labeled> T requireControl(javafx.scene.Scene scene, String text, Class<T> type) {
         requireFxThread();
-        Button match = null;
+        T match = null;
         var pending = new java.util.ArrayDeque<Node>();
         pending.add(scene.getRoot());
         while (!pending.isEmpty()) {
             var current = pending.removeFirst();
-            if (current instanceof Button button && text.equals(button.getText())) {
-                if (match != null) throw new IllegalStateException("Multiple buttons have text: " + text);
-                match = button;
+            if (type.isInstance(current) && text.equals(type.cast(current).getText())) {
+                if (match != null) throw new IllegalStateException("Multiple controls have text: " + text);
+                match = type.cast(current);
             }
             if (current instanceof javafx.scene.Parent parent) pending.addAll(parent.getChildrenUnmodifiable());
         }
-        if (match == null) throw new IllegalStateException("Button not found: " + text);
+        if (match == null) throw new IllegalStateException("Control not found: " + text);
         return match;
     }
     public static void capture(javafx.scene.Scene scene, java.nio.file.Path path, int width, int height,

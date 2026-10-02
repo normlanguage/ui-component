@@ -1,0 +1,8 @@
+{
+  "reflection": [
+    { "type": "javafx.animation.KeyValue" }
+  ],
+  "resources": [
+    { "glob": "dev/normlanguage/ui/component/*.css" }
+  ]
+}
