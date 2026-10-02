@@ -87,9 +87,7 @@
     -fx-max-height: 16;
     -fx-background-radius: 999;
     -fx-background-color: -fx-control-inner-background;
-    -fx-translate-x: -7;
 }
-.norm-switch:selected .norm-switch-thumb { -fx-translate-x: 7; }
 .norm-root:themed .text-input, .norm-root:themed .spinner,
 .norm-root:themed .combo-box-base, .norm-root:themed .choice-box, .norm-root:themed .color-picker {
     -fx-background-color: -norm-surface-raised;

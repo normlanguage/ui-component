@@ -10,6 +10,7 @@ public class Popover implements AutoCloseable {
     private final ConfigProvider contentRoot;
     private final ContextMenu popup = new ContextMenu();
     private final ThemeConnection theme;
+    private final Motion motion;
     private final javafx.beans.InvalidationListener detached;
     private App owner;
     private Side side = Side.BOTTOM;
@@ -20,6 +21,7 @@ public class Popover implements AutoCloseable {
         detached = observable -> { if (anchor.getScene() == null) close(); };
         contentRoot = new ConfigProvider(content);
         theme = new ThemeConnection(anchor, contentRoot);
+        motion = new Motion(contentRoot);
         contentRoot.getStyleClass().add("norm-popover");
         popup.getItems().add(new CustomMenuItem(contentRoot, false));
         popup.setOnHidden(event -> {
@@ -38,10 +40,11 @@ public class Popover implements AutoCloseable {
         owner.own(this);
         theme.connect();
         anchor.sceneProperty().addListener(detached);
-        try { popup.show(anchor, side, 0, 4); }
+        try { popup.show(anchor, side, 0, 4); motion.enter(0, side == Side.TOP ? 8 : -8); }
         catch (RuntimeException failure) { disconnect(); throw failure; }
     }
     private void disconnect() {
+        motion.finish();
         theme.close();
         anchor.sceneProperty().removeListener(detached);
         if (owner != null) { owner.release(this); owner = null; }

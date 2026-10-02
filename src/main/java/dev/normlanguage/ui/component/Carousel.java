@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import java.util.List;
 public class Carousel extends StackPane implements AutoCloseable {
+    private Motion transition;
     private final ObservableList<Node> slides = FXCollections.observableArrayList();
     private final IntegerProperty index = new SimpleIntegerProperty(this, "index", 0) {
         @Override public void set(int value) {
@@ -82,16 +83,21 @@ public class Carousel extends StackPane implements AutoCloseable {
         updateTimer();
     }
     private void showCurrent() {
+        if (transition != null) { transition.close(); transition = null; }
         getChildren().clear();
         if (slides.isEmpty()) { index.set(0); updateTimer(); return; }
         if (index.get() >= slides.size()) index.set(slides.size() - 1);
-        getChildren().add(slides.get(index.get()));
+        var current = slides.get(index.get());
+        getChildren().add(current);
+        transition = new Motion(current);
+        transition.enter(24, 0);
         updateTimer();
     }
     @Override public void close() {
         Util.requireFxThread();
         if (closed) return;
         closed = true;
+        if (transition != null) transition.close();
         timer.stop();
         configuration.close();
         sceneProperty().removeListener(sceneChanged);

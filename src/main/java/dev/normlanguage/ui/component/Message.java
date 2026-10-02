@@ -25,9 +25,11 @@ public final class Message {
         label.getStyleClass().add("norm-message");
         StackPane.setAlignment(label, Pos.TOP_CENTER);
         var timer = new PauseTransition(duration);
+        var motion = new Motion(label);
         class Entry implements Handle {
             @Override public void close() {
                 Util.requireFxThread();
+                motion.close();
                 timer.stop(); queue.getChildren().remove(label); app.release(this);
                 if (queue.getChildren().isEmpty()) app.getChildren().remove(queue);
             }
@@ -36,6 +38,7 @@ public final class Message {
         app.own(entry);
         if (queue.getParent() == null) app.getChildren().add(queue);
         queue.getChildren().add(label);
+        motion.enter(0, -12);
         timer.setOnFinished(event -> entry.close());
         timer.play();
         return entry;

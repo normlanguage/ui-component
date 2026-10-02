@@ -11,6 +11,7 @@ public class Modal implements AutoCloseable {
     private final Stage stage = new Stage();
     private final ConfigProvider content;
     private final ThemeConnection theme;
+    private final Motion motion;
     private final javafx.beans.InvalidationListener detached;
     private App owner;
     private Node previousFocus;
@@ -21,6 +22,7 @@ public class Modal implements AutoCloseable {
         detached = observable -> { if (anchor.getScene() == null) close(); };
         content = new ConfigProvider(body);
         theme = new ThemeConnection(anchor, content);
+        motion = new Motion(content);
         content.getStyleClass().add("norm-card");
         stage.setTitle(title);
         stage.initModality(Modality.WINDOW_MODAL);
@@ -45,10 +47,11 @@ public class Modal implements AutoCloseable {
         owner.own(this);
         theme.connect();
         anchor.sceneProperty().addListener(detached);
-        try { stage.show(); }
+        try { stage.show(); motion.enter(0, 18); }
         catch (RuntimeException failure) { disconnect(); throw failure; }
     }
     private void disconnect() {
+        motion.finish();
         theme.close();
         anchor.sceneProperty().removeListener(detached);
         if (owner != null) { owner.release(this); owner = null; }

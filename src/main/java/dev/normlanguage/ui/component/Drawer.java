@@ -17,6 +17,8 @@ public final class Drawer implements AutoCloseable {
     private final ConfigProvider panel;
     private final StackPane overlay = new StackPane();
     private final ThemeConnection theme;
+    private final Motion motion;
+    private final Side side;
     private Window window;
     private final javafx.beans.InvalidationListener detached;
     private final javafx.beans.InvalidationListener windowHidden = observable -> {
@@ -27,9 +29,11 @@ public final class Drawer implements AutoCloseable {
 
     public Drawer(Node anchor, Node content, Side side) {
         this.anchor = Objects.requireNonNull(anchor);
+        this.side = Objects.requireNonNull(side);
         detached = observable -> { if (anchor.getScene() == null) close(); };
         panel = new ConfigProvider(Objects.requireNonNull(content));
         theme = new ThemeConnection(anchor, panel);
+        motion = new Motion(panel);
         panel.getStyleClass().add("norm-card");
         panel.setMaxWidth(360);
         StackPane.setAlignment(panel, switch (side) {
@@ -76,6 +80,8 @@ public final class Drawer implements AutoCloseable {
             anchor.sceneProperty().addListener(detached);
             window.showingProperty().addListener(windowHidden);
             owner.getChildren().add(overlay);
+            motion.enter(side == Side.LEFT ? -360 : side == Side.RIGHT ? 360 : 0,
+                    side == Side.TOP ? -240 : side == Side.BOTTOM ? 240 : 0);
             var nodes = new ArrayList<Node>();
             collectFocusable(panel, nodes);
             if (nodes.isEmpty()) overlay.requestFocus(); else nodes.getFirst().requestFocus();
@@ -84,6 +90,7 @@ public final class Drawer implements AutoCloseable {
     @Override public void close() {
         Util.requireFxThread();
         if (app == null) return;
+        motion.finish();
         app.getChildren().remove(overlay);
         app.release(this);
         app = null;
