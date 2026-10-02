@@ -19,6 +19,7 @@ public class ConfigProvider extends StackPane implements AutoCloseable {
     private ComponentConfig appliedConfig;
     private String configStylesheet;
     private Node content;
+    private final ContentOwnership contentOwnership;
     private java.util.function.Function<java.util.function.Consumer<String>, Runnable> themeSource;
     private Runnable disconnectTheme;
     private record Publication(long epoch, String css) {}
@@ -27,14 +28,18 @@ public class ConfigProvider extends StackPane implements AutoCloseable {
     private volatile long themeEpoch;
     private volatile boolean closed;
 
-    public ConfigProvider() {
+    public ConfigProvider() { this(ContentOwnership.OWNED); }
+    public ConfigProvider(ContentOwnership ownership) {
+        contentOwnership = Objects.requireNonNull(ownership);
         getStyleClass().add("norm-root");
         getStylesheets().add(Objects.requireNonNull(ConfigProvider.class.getResource("components.css")).toExternalForm());
         themeCss.addListener((observable, previous, current) -> refreshStyle());
         sceneProperty().addListener((observable, previous, current) -> refreshSubscription());
         configuration.connect();
     }
-    public ConfigProvider(Node content) { this(); setContent(content); }
+    public ConfigProvider(Node content) { this(content, ContentOwnership.OWNED); }
+    public ConfigProvider(Node content, ContentOwnership ownership) { this(ownership); setContent(content); }
+    public final ContentOwnership getContentOwnership() { return contentOwnership; }
     public final StringProperty themeCssProperty() { return themeCss; }
     public final String getThemeCss() { return themeCss.get(); }
     public final void setThemeCss(String css) { Util.requireFxThread(); themeCss.set(Objects.requireNonNull(css)); }
@@ -49,8 +54,12 @@ public class ConfigProvider extends StackPane implements AutoCloseable {
     public final Node getContent() { return content; }
     public final void setContent(Node content) {
         Util.requireFxThread();
+        if (closed && content != null) throw new IllegalStateException("Component scope is closed");
         if (this.content == content) return;
         getChildren().remove(this.content);
+        var previous = this.content;
+        this.content = null;
+        if (previous != null && contentOwnership == ContentOwnership.OWNED) Util.closeTree(previous);
         this.content = content;
         if (content != null) getChildren().addFirst(content);
     }
@@ -119,8 +128,22 @@ public class ConfigProvider extends StackPane implements AutoCloseable {
         Util.requireFxThread();
         if (closed) return;
         synchronized (themeLock) { closed = true; themeEpoch++; pendingTheme = null; }
-        configuration.close();
+        RuntimeException failure = null;
+        try { configuration.close(); }
+        catch (RuntimeException error) { failure = error; }
         themeSource = null;
-        if (disconnectTheme != null) { var release = disconnectTheme; disconnectTheme = null; release.run(); }
+        if (disconnectTheme != null) {
+            var release = disconnectTheme;
+            disconnectTheme = null;
+            try { release.run(); }
+            catch (RuntimeException error) {
+                if (failure == null) failure = error; else failure.addSuppressed(error);
+            }
+        }
+        try { setContent(null); }
+        catch (RuntimeException error) {
+            if (failure == null) failure = error; else failure.addSuppressed(error);
+        }
+        if (failure != null) throw failure;
     }
 }

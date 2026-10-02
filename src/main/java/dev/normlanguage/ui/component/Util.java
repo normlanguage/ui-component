@@ -21,7 +21,7 @@ public final class Util {
     public static void closeTree(Node node) {
         Util.requireFxThread();
         RuntimeException failure = null;
-        if (node instanceof javafx.scene.Parent parent) {
+        if (node instanceof javafx.scene.Parent parent && !(node instanceof ConfigProvider)) {
             for (Node child : java.util.List.copyOf(parent.getChildrenUnmodifiable())) {
                 try { closeTree(child); }
                 catch (RuntimeException error) {
@@ -29,13 +29,17 @@ public final class Util {
                 }
             }
         }
-        if (node instanceof AutoCloseable resource) {
-            try { resource.close(); }
-            catch (Exception error) {
-                if (failure == null) failure = new IllegalStateException("Component cleanup failed", error);
-                else failure.addSuppressed(error);
-            }
+        try { closeNode(node); }
+        catch (RuntimeException error) {
+            if (failure == null) failure = error; else failure.addSuppressed(error);
         }
         if (failure != null) throw failure;
+    }
+    public static void closeNode(Node node) {
+        requireFxThread();
+        if (node instanceof AutoCloseable resource) {
+            try { resource.close(); }
+            catch (Exception error) { throw new IllegalStateException("Component cleanup failed", error); }
+        }
     }
 }
