@@ -1,7 +1,7 @@
 Module module() {
   module(name: "gallery", version: 2,
     exports: ["application", "catalog", "general", "layout", "navigation", "inputs", "display", "overlays", "status", "surface"],
-    dependencies: [dependency(repository: "github", name: "ui.desktop", version: 9), dependency(repository: "github", name: "ui.desktop.kit", version: 10),
+    dependencies: [dependency(repository: "github", name: "ui.desktop", version: 9), dependency(repository: "github", name: "ui.desktop.kit", version: 11),
       dependency(repository: "github", name: "ui", version: 11),
       dependency(repository: "github", name: "ui.theme", version: 5),
       dependency(repository: "norm", name: "java.base", version: 1)],

@@ -1,0 +1,65 @@
+package ui.desktop.kit
+
+import ui.Widget
+import ui.NodeKey
+import ui.Column
+import ui.CrossAlignment
+import ui.Text
+import ui.WidgetRole
+import ui.Dock
+import ui.Box
+import ui.Insets
+import ui.SizeConstraints
+import ui.Dimension
+import ui.theme.Tone
+import ui.theme.Appearance
+import ui.desktop.kit.internal.Button as ButtonControl
+import ui.desktop.kit.internal.buttonNew
+import ui.desktop.kit.internal.styleButton
+import ui.desktop.kit.internal.navigationLayoutAdapterButtonAction
+
+value NavigationItem implements Widget {
+  String title
+  Function<Void()> action
+  String subtitle = ""
+  Boolean selected = false
+  NodeKey? key = null
+
+  Widget build() {
+    nativeComponent<ButtonControl>(kind: "ui.desktop.kit.NavigationItem",
+      create: () { buttonNew(title) }, node: (control) { control },
+      update: (control, scope) {
+        control.setText(if subtitle == "" { title } else { title + "\n" + subtitle })
+        control.setStyle("-fx-alignment: center-left; -fx-text-alignment: left; -fx-wrap-text: false; -fx-min-height: 60; -fx-pref-height: 60; -fx-max-height: 60; -fx-max-width: 10000; -fx-padding: 8 14; -fx-background-radius: 6; -fx-border-radius: 6;")
+        styleButton(control: control, tone: if selected { Tone.Primary } else { Tone.Neutral },
+          appearance: if selected { Appearance.Soft } else { Appearance.Plain })
+        navigationLayoutAdapterButtonAction(arg0: control, arg1: scope.bind(action))
+      }, close: (control) { control.close() }, key: key)
+  }
+}
+
+value SectionHeading implements Widget {
+  String title
+  String description = ""
+  Widget build() {
+    Column(gap: 4.0, cross: CrossAlignment.Stretch) {
+      Text(text: title, role: WidgetRole.Title)
+      if description != "" { Text(text: description, role: WidgetRole.Muted) }
+    }
+  }
+}
+
+value SettingRow implements Widget {
+  String title
+  Widget control
+  String description = ""
+  Widget build() {
+    Box(size: SizeConstraints(width: Dimension.Fill),
+      padding: Insets(top: 12.0, bottom: 12.0), content: Dock(
+        center: Column(gap: 4.0, cross: CrossAlignment.Stretch) {
+          Text(text: title)
+          if description != "" { Text(text: description, role: WidgetRole.Muted) }
+        },
+        right: Box(padding: Insets(left: 16.0), content: control)))
+  }
+}
