@@ -1,0 +1,51 @@
+package ui.desktop.kit.test.workbench
+
+import ui.desktop.nativeComponent
+import std.testing.Test
+import std.core.Exception
+import ui.desktop.kit.App
+import ui.desktop.kit.NavigationItem
+import ui.desktop.kit.internal.Button as ButtonControl
+import ui.NodeKey
+import ui.desktop.fxHandle
+import ui.theme.ThemeManager
+import ui.theme.ThemeDefinition
+import ui.theme.Color
+import ui.Renderer
+import ui.desktop.JavaFxBackend
+import ui.desktop.JavaFxScheduler
+import ui.desktop.FxApplication
+import ui.desktop.withFxRuntime
+
+class CreationState { Integer released = 0 Boolean failed = false }
+
+@Test
+Void navigationKeepsGeometryAfterThemeApplication() {
+  var state = CreationState()
+  withFxRuntime(() {
+    var application = FxApplication("Navigation theme verification")
+    var theme = ThemeManager(ThemeDefinition(primary: Color(hex: "#1677FF")))
+    var renderer = Renderer(backend: JavaFxBackend(application), scheduler: JavaFxScheduler(application))
+    application.run(build: () {
+      renderer.render(App(theme: theme, content: NavigationItem(key: NodeKey.Named("navigation"),
+        title: "Windows MCP", subtitle: "Desktop controls", selected: true, action: () {})))
+      application.root(fxHandle(renderer.node()))
+      application.later(() {
+        try {
+          switch application.scene().lookup("#navigation") {
+            case ButtonControl button {
+              String style = button.getStyle()!!
+              require(condition: style.contains("-fx-alignment: center-left") && style.contains("-fx-max-width: 10000"),
+                message: "theme changes preserve full-width navigation geometry")
+              require(condition: !style.contains("-fx-text-fill:#"), message: "base theme cannot pin navigation text to black")
+              state.failed = false
+              state.released = 1
+            }
+            case _ { throw Exception(message: "Navigation control missing") }
+          }
+        } finally { application.close() }
+      })
+    }, dispose: () { renderer.close() theme.close() })
+  })
+  require(condition: state.released == 1, message: "navigation theme assertions completed")
+}

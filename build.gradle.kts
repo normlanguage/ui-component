@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.FixCrLfFilter
+
 plugins {
     `java-library`
     `maven-publish`
@@ -31,6 +33,7 @@ dependencies {
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
+    options.release.set(25)
     options.compilerArgs.add("-parameters")
 }
 val gallery = sourceSets.create("gallery") {
@@ -42,7 +45,12 @@ val gallery = sourceSets.create("gallery") {
 sourceSets.test { compileClasspath += gallery.output; runtimeClasspath += gallery.output }
 val galleryJar = tasks.register<Jar>("galleryJar") {
     archiveBaseName.set("ui-desktop-gallery")
-    archiveVersion.set("2")
+    archiveVersion.set("3")
+    // The gallery embeds source text. Make resource bytes independent of the
+    // checkout's line-ending policy, including files generated on Windows.
+    filesMatching("**/*.norm") {
+        filter<FixCrLfFilter>("eol" to FixCrLfFilter.CrLf.newInstance("lf"))
+    }
     includeEmptyDirs = false
     from(gallery.output)
     from("samples/gallery") { include("**/*.norm"); exclude("tests/**", "module.norm"); into("norm-source/samples/gallery") }
@@ -87,7 +95,7 @@ publishing {
         create<MavenPublication>("library") { from(components["java"]) }
         create<MavenPublication>("gallery") {
             artifactId = "ui-desktop-gallery"
-            version = "2"
+            version = "3"
             artifact(galleryJar)
             pom.withXml {
                 val dependency = asNode().appendNode("dependencies").appendNode("dependency")
