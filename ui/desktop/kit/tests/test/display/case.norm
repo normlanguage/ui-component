@@ -3,6 +3,12 @@ package ui.desktop.kit.test.display
 import std.testing.Test
 import ui.ValueKey
 import ui.Widget
+import ui.NativeView
+import ui.Insets
+import ui.RenderNode
+import ui.LayoutView
+import ui.View
+import ui.describe
 import ui.Text
 import ui.Column as Vertical
 import ui.Binding
@@ -193,4 +199,41 @@ Void preservesSelectedIdentityWhenRowDataIsReplaced() {
     } finally { application.close() }
   }, dispose: renderer.close)
   require(condition: chosen.value == "updated", message: "replacing a selected row with the same identity projects selection onto its current data")
+}
+
+private class SlotProbe implements RenderNode {
+  Void update(View view) {}
+  Void children(List<RenderNode> children) {}
+  Void close() {}
+}
+
+@Test
+Void customCardSectionsOnlyReserveSpaceForPresentSlots() {
+  var body = Text("Body")
+  for footer : [false, true] {
+    var card = Card(content: body, header: Text("Header"),
+      bottom: if footer { Text("Actions") } else { null }, sectionGap: 12.0)
+    switch describe(card.build()).content {
+      case Native(NativeView node) {
+        var sections = node.children(SlotProbe())
+        switch sections[0].content {
+          case Native(NativeView layout) {
+            switch layout {
+              case LayoutView box {
+                switch box.specification {
+                  case Box(_, Insets insets) {
+                    require(condition: insets.top == 12.0 && insets.bottom == (if footer { 12.0 } else { 0.0 }), message: "only present sections get spacing")
+                  }
+                  case _ { require(condition: false, message: "expected a padded card body") }
+                }
+              }
+              case _ { require(condition: false, message: "expected a layout") }
+            }
+          }
+          case _ { require(condition: false, message: "expected a native card body") }
+        }
+      }
+      case _ { require(condition: false, message: "expected a card") }
+    }
+  }
 }

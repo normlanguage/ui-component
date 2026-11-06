@@ -1,10 +1,10 @@
 Module module() {
   module(name: "gallery", version: 2,
     exports: ["application", "catalog", "general", "layout", "navigation", "inputs", "display", "overlays", "status", "surface"],
-    dependencies: [dependency(repository: "github", name: "ui.desktop", version: 9), dependency(repository: "github", name: "ui.desktop.kit", version: 9),
+    dependencies: [dependency(repository: "github", name: "ui.desktop", version: 9), dependency(repository: "github", name: "ui.desktop.kit", version: 10),
       dependency(repository: "github", name: "ui", version: 11),
       dependency(repository: "github", name: "ui.theme", version: 5),
       dependency(repository: "norm", name: "java.base", version: 1)],
-    binding: jarBinding(target: mavenJar(group: "dev.normlanguage", artifact: "ui-desktop-gallery", version: "2", resolution: sha256("e243a87cf2e35c31618f6628dec42259168867da2b5669e939fcf765de8dd02f")),
+    binding: jarBinding(target: mavenJar(group: "dev.normlanguage", artifact: "ui-desktop-gallery", version: "2", resolution: sha256("2b3ca6f26e8d6ea260d009fec2399027666773f144dadf749d23096a84af240f")),
       api: [jarType(name: "dev.normlanguage.ui.gallery.GallerySupport", alias: "internal.GallerySupport", members: ["capture", "requireButton", "resourceText"])]))
 }

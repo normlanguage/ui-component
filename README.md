@@ -9,8 +9,10 @@ JavaFX components built on [ui](https://github.com/normlanguage/ui), [ui.desktop
 ## Use
 
 ```norm
-dependency(repository: "github", name: "ui.desktop.kit", version: 9)
+dependency(repository: "github", name: "ui.desktop.kit", version: 10)
 ```
+
+Set `Card(sectionGap: 12.0, ...)` to separate a custom header or footer from the body. The default is zero.
 
 Use the public Norm widgets, bindings and field models defined by [module.norm](ui/desktop/kit/module.norm). Native component adapters are private implementation details. Applications that need JavaFX types import `ui.desktop.native.*` and use [nativeComponent](https://github.com/normlanguage/ui.desktop/blob/main/ui/desktop/native.norm).
 
