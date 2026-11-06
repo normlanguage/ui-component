@@ -60,6 +60,7 @@ jobs:
         run: |
           timeout 300 norm test ui/desktop/kit --filter ui.desktop.kit.test.tabs
           timeout 300 norm test ui/desktop/kit --filter ui.desktop.kit.test.creation
+          timeout 300 norm test ui/desktop/kit --filter ui.desktop.kit.test.workbench
           timeout 300 norm test ui/desktop/kit --filter ui.desktop.kit.test.inputs
           timeout 300 norm test ui/desktop/kit --filter ui.desktop.kit.test.display
           timeout 300 norm test ui/desktop/kit --filter ui.desktop.kit.test.navigation
