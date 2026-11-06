@@ -43,6 +43,8 @@ jobs:
           $gallery = 'dev/normlanguage/ui-desktop-gallery/3/ui-desktop-gallery-3.jar'
           Get-FileHash (Join-Path 'build/repository' $gallery)
           Get-FileHash (Join-Path $cache $gallery)
+          norm resolve samples/gallery
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - uses: actions/upload-artifact@v4
         with:
           name: gallery-maven-artifact
