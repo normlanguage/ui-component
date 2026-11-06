@@ -36,7 +36,7 @@ value Button implements Widget {
         styleButton(control: control, tone: tone, appearance: appearance)
         var callback = scope.bind(action)
         navigationLayoutAdapterButtonAction(arg0: control, arg1: callback)
-      }, close: (control) { control.close() }, key: key, enabled: enabled)
+      }, applyTheme: (control, snapshot) { styleButton(control: control, tone: tone, appearance: appearance) }, close: (control) { control.close() }, key: key, enabled: enabled)
   }
 }
 
