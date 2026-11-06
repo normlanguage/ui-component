@@ -5,6 +5,6 @@ Module module() {
       dependency(repository: "github", name: "ui", version: 11),
       dependency(repository: "github", name: "ui.theme", version: 5),
       dependency(repository: "norm", name: "java.base", version: 1)],
-    binding: jarBinding(target: mavenJar(group: "dev.normlanguage", artifact: "ui-desktop-gallery", version: "2", resolution: sha256("2d261485cc99af283dae4b7230478842631eff2aba2119dcc791e68079450003")),
+    binding: jarBinding(target: mavenJar(group: "dev.normlanguage", artifact: "ui-desktop-gallery", version: "2", resolution: sha256("89f5502ba6462e81899ef837fa5a60ac82b734d4d49256a5fef05d69a8cb359c")),
       api: [jarType(name: "dev.normlanguage.ui.gallery.GallerySupport", alias: "internal.GallerySupport", members: ["capture", "requireButton", "resourceText"])]))
 }
