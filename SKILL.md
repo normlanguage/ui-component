@@ -1,6 +1,6 @@
 # ui.desktop.kit Skill
 
-Use this skill to work with Norm module `ui.desktop.kit` version 9. Use only declarations listed below.
+Use this skill to work with Norm module `ui.desktop.kit` version 10. Use only declarations listed below.
 
 ## `ui.desktop.kit`
 
@@ -582,6 +582,10 @@ Returns: `Widget`
 ```norm
 value Card implements Widget
 ```
+
+#### `sectionGap`
+
+Optional spacing between the body and a custom header or footer, in logical pixels. Defaults to `0.0`.
 
 #### `content`
 

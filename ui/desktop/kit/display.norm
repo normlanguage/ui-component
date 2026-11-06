@@ -1,6 +1,10 @@
 package ui.desktop.kit
 
 import ui.Widget
+import ui.Box
+import ui.Dimension
+import ui.SizeConstraints
+import ui.Insets
 import ui.NodeKey
 import ui.theme.Tone
 import ui.theme.Appearance
@@ -159,10 +163,18 @@ value Card implements Widget {
   Widget? bottom = null
   NodeKey? key = null
 
+  Double sectionGap = 0.0
+
   Widget build() {
-    List<Widget> children = [content]
     var footer = bottom
     var heading = header
+    Widget body = content
+    if sectionGap > 0.0 && (heading != null || footer != null) {
+      body = Box(content: content, size: SizeConstraints(width: Dimension.Fill, height: Dimension.Fill),
+        padding: Insets(top: if heading != null { sectionGap } else { 0.0 },
+          bottom: if footer != null { sectionGap } else { 0.0 }))
+    }
+    List<Widget> children = [body]
     if footer != null { children.add(footer) }
     if heading != null { children.add(heading) }
     nativeComponent<CardControl>(kind: "ui.desktop.kit.Card",
