@@ -1,8 +1,18 @@
 {
   "reflection": [
-    { "type": "javafx.animation.KeyValue" }
+    {
+      "type": "javafx.animation.KeyValue"
+    }
   ],
   "resources": [
-    { "glob": "dev/normlanguage/ui/component/*.css" }
+    {
+      "glob": "dev/normlanguage/ui/component/*.css"
+    },
+    {
+      "glob": "META-INF/resources/materialdesign2/**"
+    },
+    {
+      "glob": "META-INF/resources/ikonli/**"
+    }
   ]
 }

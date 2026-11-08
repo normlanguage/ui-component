@@ -40,7 +40,7 @@ jobs:
           $cache = Join-Path $HOME '.norm/cache/maven'
           New-Item -ItemType Directory -Force $cache | Out-Null
           Copy-Item -Path build/repository/* -Destination $cache -Recurse -Force
-          $gallery = 'dev/normlanguage/ui-desktop-gallery/3/ui-desktop-gallery-3.jar'
+          $gallery = 'dev/normlanguage/ui-desktop-gallery/4/ui-desktop-gallery-4.jar'
           Get-FileHash (Join-Path 'build/repository' $gallery)
           Get-FileHash (Join-Path $cache $gallery)
           norm resolve samples/gallery
@@ -48,7 +48,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: gallery-maven-artifact
-          path: build/repository/dev/normlanguage/ui-desktop-gallery/3
+          path: build/repository/dev/normlanguage/ui-desktop-gallery/4
       - name: Generate repository Skill
         shell: pwsh
         run: norm docs ui/desktop/kit --output build/api --skill SKILL.md
