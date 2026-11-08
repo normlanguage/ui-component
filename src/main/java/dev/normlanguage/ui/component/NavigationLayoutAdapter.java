@@ -170,7 +170,7 @@ public final class NavigationLayoutAdapter {
             tab.setContent(page);
             ordered.add(tab);
         }
-        control.getTabs().setAll(ordered);
+        if (!control.getTabs().equals(ordered)) control.getTabs().setAll(ordered);
     }
 
     public static IndexLink tabsSelection(Tabs tabs) {

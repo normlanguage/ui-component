@@ -2,6 +2,9 @@
   "reflection": [
     {
       "type": "javafx.animation.KeyValue"
+    },
+    {
+      "type": "javafx.scene.shape.Circle"
     }
   ],
   "resources": [

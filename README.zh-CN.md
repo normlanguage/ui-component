@@ -9,7 +9,7 @@
 ## 使用
 
 ```norm
-dependency(repository: "github", name: "ui.desktop.kit", version: 12)
+dependency(repository: "github", name: "ui.desktop.kit", version: 13)
 ```
 
 公开 Norm 控件、绑定与字段模型由 [module.norm](ui/desktop/kit/module.norm)定义。原生组件适配器属于内部实现。应用需要 JavaFX 类型时，使用 `ui.desktop.native.*` 与 [nativeComponent](https://github.com/normlanguage/ui.desktop/blob/main/ui/desktop/native.norm)。
@@ -37,3 +37,5 @@ dependency(repository: "github", name: "ui.desktop.kit", version: 12)
 [MPL-2.0](LICENSE)。发布 Java 归档在 `META-INF/LICENSE` 携带许可证。
 
 卡片可通过 `Card(sectionGap: 12.0, ...)` 设置自定义页眉、页脚与正文之间的间距，默认值为零。
+
+`Button(icon: "mdi2r-refresh", ...)` 可以设置按钮前置图标。配合外部导航使用 `Tabs(showHeader: false, ...)`，切换页面时保留内容与控件状态。
