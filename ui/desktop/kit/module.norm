@@ -1,9 +1,9 @@
 Module module() {
-  module(name: "ui.desktop.kit", version: 14,
+  module(name: "ui.desktop.kit", version: 15,
     exports: ["general", "inputs", "form", "layout", "navigation", "display", "feedback", "configuration", "status", "notices", "component_bridge", "workbench"],
     dependencies: [dependency(repository: "github", name: "ui", version: 11), dependency(repository: "github", name: "ui.desktop", version: 12), dependency(repository: "norm", name: "java.base", version: 1), dependency(repository: "github", name: "ui.theme", version: 5)],
     binding: jarBinding(
-      target: mavenJar(group: "dev.normlanguage", artifact: "ui-desktop-kit", version: "7", resolution: sha256("4790e7c35f22327cda4f299c021aa5ffb6089b5214957ef24e2dc503a409a3d0")),
+      target: mavenJar(group: "dev.normlanguage", artifact: "ui-desktop-kit", version: "8", resolution: sha256("0dedb1e77306b25c9f23b74137294af058514975bc10678a2269d101b2850c3e")),
       api: [
         jarType(name: "dev.normlanguage.ui.component.KitEnvironment", alias: "internal.KitEnvironment", members: ["apply", "clear"]),
         jarType(name: "dev.normlanguage.ui.component.Upload.Item", alias: "internal.UploadItem", members: ["getFile", "getStatus", "getProgress", "statusProperty", "progressProperty"]),
@@ -13,7 +13,7 @@ Module module() {
         jarType(name: "dev.normlanguage.ui.component.DatePicker.DateRange", alias: "internal.DateRange", members: ["new", "start", "end"]),
         jarType(name: "dev.normlanguage.ui.component.App", alias: "internal.App", members: ["new", "setContent", "getContent", "getThemeCss", "publishTheme", "close", "onClose", "isClosed", "getMessages", "getNotifications"], borrowed: ["getContent", "getMessages", "getNotifications"]),
         jarType(name: "dev.normlanguage.ui.component.ConfigProvider", alias: "internal.ConfigProvider", members: ["new", "setContent", "getContent", "setThemeCss", "getThemeCss", "publishTheme", "close", "getConfig", "setConfig", "getEffectiveConfig", "clearTheme", "setStylesheet"], borrowed: ["getContent"]),
-        jarType(name: "dev.normlanguage.ui.component.Button", alias: "internal.Button", members: ["new", "setText", "setOnAction", "fire", "setLoading", "setIconLiteral", "isLoading", "setStyle", "getStyle", "close"]),
+        jarType(name: "dev.normlanguage.ui.component.Button", alias: "internal.Button", members: ["new", "setText", "setOnAction", "fire", "setLoading", "setIconLiteral", "setIconSize", "setIconOnly", "isLoading", "setStyle", "getStyle", "close"]),
         jarType(name: "dev.normlanguage.ui.component.Input", alias: "internal.Input", members: ["new", "setText", "getText", "setPromptText", "selectRange", "getSelection", "textProperty", "password", "multiline"]),
         jarType(name: "dev.normlanguage.ui.component.Popover", alias: "internal.Popover", members: ["new", "show", "hide", "close", "isShowing"]),
         jarType(name: "dev.normlanguage.ui.component.Modal", alias: "internal.Modal", members: ["new", "show", "hide", "close", "isShowing"]),

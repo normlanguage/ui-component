@@ -53,12 +53,27 @@ class SidebarComponentsTest extends FxTest {
             assertSame(pages.get(1), tabs.getTabs().get(1).getContent());
         });
     }
+    @Test void iconOnlyButtonsKeepAccessibleNamesAndHints() throws Exception {
+        fx(() -> {
+            var button = new Button("Refresh");
+            button.setIconLiteral("mdi2r-refresh");
+            button.setIconSize(22);
+            button.setIconOnly(true);
+            assertEquals(javafx.scene.control.ContentDisplay.GRAPHIC_ONLY, button.getContentDisplay());
+            assertEquals("Refresh", button.getAccessibleText());
+            assertEquals("Refresh", button.getTooltip().getText());
+            button.setIconOnly(false);
+            assertEquals(javafx.scene.control.ContentDisplay.LEFT, button.getContentDisplay());
+            assertNull(button.getTooltip());
+            button.close();
+        });
+    }
     @Test void buttonIconsAreReusedAndCanBeRemoved() throws Exception {
         fx(() -> {
             var button = new Button("Connect");
             button.setIconLiteral("mdi2l-link-variant");
             var graphic = button.getGraphic();
-            assertInstanceOf(Icon.class, graphic);
+            assertInstanceOf(javafx.scene.layout.StackPane.class, graphic);
             button.setIconLiteral("mdi2l-link-variant");
             assertSame(graphic, button.getGraphic());
             button.setIconLiteral(null);
