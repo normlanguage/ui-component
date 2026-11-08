@@ -1,4 +1,4 @@
 Module module() {
   module(name: "samples.fixtures", version: 1,
-    dependencies: [dependency(repository: "github", name: "ui.desktop", version: 9), dependency(repository: "github", name: "ui.theme", version: 5)])
+    dependencies: [dependency(repository: "github", name: "ui.desktop", version: 10), dependency(repository: "github", name: "ui.theme", version: 5)])
 }

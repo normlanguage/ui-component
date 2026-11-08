@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "dev.normlanguage"
-version = "4"
+version = "5"
 
 repositories { mavenCentral() }
 
@@ -45,7 +45,7 @@ val gallery = sourceSets.create("gallery") {
 sourceSets.test { compileClasspath += gallery.output; runtimeClasspath += gallery.output }
 val galleryJar = tasks.register<Jar>("galleryJar") {
     archiveBaseName.set("ui-desktop-gallery")
-    archiveVersion.set("3")
+    archiveVersion.set("4")
     // The gallery embeds source text. Make resource bytes independent of the
     // checkout's line-ending policy, including files generated on Windows.
     filesMatching("**/*.norm") {
@@ -95,7 +95,7 @@ publishing {
         create<MavenPublication>("library") { from(components["java"]) }
         create<MavenPublication>("gallery") {
             artifactId = "ui-desktop-gallery"
-            version = "3"
+            version = "4"
             artifact(galleryJar)
             pom.withXml {
                 val dependency = asNode().appendNode("dependencies").appendNode("dependency")
