@@ -50,6 +50,7 @@ public class Button extends javafx.scene.control.Button implements AutoCloseable
         iconBox.setPrefSize(iconSize + 2, iconSize + 2);
         iconBox.setMaxSize(iconSize + 2, iconSize + 2);
     }
+    public void setSelected(boolean value) { pseudoClassStateChanged(PseudoClass.getPseudoClass("selected"), value); }
     public void setIconOnly(boolean value) {
         setContentDisplay(value ? javafx.scene.control.ContentDisplay.GRAPHIC_ONLY : javafx.scene.control.ContentDisplay.LEFT);
         setTooltip(value ? iconHint : null);
