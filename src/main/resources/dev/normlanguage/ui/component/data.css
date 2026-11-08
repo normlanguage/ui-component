@@ -156,7 +156,7 @@
 }
 .norm-card-title { -fx-font-weight: bold; -fx-padding: 0 0 10 0; }
 .norm-root:themed .norm-card-title { -fx-text-fill: -norm-text; }
-.norm-avatar { -fx-background-radius: 50; -fx-padding: 10; }
+.norm-avatar { -fx-background-radius: 18; -fx-padding: 0; -fx-min-width: 36; -fx-pref-width: 36; -fx-max-width: 36; -fx-min-height: 36; -fx-pref-height: 36; -fx-max-height: 36; }
 .norm-root:themed .norm-avatar { -fx-background-color: -norm-primary-soft-normal-background; }
 .norm-root:themed .norm-avatar .label { -fx-text-fill: -norm-primary-soft-normal-foreground; -fx-font-weight: bold; }
 .norm-badge-indicator { -fx-background-radius: 100; -fx-padding: 2 6; -fx-font-size: 10; -fx-font-weight: bold; }
@@ -174,3 +174,10 @@
 
 .norm-card { -norm-surface-background: -norm-surface-raised; -norm-surface-border: -norm-divider; }
 .norm-tag { -norm-surface-background: -norm-neutral-soft-normal-background; -norm-surface-foreground: -norm-neutral-soft-normal-foreground; -norm-surface-hover: -norm-neutral-soft-hovered-background; }
+
+.norm-tabs-headerless > .tab-header-area {
+    -fx-min-height: 0;
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
+    -fx-padding: 0;
+}

@@ -21,6 +21,7 @@ import ui.desktop.kit.internal.navigationLayoutAdapterButtonAction
 value Button implements Widget {
   String text
   Function<Void()> action
+  String? icon = null
   Boolean enabled = true
   Boolean loading = false
   Tone tone = Tone.Primary
@@ -32,6 +33,7 @@ value Button implements Widget {
       create: () { buttonNew(text) }, node: (control) { control },
       update: (control, scope) {
         control.setText(text)
+        control.setIconLiteral(icon)
         control.setLoading(loading)
         styleButton(control: control, tone: tone, appearance: appearance)
         var callback = scope.bind(action)

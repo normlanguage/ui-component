@@ -207,6 +207,7 @@ private class TabsHost {
 value Tabs implements Widget {
   List<Tab> tabs
   Binding<Integer> selected
+  Boolean showHeader = true
   NodeKey? key = null
 
   Widget build() {
@@ -228,6 +229,7 @@ value Tabs implements Widget {
         TabsHost(control: control, selection: navigationLayoutAdapterTabsSelection(control)!!)
       }, node: (host) { host.control },
       update: (host, scope) {
+        host.control.setHeaderVisible(showHeader)
         host.selected = selected.value
         host.changed = scope.bind((Integer? next) { if next != null { selected.value = next!! } })
       }, children: pages,

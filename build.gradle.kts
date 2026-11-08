@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "dev.normlanguage"
-version = "5"
+version = "6"
 
 repositories { mavenCentral() }
 
@@ -31,6 +31,12 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
+tasks.withType<ProcessResources>().configureEach {
+    filesMatching(listOf("**/*.css", "**/*.json")) {
+        filter<FixCrLfFilter>("eol" to FixCrLfFilter.CrLf.newInstance("lf"))
+    }
+}
+
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
     options.release.set(25)
@@ -45,7 +51,7 @@ val gallery = sourceSets.create("gallery") {
 sourceSets.test { compileClasspath += gallery.output; runtimeClasspath += gallery.output }
 val galleryJar = tasks.register<Jar>("galleryJar") {
     archiveBaseName.set("ui-desktop-gallery")
-    archiveVersion.set("4")
+    archiveVersion.set("5")
     // The gallery embeds source text. Make resource bytes independent of the
     // checkout's line-ending policy, including files generated on Windows.
     filesMatching("**/*.norm") {
@@ -95,7 +101,7 @@ publishing {
         create<MavenPublication>("library") { from(components["java"]) }
         create<MavenPublication>("gallery") {
             artifactId = "ui-desktop-gallery"
-            version = "4"
+            version = "5"
             artifact(galleryJar)
             pom.withXml {
                 val dependency = asNode().appendNode("dependencies").appendNode("dependency")

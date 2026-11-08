@@ -22,6 +22,13 @@ public class Button extends javafx.scene.control.Button implements AutoCloseable
     public BooleanProperty loadingProperty() { return loading; }
     public boolean isLoading() { return loading.get(); }
     public void setLoading(boolean value) { loading.set(value); }
+    public void setIconLiteral(String literal) {
+        String normalized = literal == null ? "" : literal;
+        if (java.util.Objects.equals(getProperties().get("norm-button-icon"), normalized)) return;
+        getProperties().put("norm-button-icon", normalized);
+        setGraphic(normalized.isBlank() ? null : new Icon(normalized));
+        setGraphicTextGap(8);
+    }
     @Override public void close() { motion.close(); }
     @Override public void fire() { if (!isLoading()) super.fire(); }
 }

@@ -9,7 +9,7 @@ JavaFX components built on [ui](https://github.com/normlanguage/ui), [ui.desktop
 ## Use
 
 ```norm
-dependency(repository: "github", name: "ui.desktop.kit", version: 12)
+dependency(repository: "github", name: "ui.desktop.kit", version: 13)
 ```
 
 Set `Card(sectionGap: 12.0, ...)` to separate a custom header or footer from the body. The default is zero.
@@ -42,3 +42,5 @@ Gallery documentation embeds the public UI source from an explicit `-UiRoot` inp
 
 Module 11 provides NavigationItem(title, action, subtitle, selected), SectionHeading(title, description), and SettingRow(title, control, description). Rows use vertical whitespace without separators. Navigation items reserve room for two lines and use the existing theme selection tokens.
 
+
+`Button(icon: "mdi2r-refresh", ...)` adds a leading icon. Use `Tabs(showHeader: false, ...)` with external navigation to retain page content while switching.
