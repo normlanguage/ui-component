@@ -22,6 +22,9 @@ value Button implements Widget {
   String text
   Function<Void()> action
   String? icon = null
+  Integer iconSize = 18
+  Boolean iconOnly = false
+  Boolean selected = false
   Boolean enabled = true
   Boolean loading = false
   Tone tone = Tone.Primary
@@ -34,6 +37,9 @@ value Button implements Widget {
       update: (control, scope) {
         control.setText(text)
         control.setIconLiteral(icon)
+        control.setIconSize(iconSize)
+        control.setIconOnly(iconOnly)
+        control.setSelected(selected)
         control.setLoading(loading)
         styleButton(control: control, tone: tone, appearance: appearance)
         var callback = scope.bind(action)
