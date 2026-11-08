@@ -9,6 +9,23 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SidebarComponentsTest extends FxTest {
+    @Test void avatarPaintsImageAndRestoresFallback() throws Exception {
+        fx(() -> {
+            var avatar = new Avatar("A");
+            var image = new javafx.scene.image.WritableImage(36, 36);
+            for (int y = 0; y < 36; y++) for (int x = 0; x < 36; x++)
+                image.getPixelWriter().setColor(x, y, javafx.scene.paint.Color.CORNFLOWERBLUE);
+            avatar.setImage(image);
+            new Scene(avatar, 36, 36);
+            avatar.applyCss();
+            avatar.layout();
+            var snapshot = avatar.snapshot(null, null);
+            assertEquals(javafx.scene.paint.Color.CORNFLOWERBLUE, snapshot.getPixelReader().getColor(18, 18));
+            avatar.setImage(null);
+            assertTrue(avatar.getChildren().get(0).isVisible());
+            assertFalse(avatar.getChildren().get(1).isVisible());
+        });
+    }
     @Test void unchangedTabsRetainSelectionAndContent() throws Exception {
         fx(() -> {
             var tabs = new Tabs();

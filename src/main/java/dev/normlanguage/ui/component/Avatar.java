@@ -1,51 +1,52 @@
 package dev.normlanguage.ui.component;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Circle;
-import javafx.geometry.Rectangle2D;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
+
+/** A fixed-size avatar with a centered, circular image and a loading/error fallback. */
 public class Avatar extends StackPane {
-    private final ImageView image = new ImageView();
+    private final Circle portrait = new Circle(18, 18, 18);
     private final Label fallback = new Label();
-    private final ChangeListener<Number> dimensions = (observable, old, value) -> updateViewport();
-    private final WeakChangeListener<Number> weakDimensions = new WeakChangeListener<>(dimensions);
+    private final ChangeListener<Number> loaded = (observable, old, value) -> updatePortrait();
+    private final WeakChangeListener<Number> weakLoaded = new WeakChangeListener<>(loaded);
+    private Image image;
+
     public Avatar(String text) {
         getStyleClass().add("norm-avatar");
         fallback.setText(text);
-        image.setPreserveRatio(true);
-        image.setFitWidth(36);
-        image.setFitHeight(36);
-        image.setClip(new Circle(18, 18, 18));
-        getChildren().addAll(fallback, image);
-        image.visibleProperty().bind(image.imageProperty().isNotNull());
-        fallback.visibleProperty().bind(image.imageProperty().isNull());
+        portrait.setVisible(false);
+        getChildren().addAll(fallback, portrait);
     }
+
     public void setImage(Image value) {
-        var previous = image.getImage();
-        if (previous != null) {
-            previous.widthProperty().removeListener(weakDimensions);
-            previous.heightProperty().removeListener(weakDimensions);
-        }
-        image.setImage(value);
-        if (value != null) {
-            value.widthProperty().addListener(weakDimensions);
-            value.heightProperty().addListener(weakDimensions);
-        }
-        updateViewport();
+        if (image == value) return;
+        if (image != null) image.progressProperty().removeListener(weakLoaded);
+        image = value;
+        if (image != null) image.progressProperty().addListener(weakLoaded);
+        updatePortrait();
     }
-    private void updateViewport() {
-        var source = image.getImage();
-        if (source == null || source.getWidth() <= 0 || source.getHeight() <= 0) {
-            image.setViewport(null);
+
+    private void updatePortrait() {
+        boolean ready = image != null && !image.isError() && image.getProgress() >= 1
+                && image.getWidth() > 0 && image.getHeight() > 0;
+        portrait.setVisible(ready);
+        fallback.setVisible(!ready);
+        if (!ready) {
+            portrait.setFill(null);
             return;
         }
-        double side = Math.min(source.getWidth(), source.getHeight());
-        image.setViewport(new Rectangle2D((source.getWidth() - side) / 2, (source.getHeight() - side) / 2, side, side));
+        double scale = 36 / Math.min(image.getWidth(), image.getHeight());
+        double width = image.getWidth() * scale;
+        double height = image.getHeight() * scale;
+        portrait.setFill(new ImagePattern(image, (36 - width) / 2, (36 - height) / 2, width, height, false));
     }
-    public Image getImage() { return image.getImage(); }
+
+    public Image getImage() { return image; }
     public void setText(String value) { fallback.setText(value); }
     public String getText() { return fallback.getText(); }
 }

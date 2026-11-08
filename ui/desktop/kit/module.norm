@@ -3,7 +3,7 @@ Module module() {
     exports: ["general", "inputs", "form", "layout", "navigation", "display", "feedback", "configuration", "status", "notices", "component_bridge", "workbench"],
     dependencies: [dependency(repository: "github", name: "ui", version: 11), dependency(repository: "github", name: "ui.desktop", version: 11), dependency(repository: "norm", name: "java.base", version: 1), dependency(repository: "github", name: "ui.theme", version: 5)],
     binding: jarBinding(
-      target: mavenJar(group: "dev.normlanguage", artifact: "ui-desktop-kit", version: "6", resolution: sha256("002e299efa4a2301777faa03b4518e06e055684cbbb2252ac163d05852bc41eb")),
+      target: mavenJar(group: "dev.normlanguage", artifact: "ui-desktop-kit", version: "6", resolution: sha256("d52fab9de3b290c68b59310782a29d35a750edbb1b1d2d90bae8a04a94432de9")),
       api: [
         jarType(name: "dev.normlanguage.ui.component.KitEnvironment", alias: "internal.KitEnvironment", members: ["apply", "clear"]),
         jarType(name: "dev.normlanguage.ui.component.Upload.Item", alias: "internal.UploadItem", members: ["getFile", "getStatus", "getProgress", "statusProperty", "progressProperty"]),
