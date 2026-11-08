@@ -1,9 +1,9 @@
 Module module() {
-  module(name: "ui.desktop.kit", version: 13,
+  module(name: "ui.desktop.kit", version: 14,
     exports: ["general", "inputs", "form", "layout", "navigation", "display", "feedback", "configuration", "status", "notices", "component_bridge", "workbench"],
-    dependencies: [dependency(repository: "github", name: "ui", version: 11), dependency(repository: "github", name: "ui.desktop", version: 11), dependency(repository: "norm", name: "java.base", version: 1), dependency(repository: "github", name: "ui.theme", version: 5)],
+    dependencies: [dependency(repository: "github", name: "ui", version: 11), dependency(repository: "github", name: "ui.desktop", version: 12), dependency(repository: "norm", name: "java.base", version: 1), dependency(repository: "github", name: "ui.theme", version: 5)],
     binding: jarBinding(
-      target: mavenJar(group: "dev.normlanguage", artifact: "ui-desktop-kit", version: "6", resolution: sha256("d52fab9de3b290c68b59310782a29d35a750edbb1b1d2d90bae8a04a94432de9")),
+      target: mavenJar(group: "dev.normlanguage", artifact: "ui-desktop-kit", version: "7", resolution: sha256("4790e7c35f22327cda4f299c021aa5ffb6089b5214957ef24e2dc503a409a3d0")),
       api: [
         jarType(name: "dev.normlanguage.ui.component.KitEnvironment", alias: "internal.KitEnvironment", members: ["apply", "clear"]),
         jarType(name: "dev.normlanguage.ui.component.Upload.Item", alias: "internal.UploadItem", members: ["getFile", "getStatus", "getProgress", "statusProperty", "progressProperty"]),

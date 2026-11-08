@@ -26,6 +26,19 @@ class SidebarComponentsTest extends FxTest {
             assertFalse(avatar.getChildren().get(1).isVisible());
         });
     }
+    @Test void avatarSupportsTransparentLargeImages() throws Exception {
+        fx(() -> {
+            var avatar = new Avatar("A");
+            var image = new javafx.scene.image.WritableImage(100, 100);
+            for (int y = 15; y < 85; y++) for (int x = 15; x < 85; x++)
+                image.getPixelWriter().setColor(x, y, javafx.scene.paint.Color.CORNFLOWERBLUE);
+            avatar.setImage(image);
+            new Scene(avatar, 36, 36);
+            avatar.applyCss(); avatar.layout();
+            var snapshot = avatar.snapshot(null, null);
+            assertEquals(javafx.scene.paint.Color.CORNFLOWERBLUE, snapshot.getPixelReader().getColor(18, 18));
+        });
+    }
     @Test void unchangedTabsRetainSelectionAndContent() throws Exception {
         fx(() -> {
             var tabs = new Tabs();
