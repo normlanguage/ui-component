@@ -1,7 +1,7 @@
 Module module() {
   module(name: "ui.desktop.kit", version: 12,
     exports: ["general", "inputs", "form", "layout", "navigation", "display", "feedback", "configuration", "status", "notices", "component_bridge", "workbench"],
-    dependencies: [dependency(repository: "github", name: "ui", version: 11), dependency(repository: "github", name: "ui.desktop", version: 9), dependency(repository: "norm", name: "java.base", version: 1), dependency(repository: "github", name: "ui.theme", version: 5)],
+    dependencies: [dependency(repository: "github", name: "ui", version: 11), dependency(repository: "github", name: "ui.desktop", version: 10), dependency(repository: "norm", name: "java.base", version: 1), dependency(repository: "github", name: "ui.theme", version: 5)],
     binding: jarBinding(
       target: mavenJar(group: "dev.normlanguage", artifact: "ui-desktop-kit", version: "5", resolution: sha256("fe74ab29d3d6b2f226664e24b43e867e80a3569d3e81657dbcd820005a8c80f8")),
       api: [
