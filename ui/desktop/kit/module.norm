@@ -1,9 +1,9 @@
 Module module() {
-  module(name: "ui.desktop.kit", version: 15,
+  module(name: "ui.desktop.kit", version: 16,
     exports: ["general", "inputs", "form", "layout", "navigation", "display", "feedback", "configuration", "status", "notices", "component_bridge", "workbench"],
     dependencies: [dependency(repository: "github", name: "ui", version: 11), dependency(repository: "github", name: "ui.desktop", version: 12), dependency(repository: "norm", name: "java.base", version: 1), dependency(repository: "github", name: "ui.theme", version: 5)],
     binding: jarBinding(
-      target: mavenJar(group: "dev.normlanguage", artifact: "ui-desktop-kit", version: "8", resolution: sha256("f976b11e1051a7ebc2bc002bb8acf3d23d7b241753866bdd926daeece07a9fc0")),
+      target: mavenJar(group: "dev.normlanguage", artifact: "ui-desktop-kit", version: "9", resolution: sha256("f7be57fad78cf568b198499440c2fcdf0990c8d47f4b808676e45a8a85243ec0")),
       api: [
         jarType(name: "dev.normlanguage.ui.component.KitEnvironment", alias: "internal.KitEnvironment", members: ["apply", "clear"]),
         jarType(name: "dev.normlanguage.ui.component.Upload.Item", alias: "internal.UploadItem", members: ["getFile", "getStatus", "getProgress", "statusProperty", "progressProperty"]),

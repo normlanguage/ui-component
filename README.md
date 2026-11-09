@@ -9,7 +9,7 @@ JavaFX components built on [ui](https://github.com/normlanguage/ui), [ui.desktop
 ## Use
 
 ```norm
-dependency(repository: "github", name: "ui.desktop.kit", version: 15)
+dependency(repository: "github", name: "ui.desktop.kit", version: 16)
 ```
 
 Set `Card(sectionGap: 12.0, ...)` to separate a custom header or footer from the body. The default is zero.
