@@ -17,3 +17,5 @@
 [Norm 组件测试](../ui/desktop/kit/tests)覆盖 Widget 入口，[JavaFX 定向测试](../src/test/java/dev/normlanguage/ui/component)覆盖原生控件与投影桥。原生控件需要直接嵌入 JavaFX 应用时，以对应 Java 类为入口；Norm 应用直接使用本表的 Widget。
 
 卡片标题区域的原生验证：[CardLayoutTest](../src/test/java/dev/normlanguage/ui/component/CardLayoutTest.java)。语义颜色参数复用 [`ui.theme`](https://github.com/normlanguage/ui.theme)，组件映射以 [connection.norm](../ui/desktop/kit/internal/connection.norm) 为准。
+
+按钮图标与文字的渲染对齐验证：[ButtonAlignmentTest](../src/test/java/dev/normlanguage/ui/component/ButtonAlignmentTest.java)。

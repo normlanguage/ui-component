@@ -36,7 +36,7 @@ public class Button extends javafx.scene.control.Button implements AutoCloseable
         icon = normalized.isBlank() ? null : new Icon(normalized);
         iconBox.getChildren().clear();
         if (icon != null) {
-            icon.setBoundsType(javafx.scene.text.TextBoundsType.VISUAL);
+            icon.setBoundsType(javafx.scene.text.TextBoundsType.LOGICAL);
             iconBox.getChildren().add(icon);
             setIconSize(iconSize);
         }
@@ -56,6 +56,17 @@ public class Button extends javafx.scene.control.Button implements AutoCloseable
         setTooltip(value ? iconHint : null);
         setAccessibleText(value ? getText() : null);
         pseudoClassStateChanged(PseudoClass.getPseudoClass("icon-only"), value);
+    }
+    @Override protected javafx.scene.control.Skin<?> createDefaultSkin() {
+        return new javafx.scene.control.skin.ButtonSkin(this) {
+            {
+                for (var child : getChildren()) {
+                    if (child instanceof javafx.scene.text.Text text) {
+                        text.setBoundsType(javafx.scene.text.TextBoundsType.VISUAL);
+                    }
+                }
+            }
+        };
     }
     @Override public void close() { motion.close(); }
     @Override public void fire() { if (!isLoading()) super.fire(); }
